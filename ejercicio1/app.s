@@ -11,21 +11,43 @@
 main:
 	// x0 contiene la direccion base del framebuffer
  	mov x20, x0	// Guarda la dirección base del framebuffer en x20
-	//---------------- CODE HERE ------------------------------------
 
-	movz x10, 0xC7, lsl 16
-	movk x10, 0x1585, lsl 00
+	// --------------- Start BG ---------------
+	movz x10, 0x16, lsl 16
+	movk x10, 0x032f, lsl 00
 
 	mov x2, SCREEN_HEIGH         // Y Size
-loop1:
-	mov x1, SCREEN_WIDTH         // X Size
-loop0:
-	stur w10,[x0]  // Colorear el pixel N
-	add x0,x0,4	   // Siguiente pixel
-	sub x1,x1,1	   // Decrementar contador X
-	cbnz x1,loop0  // Si no terminó la fila, salto
-	sub x2,x2,1	   // Decrementar contador Y
-	cbnz x2,loop1  // Si no es la última fila, salto
+nextCol:
+	mov x1, SCREEN_WIDTH        // X Size
+nextRow:
+	stur w10, [x0]  // Colorear el pixel N
+	add x0, x0, 4	   // Siguiente pixel
+	sub x1, x1, 1	   // Decrementar contador X
+	cbnz x1, nextRow  // Si no terminó la fila, salto
+	sub x2, x2, 1	   // Decrementar contador Y
+	cbnz x2, nextCol  // Si no es la última fila, salto
+
+	// --------------- Paint Rectangle ---------------
+	mov x0, x20          // Reiniciar x0 a la base del framebuffer
+    movz x10, 0x3b, lsl 16
+    movk x10, 0x8fae, lsl 00
+
+    mov x2, SCREEN_HEIGH // Y Size
+    mov x3, SCREEN_WIDTH * 4 / 9 // Mitad del ancho (320)
+rectY:
+    mov x1, SCREEN_WIDTH / 9 // X Size (solo mitad derecha)
+    mov x4, x0
+    add x4, x4, x3, lsl 2    // x4 = x0 + 320 * 4 (offset mitad derecha)
+rectX:
+    stur w10, [x4]       // Pintar pixel en la mitad derecha
+    add x4, x4, 4        // Siguiente pixel
+    sub x1, x1, 1        // Decrementar contador X
+    cbnz x1, rectX
+    add x0, x0, SCREEN_WIDTH * 4 // Avanzar a la siguiente fila (640 * 4 bytes)
+    mov x4, x0
+    add x4, x4, x3, lsl 2       // Recalcular offset mitad derecha
+    sub x2, x2, 1        // Decrementar contador Y
+    cbnz x2, rectY
 
 	// Ejemplo de uso de gpios
 	mov x9, GPIO_BASE
@@ -46,8 +68,7 @@ loop0:
 	// efectivamente, su valor representará si GPIO 2 está activo
 	lsr w11, w11, 1
 
-	//---------------------------------------------------------------
-	// Infinite Loop
+	// --------------- Infinite Loop ---------------
 
 
 InfLoop:
