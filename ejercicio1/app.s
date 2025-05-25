@@ -33,11 +33,11 @@ nextRow:
     movk x10, 0x8fae, lsl 00
 
     mov x2, SCREEN_HEIGH // Y Size
-    mov x3, SCREEN_WIDTH * 4 / 9 // Mitad del ancho (320)
+    mov x3, SCREEN_WIDTH * 4 / 9 // Denominador impar, numerador: trunc(denominador / 2)
 rectY:
-    mov x1, SCREEN_WIDTH / 9 // X Size (solo mitad derecha)
+    mov x1, SCREEN_WIDTH / 9 // Denominador de arriba
     mov x4, x0
-    add x4, x4, x3, lsl 2    // x4 = x0 + 320 * 4 (offset mitad derecha)
+    add x4, x4, x3, lsl 2
 rectX:
     stur w10, [x4]       // Pintar pixel en la mitad derecha
     add x4, x4, 4        // Siguiente pixel
