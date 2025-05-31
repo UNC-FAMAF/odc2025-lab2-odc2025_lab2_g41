@@ -28,6 +28,8 @@ bg_col: stur    w10, [x0]
 
         bl drawRightHand
 
+        bl drawLeftHand
+
 
 // ---------- 3) GPIO DEMO + BUCLE INFINITO -----------------------
         mov     x9,  GPIO_BASE
