@@ -8,68 +8,71 @@
 
 	.globl main
 
+draw_rectangle:
+	stp     x30, x12, [sp, -16]!
+	mov     x7,  x4                   // alto = h
+	mov     x8,  x3                   // ancho original
+.rectRow: // dirección fila (x,y)
+	mov     x9,  x2
+	lsl     x9,  x9,  #9
+	mov     x12, x2
+	lsl     x12, x12, #7
+	add     x9,  x9,  x12
+	add     x9,  x9,  x1
+	lsl     x9,  x9,  #2
+	add     x9,  x9,  x0
+	// recorre ancho
+	mov     x6,  x3                    // ancho restante
+.rectPix:	stur    w5, [x9]
+	add     x9,  x9,  #4
+	sub     x6,  x6,  #1
+	cbnz    x6,  .rectPix
+	// próxima fila
+	add     x2,  x2,  #1
+	sub     x7,  x7,  #1
+	cbnz    x7,  .rectRow
+	ldp     x30, x12, [sp], 16
+	ret
+
+
+
 main:
-	// x0 contiene la direccion base del framebuffer
- 	mov x20, x0	// Guarda la dirección base del framebuffer en x20
+        // x0 llega con la base del framebuffer
+        mov     x20, x0                  // guarda FB base
 
-	// --------------- Start BG ---------------
-	movz x10, 0x16, lsl 16
-	movk x10, 0x032f, lsl 00
+// ---------- 1) PINTAR EL FONDO COMPLETO -------------------------
+        movz    x10, 0xC7, lsl 16
+        movk    x10, 0x1585, lsl 0
+        mov     x2,  SCREEN_HEIGH
+bg_row: mov     x1,  SCREEN_WIDTH
+bg_col: stur    w10, [x0]
+        add     x0,  x0,  #4
+        sub     x1,  x1,  #1
+        cbnz    x1,  bg_col
+        sub     x2,  x2,  #1
+        cbnz    x2,  bg_row
 
-	mov x2, SCREEN_HEIGH         // Y Size
-nextCol:
-	mov x1, SCREEN_WIDTH        // X Size
-nextRow:
-	stur w10, [x0]  // Colorear el pixel N
-	add x0, x0, 4	   // Siguiente pixel
-	sub x1, x1, 1	   // Decrementar contador X
-	cbnz x1, nextRow  // Si no terminó la fila, salto
-	sub x2, x2, 1	   // Decrementar contador Y
-	cbnz x2, nextCol  // Si no es la última fila, salto
+// ---------- 2) DIBUJO DE FIGURAS --------------------------------
+// -- Rectángulo rojo (80,60) 180×120 -----------------------------
+        mov     x0,  x20                 // base FB
+        mov     x1,  #120
+        mov     x2,  #240
+        mov     x3,  #180
+        mov     x4,  #120
+        movz    x5, 0x83, lsl 16
+        movk    x5, 0x15c7, lsl 0
+        bl      draw_rectangle
 
-	// --------------- Paint Rectangle ---------------
-	mov x0, x20          // Reiniciar x0 a la base del framebuffer
-    movz x10, 0x3b, lsl 16
-    movk x10, 0x8fae, lsl 00
 
-    mov x2, SCREEN_HEIGH // Y Size
-    mov x3, SCREEN_WIDTH * 4 / 9 // Denominador impar, numerador: trunc(denominador / 2)
-rectY:
-    mov x1, SCREEN_WIDTH / 9 // Denominador de arriba
-    mov x4, x0
-    add x4, x4, x3, lsl 2
-rectX:
-    stur w10, [x4]       // Pintar pixel en la mitad derecha
-    add x4, x4, 4        // Siguiente pixel
-    sub x1, x1, 1        // Decrementar contador X
-    cbnz x1, rectX
-    add x0, x0, SCREEN_WIDTH * 4 // Avanzar a la siguiente fila (640 * 4 bytes)
-    mov x4, x0
-    add x4, x4, x3, lsl 2       // Recalcular offset mitad derecha
-    sub x2, x2, 1        // Decrementar contador Y
-    cbnz x2, rectY
-
-	// Ejemplo de uso de gpios
-	mov x9, GPIO_BASE
-
-	// Atención: se utilizan registros w porque la documentación de broadcom
-	// indica que los registros que estamos leyendo y escribiendo son de 32 bits
-
-	// Setea gpios 0 - 9 como lectura
-	str wzr, [x9, GPIO_GPFSEL0]
-
-	// Lee el estado de los GPIO 0 - 31
-	ldr w10, [x9, GPIO_GPLEV0]
-
-	// And bit a bit mantiene el resultado del bit 2 en w10
-	and w11, w10, 0b10
-
-	// w11 será 1 si había un 1 en la posición 2 de w10, si no será 0
-	// efectivamente, su valor representará si GPIO 2 está activo
-	lsr w11, w11, 1
+// ---------- 3) GPIO DEMO + BUCLE INFINITO -----------------------
+        mov     x9,  GPIO_BASE
+        str     wzr, [x9, GPIO_GPFSEL0]  // GPIO 0-9 como entrada
+        ldr     w10, [x9, GPIO_GPLEV0]   // lee 32 bits
+        and     w11, w10, 0b10
+        lsr     w11, w11, 1
 
 	// --------------- Infinite Loop ---------------
 
 
 InfLoop:
-	b InfLoop
+        b       InfLoop
