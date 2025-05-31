@@ -284,11 +284,295 @@ bg_col: stur    w10, [x0]
 
 
 // ODC ENGRAVING
+//O
+        mov     x0,  x20                 // base FB
+        mov     x1,  #300               // EJE X
+        mov     x2,  #225               // EJE Y
+        mov     x3,  #3               // ANCHO
+        mov     x4,  #13                // ALTO
+        movz    x5, 0x04, lsl 16
+        movk    x5, 0x1839, lsl 0
+        bl      draw_rectangle
+
+        mov     x0,  x20                 // base FB
+        mov     x1,  #310               // EJE X
+        mov     x2,  #225               // EJE Y
+        mov     x3,  #3               // ANCHO
+        mov     x4,  #13                // ALTO
+        movz    x5, 0x04, lsl 16
+        movk    x5, 0x1839, lsl 0
+        bl      draw_rectangle
 
 
+        mov     x0,  x20                 // base FB
+        mov     x1,  #303               // EJE X
+        mov     x2,  #223               // EJE Y
+        mov     x3,  #7               // ANCHO
+        mov     x4,  #2                // ALTO
+        movz    x5, 0x04, lsl 16
+        movk    x5, 0x1839, lsl 0
+        bl      draw_rectangle
+
+        mov     x0,  x20                 // base FB
+        mov     x1,  #303               // EJE X
+        mov     x2,  #238               // EJE Y
+        mov     x3,  #7               // ANCHO
+        mov     x4,  #2                // ALTO
+        movz    x5, 0x04, lsl 16
+        movk    x5, 0x1839, lsl 0
+        bl      draw_rectangle
 
 
+//D
+        mov     x0,  x20                 // base FB
+        mov     x1,  #315               // EJE X
+        mov     x2,  #223               // EJE Y
+        mov     x3,  #3               // ANCHO
+        mov     x4,  #17                // ALTO
+        movz    x5, 0x04, lsl 16
+        movk    x5, 0x1839, lsl 0
+        bl      draw_rectangle
 
+        mov     x0,  x20                 // base FB
+        mov     x1,  #325               // EJE X
+        mov     x2,  #225               // EJE Y
+        mov     x3,  #3               // ANCHO
+        mov     x4,  #13                // ALTO
+        movz    x5, 0x04, lsl 16
+        movk    x5, 0x1839, lsl 0
+        bl      draw_rectangle
+
+
+        mov     x0,  x20                 // base FB
+        mov     x1,  #318               // EJE X
+        mov     x2,  #223               // EJE Y
+        mov     x3,  #7               // ANCHO
+        mov     x4,  #2                // ALTO
+        movz    x5, 0x04, lsl 16
+        movk    x5, 0x1839, lsl 0
+        bl      draw_rectangle
+
+        mov     x0,  x20                 // base FB
+        mov     x1,  #318               // EJE X
+        mov     x2,  #238               // EJE Y
+        mov     x3,  #7               // ANCHO
+        mov     x4,  #2                // ALTO
+        movz    x5, 0x04, lsl 16
+        movk    x5, 0x1839, lsl 0
+        bl      draw_rectangle
+
+//C
+        mov     x0,  x20                 // base FB
+        mov     x1,  #330               // EJE X
+        mov     x2,  #225               // EJE Y
+        mov     x3,  #3               // ANCHO
+        mov     x4,  #13                // ALTO
+        movz    x5, 0x04, lsl 16
+        movk    x5, 0x1839, lsl 0
+        bl      draw_rectangle
+
+        mov     x0,  x20                 // base FB
+        mov     x1,  #333               // EJE X
+        mov     x2,  #223               // EJE Y
+        mov     x3,  #8               // ANCHO
+        mov     x4,  #2                // ALTO
+        movz    x5, 0x04, lsl 16
+        movk    x5, 0x1839, lsl 0
+        bl      draw_rectangle
+
+        mov     x0,  x20                 // base FB
+        mov     x1,  #333               // EJE X
+        mov     x2,  #238               // EJE Y
+        mov     x3,  #8               // ANCHO
+        mov     x4,  #2                // ALTO
+        movz    x5, 0x04, lsl 16
+        movk    x5, 0x1839, lsl 0
+        bl      draw_rectangle
+
+//2
+
+        mov     x0,  x20                 // base FB
+        mov     x1,  #302               // EJE X
+        mov     x2,  #262               // EJE Y
+        mov     x3,  #6               // ANCHO
+        mov     x4,  #2                // ALTO
+        movz    x5, 0x04, lsl 16
+        movk    x5, 0x1839, lsl 0
+        bl      draw_rectangle
+
+        mov     x0,  x20                 // base FB
+        mov     x1,  #302               // EJE X
+        mov     x2,  #254               // EJE Y
+        mov     x3,  #6               // ANCHO
+        mov     x4,  #2                // ALTO
+        movz    x5, 0x04, lsl 16
+        movk    x5, 0x1839, lsl 0
+        bl      draw_rectangle
+
+
+        mov     x0,  x20                 // base FB
+        mov     x1,  #302               // EJE X
+        mov     x2,  #246               // EJE Y
+        mov     x3,  #6               // ANCHO
+        mov     x4,  #2                // ALTO
+        movz    x5, 0x04, lsl 16
+        movk    x5, 0x1839, lsl 0
+        bl      draw_rectangle
+
+        mov     x0,  x20                 // base FB
+        mov     x1,  #308               // EJE X
+        mov     x2,  #248               // EJE Y
+        mov     x3,  #2               // ANCHO
+        mov     x4,  #6                // ALTO
+        movz    x5, 0x04, lsl 16
+        movk    x5, 0x1839, lsl 0
+        bl      draw_rectangle
+
+
+        mov     x0,  x20                 // base FB
+        mov     x1,  #300               // EJE X
+        mov     x2,  #256               // EJE Y
+        mov     x3,  #2               // ANCHO
+        mov     x4,  #6                // ALTO
+        movz    x5, 0x04, lsl 16
+        movk    x5, 0x1839, lsl 0
+        bl      draw_rectangle
+
+//0
+        mov     x0,  x20                 // base FB
+        mov     x1,  #314               // EJE X
+        mov     x2,  #246               // EJE Y
+        mov     x3,  #6               // ANCHO
+        mov     x4,  #2                // ALTO
+        movz    x5, 0x04, lsl 16
+        movk    x5, 0x1839, lsl 00
+        bl      draw_rectangle
+
+        mov     x0,  x20                 // base FB
+        mov     x1,  #314               // EJE X
+        mov     x2,  #262               // EJE Y
+        mov     x3,  #6               // ANCHO
+        mov     x4,  #2                // ALTO
+        movz    x5, 0x04, lsl 16
+        movk    x5, 0x1839, lsl 0
+        bl      draw_rectangle
+
+        mov     x0,  x20                 // base FB
+        mov     x1,  #312               // EJE X
+        mov     x2,  #248               // EJE Y
+        mov     x3,  #2               // ANCHO
+        mov     x4,  #14                // ALTO
+        movz    x5, 0x04, lsl 16
+        movk    x5, 0x1839, lsl 0
+        bl      draw_rectangle
+
+
+        mov     x0,  x20                 // base FB
+        mov     x1,  #320               // EJE X
+        mov     x2,  #248               // EJE Y
+        mov     x3,  #2               // ANCHO
+        mov     x4,  #14                // ALTO
+        movz    x5, 0x04, lsl 16
+        movk    x5, 0x1839, lsl 0
+        bl      draw_rectangle
+
+//2
+
+        mov     x0,  x20                 // base FB
+        mov     x1,  #326               // EJE X
+        mov     x2,  #262               // EJE Y
+        mov     x3,  #6               // ANCHO
+        mov     x4,  #2                // ALTO
+        movz    x5, 0x04, lsl 16
+        movk    x5, 0x1839, lsl 0
+        bl      draw_rectangle
+
+        mov     x0,  x20                 // base FB
+        mov     x1,  #326               // EJE X
+        mov     x2,  #254               // EJE Y
+        mov     x3,  #6               // ANCHO
+        mov     x4,  #2                // ALTO
+        movz    x5, 0x04, lsl 16
+        movk    x5, 0x1839, lsl 0
+        bl      draw_rectangle
+
+
+        mov     x0,  x20                 // base FB
+        mov     x1,  #326               // EJE X
+        mov     x2,  #246               // EJE Y
+        mov     x3,  #6               // ANCHO
+        mov     x4,  #2                // ALTO
+        movz    x5, 0x04, lsl 16
+        movk    x5, 0x1839, lsl 0
+        bl      draw_rectangle
+
+        mov     x0,  x20                 // base FB
+        mov     x1,  #332               // EJE X
+        mov     x2,  #248               // EJE Y
+        mov     x3,  #2               // ANCHO
+        mov     x4,  #6                // ALTO
+        movz    x5, 0x04, lsl 16
+        movk    x5, 0x1839, lsl 0
+        bl      draw_rectangle
+
+
+        mov     x0,  x20                 // base FB
+        mov     x1,  #324               // EJE X
+        mov     x2,  #256               // EJE Y
+        mov     x3,  #2               // ANCHO
+        mov     x4,  #6                // ALTO
+        movz    x5, 0x04, lsl 16
+        movk    x5, 0x1839, lsl 0
+        bl      draw_rectangle
+
+//5
+
+        mov     x0,  x20                 // base FB
+        mov     x1,  #338               // EJE X
+        mov     x2,  #262               // EJE Y
+        mov     x3,  #6               // ANCHO
+        mov     x4,  #2                // ALTO
+        movz    x5, 0x04, lsl 16
+        movk    x5, 0x1839, lsl 0
+        bl      draw_rectangle
+
+        mov     x0,  x20                 // base FB
+        mov     x1,  #338               // EJE X
+        mov     x2,  #254               // EJE Y
+        mov     x3,  #6               // ANCHO
+        mov     x4,  #2                // ALTO
+        movz    x5, 0x04, lsl 16
+        movk    x5, 0x1839, lsl 0
+        bl      draw_rectangle
+
+
+        mov     x0,  x20                 // base FB
+        mov     x1,  #338               // EJE X
+        mov     x2,  #246               // EJE Y
+        mov     x3,  #6               // ANCHO
+        mov     x4,  #2                // ALTO
+        movz    x5, 0x04, lsl 16
+        movk    x5, 0x1839, lsl 0
+        bl      draw_rectangle
+
+        mov     x0,  x20                 // base FB
+        mov     x1,  #344               // EJE X
+        mov     x2,  #256               // EJE Y
+        mov     x3,  #2               // ANCHO
+        mov     x4,  #6                // ALTO
+        movz    x5, 0x04, lsl 16
+        movk    x5, 0x1839, lsl 0
+        bl      draw_rectangle
+
+
+        mov     x0,  x20                 // base FB
+        mov     x1,  #336               // EJE X
+        mov     x2,  #248               // EJE Y
+        mov     x3,  #2               // ANCHO
+        mov     x4,  #6                // ALTO
+        movz    x5, 0x04, lsl 16
+        movk    x5, 0x1839, lsl 0
+        bl      draw_rectangle
 
 
 // -- HAZ DEL SABLE DE LUZ -----------------------------
