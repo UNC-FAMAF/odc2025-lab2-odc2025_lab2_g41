@@ -1,89 +1,79 @@
-//  drawRightHand – dibuja la mano derecha (40 rectángulos en 4 escalones)
-// drawRightHand, versión corregida
 .global drawRightHand
+
 drawRightHand:
-        // ---------- prólogo (48 B, alineado) ----------
-        stp     x29, x30, [sp, -48]!
-        mov     x29, sp
-        stp     x22, x23, [sp, 16]   //  x22-x23
-        str     x24,       [sp, 32]  //  x24   (dentro del frame)
+        mov     x22, #0          // X inicial
+        mov     x23, #300        // Y inicial
+        mov     x24, #10          // cuántos rectángulos
 
-        //------------------------------------------------------------------
-        //  Inicialización
-        //------------------------------------------------------------------
-        mov     x22, #0          // X
-        mov     x23, #300        // Y
-        mov     x24, #10         // contador
+        .manoDerLoop1:
+            mov     x0,  x20         // frame-buffer
+            mov     x1,  x22         // X
+            mov     x2,  x23         // Y
+            mov     x3,  #6          // ancho
+            mov     x4,  #80         // alto
+            movz    x5,  #0,     lsl 16
+            movk    x5,  #0x4782, lsl 0
+            bl      draw_rectangle   // draw_rectangle puede clobber x0-x17 sin problemas
 
-//=========================== ESCALÓN 1 ===========================
-.manoDerLoop1:
-        mov     x0,  x20
-        mov     x1,  x22
-        mov     x2,  x23
-        mov     x3,  #6
-        mov     x4,  #80
-        movz    x5,  #0, lsl 16
-        movk    x5,  #0x4782
-        bl      draw_rectangle
+            add     x22, x22, #6     // X += 6
+            sub     x23, x23, #1     // Y -= 1
+            subs    x24, x24, #1     // contador--
+            b.ne    .manoDerLoop1
 
-        add     x22, x22, #6     // X += 6
-        sub     x23, x23, #1     // Y -= 1
-        subs    x24, x24, #1
-        b.ne    .manoDerLoop1
 
-//=========================== ESCALÓN 2 ===========================
-        mov     x24, #10
-.manoDerLoop2:
-        mov     x0,  x20
-        mov     x1,  x22
-        mov     x2,  x23
-        mov     x3,  #6
-        mov     x4,  #80
-        movz    x5,  #0x0, lsl 16
-        movk    x5,  #0x4782, lsl 0
-        bl      draw_rectangle
+            mov     x24, #10          // reiniciamos contador
 
-        add     x22, x22, #6
-        sub     x23, x23, #2
-        subs    x24, x24, #1
-        b.ne    .manoDerLoop2
+            .manoDerLoop2:
+            mov     x0,  x20         // frame-buffer
+            mov     x1,  x22         // X
+            mov     x2,  x23         // Y
+            mov     x3,  #6          // ancho
+            mov     x4,  #80         // alto
+            movz    x5,  #0,     lsl 16
+            movk    x5,  #0x4782, lsl 0
+            bl      draw_rectangle   // draw_rectangle puede clobber x0-x17 sin problemas
 
-//=========================== ESCALÓN 3 ===========================
-        mov     x24, #10
-.manoDerLoop3:
-        mov     x0,  x20
-        mov     x1,  x22
-        mov     x2,  x23
-        mov     x3,  #6
-        mov     x4,  #80
-        movz    x5,  #0, lsl 16
-        movk    x5,  #0x4782
-        bl      draw_rectangle
+            add     x22, x22, #6     // X += 6
+            sub     x23, x23, #2     // Y -= 2
+            subs    x24, x24, #1     // contador--
+            b.ne    .manoDerLoop2
 
-        add     x22, x22, #6
-        sub     x23, x23, #3
-        subs    x24, x24, #1
-        b.ne    .manoDerLoop3
+            mov     x24, #10          // reiniciamos contador
 
-//=========================== ESCALÓN 4 ===========================
-        mov     x24, #10
-.manoDerLoop4:
-        mov     x0,  x20
-        mov     x1,  x22
-        mov     x2,  x23
-        mov     x3,  #6
-        mov     x4,  #80
-        movz    x5,  #0, lsl 16
-        movk    x5,  #0x4782
-        bl      draw_rectangle
 
-        add     x22, x22, #6
-        sub     x23, x23, #4
-        subs    x24, x24, #1
-        b.ne    .manoDerLoop4
+ .manoDerLoop3:
+            mov     x0,  x20         // frame-buffer
+            mov     x1,  x22         // X
+            mov     x2,  x23         // Y
+            mov     x3,  #6          // ancho
+            mov     x4,  #80         // alto
+            movz    x5,  #0,     lsl 16
+            movk    x5,  #0x4782, lsl 0
+            bl      draw_rectangle   // draw_rectangle puede clobber x0-x17 sin problemas
 
-        // ---------- epílogo ----------
-        ldr     x24,       [sp, 32]
-        ldp     x22, x23, [sp, 16]
-        ldp     x29, x30, [sp], 48
-        ret
+            add     x22, x22, #6     // X += 6
+            sub     x23, x23, #3     // Y -= 3
+            subs    x24, x24, #1     // contador--
+            b.ne    .manoDerLoop3
+
+
+
+            mov     x24, #10          // reiniciamos contador
+
+
+ .manoDerLoop4:
+            mov     x0,  x20         // frame-buffer
+            mov     x1,  x22         // X
+            mov     x2,  x23         // Y
+            mov     x3,  #6          // ancho
+            mov     x4,  #80         // alto
+            movz    x5,  #0,     lsl 16
+            movk    x5,  #0x4782, lsl 0
+            bl      draw_rectangle   // draw_rectangle puede clobber x0-x17 sin problemas
+
+            add     x22, x22, #6     // X += 6
+            sub     x23, x23, #4     // Y -= 4
+            subs    x24, x24, #1     // contador--
+            b.ne    .manoDerLoop4
+            ret
+            
