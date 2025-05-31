@@ -694,6 +694,100 @@ mov     x0,  x20                 // base FB
 
 
 //HAND -------------------------------------------------------------
+//DEDO GORDO
+        mov     x0,  x20                 // base FB
+        mov     x1,  #260               // EJE X
+        mov     x2,  #190             // EJE Y
+        mov     x3,  #6              // ANCHO
+        mov     x4,  #82                // ALTO
+        movz    x5,  #0x01,     lsl 16
+        movk    x5,  #0x2e54, lsl 0
+        bl      draw_rectangle
+
+        mov     x0,  x20                 // base FB
+        mov     x1,  #266               // EJE X
+        mov     x2,  #190             // EJE Y
+        mov     x3,  #6              // ANCHO
+        mov     x4,  #82                // ALTO
+        movz    x5,  #0x01,     lsl 16
+        movk    x5,  #0x2e54, lsl 0
+        bl      draw_rectangle
+
+        mov     x0,  x20                 // base FB
+        mov     x1,  #272               // EJE X
+        mov     x2,  #190             // EJE Y
+        mov     x3,  #6              // ANCHO
+        mov     x4,  #82                // ALTO
+        movz    x5,  #0x01,     lsl 16
+        movk    x5,  #0x2e54, lsl 0
+        bl      draw_rectangle
+
+        mov     x0,  x20                 // base FB
+        mov     x1,  #278               // EJE X
+        mov     x2,  #190             // EJE Y
+        mov     x3,  #3              // ANCHO
+        mov     x4,  #82                // ALTO
+        movz    x5,  #0x01,     lsl 16
+        movk    x5,  #0x2e54, lsl 0
+        bl      draw_rectangle
+
+        mov     x0,  x20                 // base FB
+        mov     x1,  #281               // EJE X
+        mov     x2,  #192             // EJE Y
+        mov     x3,  #3              // ANCHO
+        mov     x4,  #28                // ALTO
+        movz    x5,  #0x01,     lsl 16
+        movk    x5,  #0x2e54, lsl 0
+        bl      draw_rectangle
+
+        mov     x0,  x20                 // base FB
+        mov     x1,  #283               // EJE X
+        mov     x2,  #194             // EJE Y
+        mov     x3,  #3              // ANCHO
+        mov     x4,  #28                // ALTO
+        movz    x5,  #0x01,     lsl 16
+        movk    x5,  #0x2e54, lsl 0
+        bl      draw_rectangle
+
+        mov     x0,  x20                 // base FB
+        mov     x1,  #286               // EJE X
+        mov     x2,  #196             // EJE Y
+        mov     x3,  #3              // ANCHO
+        mov     x4,  #24                // ALTO
+        movz    x5,  #0x01,     lsl 16
+        movk    x5,  #0x2e54, lsl 0
+        bl      draw_rectangle
+
+        mov     x0,  x20                 // base FB
+        mov     x1,  #289               // EJE X
+        mov     x2,  #198             // EJE Y
+        mov     x3,  #3              // ANCHO
+        mov     x4,  #22                // ALTO
+        movz    x5,  #0x01,     lsl 16
+        movk    x5,  #0x2e54, lsl 0
+        bl      draw_rectangle
+
+        mov     x0,  x20                 // base FB
+        mov     x1,  #292               // EJE X
+        mov     x2,  #200             // EJE Y
+        mov     x3,  #3              // ANCHO
+        mov     x4,  #20                // ALTO
+        movz    x5,  #0x01,     lsl 16
+        movk    x5,  #0x2e54, lsl 0
+        bl      draw_rectangle
+
+        mov     x0,  x20                 // base FB
+        mov     x1,  #295               // EJE X
+        mov     x2,  #204             // EJE Y
+        mov     x3,  #2              // ANCHO
+        mov     x4,  #16                // ALTO
+        movz    x5,  #0x01,     lsl 16
+        movk    x5,  #0x2e54, lsl 0
+        bl      draw_rectangle
+
+
+
+// OTROS DEDOS
         mov     x0,  x20                 // base FB
         mov     x1,  #162              // EJE X
         mov     x2,  #216              // EJE Y
@@ -899,6 +993,81 @@ mov     x0,  x20                 // base FB
         movz    x5,  #0,     lsl 16
         movk    x5,  #0x4782, lsl 0
         bl      draw_rectangle
+
+
+// DETALLES DE MANOS
+
+// NUDILLO1 -------------------------------------------------------------------------------------
+        mov     x20, x0            // framebuffer base
+        mov     x21, #14            // contador (10 rectángulos)
+        mov     x22, #286          // X inicial
+        mov     x23, #240          // Y fijo
+        mov     x24, #2           // ancho
+        mov     x25, #4           // alto
+
+    nudillo1:
+        mov     x0, x20            // framebuffer
+        mov     x1, x22            // X
+        mov     x2, x23            // Y
+        mov     x3, x24            // ancho
+        mov     x4, x25            // alto
+        movz    x5,  #0x01,     lsl 16
+        movk    x5,  #0x2e54, lsl 0
+        bl      draw_rectangle
+
+        sub     x22, x22, x24      // X += ancho → siguiente rectángulo a la derecha
+        sub     x23, x23, #2
+        subs    x21, x21, #1       // contador--
+        cbnz    x21, nudillo1
+
+
+// NUDILLO2 -------------------------------------------------------------------------------------
+        mov     x20, x0            // framebuffer base
+        mov     x21, #12            // contador (10 rectángulos)
+        mov     x22, #286          // X inicial
+        mov     x23, #270          // Y fijo
+        mov     x24, #2           // ancho
+        mov     x25, #4           // alto
+
+    nudillo2:
+        mov     x0, x20            // framebuffer
+        mov     x1, x22            // X
+        mov     x2, x23            // Y
+        mov     x3, x24            // ancho
+        mov     x4, x25            // alto
+        movz    x5,  #0x01,     lsl 16
+        movk    x5,  #0x2e54, lsl 0
+        bl      draw_rectangle
+
+        sub     x22, x22, x24      // X += ancho → siguiente rectángulo a la derecha
+        sub     x23, x23, #2
+        subs    x21, x21, #1       // contador--
+        cbnz    x21, nudillo2
+
+
+// NUDILLO3 -------------------------------------------------------------------------------------
+        mov     x20, x0            // framebuffer base
+        mov     x21, #8            // contador (10 rectángulos)
+        mov     x22, #274          // X inicial
+        mov     x23, #290          // Y fijo
+        mov     x24, #2           // ancho
+        mov     x25, #4           // alto
+
+    nudillo3:
+        mov     x0, x20            // framebuffer
+        mov     x1, x22            // X
+        mov     x2, x23            // Y
+        mov     x3, x24            // ancho
+        mov     x4, x25            // alto
+        movz    x5,  #0x01,     lsl 16
+        movk    x5,  #0x2e54, lsl 0
+        bl      draw_rectangle
+
+        sub     x22, x22, x24      // X += ancho → siguiente rectángulo a la derecha
+        sub     x23, x23, #2
+        subs    x21, x21, #1       // contador--
+        cbnz    x21, nudillo3
+
 
 // ---------- 3) GPIO DEMO + BUCLE INFINITO -----------------------
         mov     x9,  GPIO_BASE
