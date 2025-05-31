@@ -1,4 +1,6 @@
 utils/venv
+ejercicio1/memory_map.txt
+ejercicio2/memory_map.txt
 *.o
 *.list
 *.img
