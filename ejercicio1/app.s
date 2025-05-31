@@ -13,16 +13,16 @@ main:
         mov     x20, x0                  // guarda FB base
 
 // ---------- 1) PINTAR EL FONDO COMPLETO -------------------------
-        movz    x10, 0x16, lsl 16
-        movk    x10, 0x032f, lsl 0
-        mov     x2,  SCREEN_HEIGH
-bg_row: mov     x1,  SCREEN_WIDTH
-bg_col: stur    w10, [x0]
-        add     x0,  x0,  #4
-        sub     x1,  x1,  #1
-        cbnz    x1,  bg_col
-        sub     x2,  x2,  #1
-        cbnz    x2,  bg_row
+        movz    x10, 0x16, lsl 16  // x10 = 0x (00 00 00 00) [00 16 00 00]  [] es w10
+        movk    x10, 0x032f, lsl 0 // x10 = 0x (00 .. 00 ) [00 16 03 2F]
+        mov     x2,  SCREEN_HEIGH  // x2 = 480 
+bg_row: mov     x1,  SCREEN_WIDTH  // x1 = 640
+bg_col: stur    w10, [x0]          // w10 = 32 bits menos significativos de x10 y usa stur para settear el valor del pointer. En C: x0* = w10;
+        add     x0,  x0,  #4       // avanza 4 bytes el puntero/ 4 bytes en direcciones de mem, o al siguiente pixel. En C: x0 += 4 Bytes;
+        sub     x1,  x1,  #1       // resta 1 al ancho
+        cbnz    x1,  bg_col        // (x1 != 0) --> volve al inicio del loop horizontal  
+        sub     x2,  x2,  #1       // resta 1 al alto
+        cbnz    x2,  bg_row        // vuelve a settear el ancho a su valor inicial y repite el loop
 
         bl drawLightsaber
 
