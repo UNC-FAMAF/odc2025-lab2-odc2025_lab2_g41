@@ -44,7 +44,35 @@ draw_rectangle:
     ldp     x30, x12, [sp], 16           // Restaura x30 y x12 desde la pila
     ret                                  // Vuelve al llamador
 
+// ESTRELLAS -------------------------------------------------------------------------------------
+// Función para dibujar una estrella (cruz)
+// Parámetros:
+// x1: coordenada X del centro
+// x2: coordenada Y del centro
+star:
+    // Parte central
+    mov     x3, #5                       // Ancho
+    mov     x4, #5                       // Alto
+    movz    x5, 0x3B, lsl 16             // Color del centro #3b8fae
+    movk    x5, 0x8FAE, lsl 0
+    bl      draw_rectangle
 
+    // Parte superior e inferior
+    sub     x2, x2, #10                   // Subir del centro
+    movz    x5, 0x14, lsl 16			  // Color de alrededor #14366d
+    movk    x5, 0x366D, lsl 0
+    bl      draw_rectangle
+    add     x2, x2, #5                   // Bajar del centro
+    bl      draw_rectangle
+    sub     x2, x2, #10                   // Restaurar Y
+
+	// Parte derecha e izquierda
+    add     x1, x1, #5                   // Derecha del centro
+    bl      draw_rectangle
+	sub     x1, x1, #10                   // Izquierda del centro
+	sub		x2, x2, #5					  // No se por que hace este offset
+    bl      draw_rectangle
+    ret
 
 
 main:
@@ -1071,6 +1099,22 @@ mov     x0,  x20                 // base FB
         sub     x23, x23, #2
         subs    x21, x21, #1       // contador--
         cbnz    x21, nudillo3
+
+// CALLING FUNCTION STAR (X1, X2 -> X center, Y center)
+		mov     x0, x20
+		mov     x1, #200
+		mov     x2, #100
+		bl star
+
+		mov     x0, x20
+		mov     x1, #300
+		mov     x2, #125
+		bl star
+
+		mov     x0, x20
+		mov     x1, #250
+		mov     x2, #75
+		bl star
 
 
 // ---------- 3) GPIO DEMO + BUCLE INFINITO -----------------------
