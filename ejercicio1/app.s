@@ -9,40 +9,8 @@
 	.globl main
         .include "aliases.s"
 
-        mov Yres, SCREEN_HEIGH  // alto = 480 
-        mov Xres, SCREEN_WIDTH  // ancho = 640
-
-draw_rectangle:
-    stp     x30, x12, [sp, -16]!         // Guarda x30 (link register) y x12 en la pila (salvar contexto)
-
-    mov     x7, x4                       // x7 ← alto (número de filas que tendrá el rectángulo)
-    mov     x8, x3                       // x8 ← ancho original (no usado directamente luego)
-
-.rectRow:                                // Comienza una nueva fila del rectángulo
-    mov     x9, x2                       // x9 ← coordenada Y                
-    mul     x9, x9, Xres                 // x9 = Y*512 + Y*128 = Y*640 → offset en filas (stride = SCREEN_WIDTH)
-
-    add     x9, x9, x1                   // x9 += X → offset horizontal
-    lsl     x9, x9, #2                   // x9 *= 4 (porque cada píxel ocupa 4 bytes = 32 bits por píxel)
-    add     x9, x9, x0                   // x9 = dirección absoluta dentro del framebuffer
-
-    mov     x6, x3                       // x6 ← ancho (cuántos píxeles escribir en esta fila)
-
-.rectPix:                                // Bucle interno: recorre columnas en una fila
-    stur    w5, [x9]                     // Guarda el color (w5) en la dirección apuntada por x9
-    add     x9, x9, #4                   // Avanza 4 bytes (siguiente píxel)
-    sub     x6, x6, #1                   // ancho restante -= 1
-    cbnz    x6, .rectPix                 // Si queda ancho por recorrer, continuar
-
-    add     x2, x2, #1                   // Y += 1 (siguiente fila)
-    sub     x7, x7, #1                   // alto restante -= 1
-    cbnz    x7, .rectRow                 // Si quedan filas, repetir
-
-    ldp     x30, x12, [sp], 16           // Restaura x30 y x12 desde la pila
-    ret                                  // Vuelve al llamador
-
-
-
+        mov Xres, SCREEN_WIDTH
+        mov Yres, SCREEN_HEIGH
 
 draw_rectangle:
     stp     x30, x12, [sp, -16]!         // Guarda x30 (link register) y x12 en la pila (salvar contexto)
@@ -81,19 +49,19 @@ draw_rectangle:
 
 main:
         // x0 llega con la base del framebuffer
-        mov     posInit, framebuffer                  // guarda FB base
+        mov     x20, x0                  // guarda FB base
 
 // ---------- 1) PINTAR EL FONDO COMPLETO -------------------------
-        movz    color, 0x16, lsl 16  // color = 0x (00 00 00 00) [00 16 00 00]  [] es color realmente
-        movk    color, 0x032F, lsl 0 // color = 0x (00 .. 00 ) [00 16 03 2F]
-        mov     alto,  SCREEN_HEIGH  // alto = 480 
-bg_row: mov     ancho,  SCREEN_WIDTH  // ancho = 640
-bg_col: stur    color, [framebuffer]          // color = 32 bits menos significativos de color y usa stur para settear el valor del pointer. En C: framebuffer* = color;
-        add     framebuffer,  framebuffer,  #4       // avanza 4 bytes el puntero/ 4 bytes en direcciones de mem, o al siguiente pixel. En C: x0 += 4 Bytes;
-        sub     ancho,  ancho,  #1       // resta 1 al ancho
-        cbnz    ancho,  bg_col        // (ancho != 0) --> volve al inicio del loop horizontal  
-        sub     alto,  alto,  #1       // resta 1 al alto
-        cbnz    alto,  bg_row        // vuelve a settear el ancho a su valor inicial y repite el loop
+        movz    x10, 0x16, lsl 16
+        movk    x10, 0x032F, lsl 0
+        mov     x2,  SCREEN_HEIGH
+bg_row: mov     x1,  SCREEN_WIDTH
+bg_col: stur    w10, [x0]
+        add     x0,  x0,  #4
+        sub     x1,  x1,  #1
+        cbnz    x1,  bg_col
+        sub     x2,  x2,  #1
+        cbnz    x2,  bg_row
 
 // ---------- 2) DIBUJO DE FIGURAS --------------------------------
 // -- MANGO DEL SABLE DE LUZ -----------------------------
@@ -1104,15 +1072,13 @@ mov     x0,  x20                 // base FB
         subs    x21, x21, #1       // contador--
         cbnz    x21, nudillo3
 
-        //bl odc
-
 
 // ---------- 3) GPIO DEMO + BUCLE INFINITO -----------------------
-        //mov     x9,  GPIO_BASE
-        //str     wzr, [x9, GPIO_GPFSEL0]  // GPIO 0-9 como entrada
-        //ldr     w10, [x9, GPIO_GPLEV0]   // lee 32 bits
-        //and     w11, w10, 0b10
-        //lsr     w11, w11, 1
+        mov     x9,  GPIO_BASE
+        str     wzr, [x9, GPIO_GPFSEL0]  // GPIO 0-9 como entrada
+        ldr     w10, [x9, GPIO_GPLEV0]   // lee 32 bits
+        and     w11, w10, 0b10
+        lsr     w11, w11, 1
 
 	// --------------- Infinite Loop ---------------
 
