@@ -44,6 +44,41 @@ draw_rectangle:
 
 
 
+draw_rectangle:
+    stp     x30, x12, [sp, -16]!         // Guarda x30 (link register) y x12 en la pila (salvar contexto)
+
+    mov     x7, x4                       // x7 ← alto (número de filas que tendrá el rectángulo)
+    mov     x8, x3                       // x8 ← ancho original (no usado directamente luego)
+
+.rectRow:                                // Comienza una nueva fila del rectángulo
+    mov     x9, x2                       // x9 ← coordenada Y
+    lsl     x9, x9, #9                   // x9 = Y * 512 (equivalente a Y << 9)
+    mov     x12, x2                      // x12 ← Y
+    lsl     x12, x12, #7                 // x12 = Y * 128 (equivalente a Y << 7)
+    add     x9, x9, x12                  // x9 = Y*512 + Y*128 = Y*640 → offset en filas (stride = SCREEN_WIDTH)
+
+    add     x9, x9, x1                   // x9 += X → offset horizontal
+    lsl     x9, x9, #2                   // x9 *= 4 (porque cada píxel ocupa 4 bytes = 32 bits por píxel)
+    add     x9, x9, x0                   // x9 = dirección absoluta dentro del framebuffer
+
+    mov     x6, x3                       // x6 ← ancho (cuántos píxeles escribir en esta fila)
+
+.rectPix:                                // Bucle interno: recorre columnas en una fila
+    stur    w5, [x9]                     // Guarda el color (w5) en la dirección apuntada por x9
+    add     x9, x9, #4                   // Avanza 4 bytes (siguiente píxel)
+    sub     x6, x6, #1                   // ancho restante -= 1
+    cbnz    x6, .rectPix                 // Si queda ancho por recorrer, continuar
+
+    add     x2, x2, #1                   // Y += 1 (siguiente fila)
+    sub     x7, x7, #1                   // alto restante -= 1
+    cbnz    x7, .rectRow                 // Si quedan filas, repetir
+
+    ldp     x30, x12, [sp], 16           // Restaura x30 y x12 desde la pila
+    ret                                  // Vuelve al llamador
+
+
+
+
 main:
         // x0 llega con la base del framebuffer
         mov     posInit, framebuffer                  // guarda FB base
