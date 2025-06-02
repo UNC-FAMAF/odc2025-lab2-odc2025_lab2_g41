@@ -44,6 +44,167 @@ draw_rectangle:
     ldp     x30, x12, [sp], 16           // Restaura x30 y x12 desde la pila
     ret                                  // Vuelve al llamador
 
+
+    .equ SCREEN_WIDTH,  640       // ancho de pantalla en píxeles
+    .equ SCREEN_HEIGHT, 480       // alto de pantalla (por si lo llegas a necesitar)
+    .equ BPP,           32        // bits por píxel (4 bytes por píxel)
+
+
+draw_line:
+    // 1) Salvar link register
+    stp     x30, xzr, [sp, #-16]!   // guardo x30 (LR)
+
+    // 2) Calcular dx, dy
+    sub     x6, x3, x1
+    sub     x7, x4, x2
+
+    // 3) abs_dx = |dx| → en x8
+    mov     x8, x6              // copiar
+    cmp     x8, #0
+    cneg    x8, x8, MI          // si x8<0, x8 = -x8
+
+    // 4) abs_dy = |dy| → en x9
+    mov     x9, x7
+    cmp     x9, #0
+    cneg    x9, x9, MI          // si x9<0, x9 = -x9
+
+    // 5) sx = sign(dx) → +1 ó -1
+    mov     x10, #1             // por defecto +1
+    mov     x13, #-1            // usar x13 como -1
+    cmp     x6, #0
+    csel    x10, x10, x13, GE   // si dx >= 0   sx := +1 ; si dx < 0  sx := -1
+
+    // 6) sy = sign(dy) → +1 ó -1
+    mov     x11, #1             // por defecto +1
+    mov     x13, #-1            // x13 = -1
+    cmp     x7, #0
+    csel    x11, x11, x13, GE   // si dy >= 0   sy := +1 ; si dy < 0  sy := -1
+
+    // 7) Decidir si es X‐dominante o Y‐dominante
+    cmp     x8, x9
+    b.lt    .loop_ydominant     // si |dx| < |dy|, ir a la versión Y‐dominante
+
+    // ────────────────────────────────────────────────────────────────────────
+    //  A) CASO “X‐dominante”: abs_dx ≥ abs_dy
+    //    Para cada i = 0 .. abs_dx:
+    //      x = x₁ + (i · sx)
+    //      y = y₁ + ⎣(dy · i) / abs_dx⎦
+    //
+    mov     x12, #0             // i = 0
+.xloop:
+    // --- calcular x = x₁ + (i·sx) sin multiplicar
+    mov     x13, x12            // x13 ← i
+    cmp     x10, #0             // ¿sx < 0?
+    cneg    x13, x13, MI        //   si sx <0, x13 = -i; si sx≥0 queda i
+    add     x14, x1, x13        // x14 ← x₁ + (i·sx)
+
+    // --- calcular y = y₁ + (dy * i) / abs_dx
+    mul     x15, x7, x12        // x15 ← dy * i
+    sdiv    x15, x15, x8        // x15 ← (dy * i) / abs_dx (división entera, floored)
+    add     x15, x15, x2        // x15 ← y₁ + … = valor de y
+
+    // --- dibujar pixel en (x14, x15)
+    //     offset_bytes = (((y * SCREEN_WIDTH) + x) * 4)
+    //     SCREEN_WIDTH = 640 = (1<<9) + (1<<7)
+    mov     x16, x15            // x16 = y
+    lsl     x16, x16, #9        // x16 = y*512
+    mov     x17, x15            // x17 = y
+    lsl     x17, x17, #7        // x17 = y*128
+    add     x16, x16, x17       // x16 = y*640
+    add     x16, x16, x14       // x16 = y*640 + x
+    lsl     x16, x16, #2        // x16 = (y*640 + x) * 4 bytes
+    add     x16, x16, x0        // x16 = dirección en el framebuffer
+    stur    w5, [x16]           // escribo el color en w5
+
+    // --- incrementar i y ver si ya terminé
+    add     x12, x12, #1        // i++
+    cmp     x12, x8             // comparar i con abs_dx
+    ble     .xloop              // mientras i ≤ abs_dx, repetir
+
+    b       .line_done          // si i > abs_dx, termino
+
+    // ────────────────────────────────────────────────────────────────────────
+.loop_ydominant:
+    // B) CASO “Y‐dominante”: abs_dx < abs_dy
+    //   Para cada i = 0 .. abs_dy:
+    //     y = y₁ + (i·sy)
+    //     x = x₁ + ⎣(dx · i) / abs_dy⎦
+    //
+    mov     x12, #0             // i = 0
+.yloop:
+    // --- calcular y = y₁ + (i·sy)
+    mov     x13, x12            // x13 ← i
+    cmp     x11, #0             // ¿sy < 0?
+    cneg    x13, x13, MI        //   si sy <0, x13 = -i; si sy≥0 queda i
+    add     x15, x2, x13        // x15 ← y₁ + (i·sy)
+
+    // --- calcular x = x₁ + ⎣(dx * i) / abs_dy⎦
+    mul     x14, x6, x12        // x14 ← dx * i
+    sdiv    x14, x14, x9        // x14 ← (dx * i) / abs_dy
+    add     x14, x14, x1        // x14 ← x₁ + … = valor de x
+
+    // --- dibujar pixel en (x14, x15)
+    mov     x16, x15            // y a x16
+    lsl     x16, x16, #9        // x16 = y*512
+    mov     x17, x15            // x17 = y
+    lsl     x17, x17, #7        // x17 = y*128
+    add     x16, x16, x17       // x16 = y*640
+    add     x16, x16, x14       // x16 = y*640 + x
+    lsl     x16, x16, #2        // x16 = (y*640 + x)*4
+    add     x16, x16, x0        // x16 = dirección absoluta
+    stur    w5, [x16]           // escribo el color
+
+    // --- incrementar i y ver si ya terminé
+    add     x12, x12, #1        // i++
+    cmp     x12, x9             // comparar i con abs_dy
+    ble     .yloop              // mientras i ≤ abs_dy, repetir
+
+    // caigo aquí cuando i > abs_dy
+.line_done:
+    // Restaurar LR y retornar
+    ldp     x30, xzr, [sp], #16
+    ret
+
+
+draw_triangle:
+    // 1) Salvar LR (x30) en pila
+    stp     x30, xzr, [sp, #-16]!       // guardo x30; xzr es dummy para alinear
+
+    // 2) Guardar (p1_x, p1_y) en registros temporales (x8, x9)
+    mov     x8, x1      // x8 ← p1_x
+    mov     x9, x2      // x9 ← p1_y
+
+    // ------- 3) Dibujar arista entre p1 (x1,y1) y p2 (x3,y4) -------
+    //    Parámetros ya en:
+    //      x0 = framebuffer, x1 = p1_x, x2 = p1_y, x3 = p2_x, x4 = p2_y
+    //    Sólo hay que copiar color (en x7) → x5
+    mov     x5, x7      // x5 ← color
+    bl      draw_line
+
+    // ------- 4) Dibujar arista entre p2 (x3,y2) y p3 (x5,y3) -------
+    //    Ajustar registros para llamada:
+    //      x1 ← p2_x (ya estaba en x3), x2 ← p2_y (ya en x4)
+    //      x3 ← p3_x (viene en x5),   x4 ← p3_y (viene en x6)
+    mov     x1, x3      // x1 = p2_x
+    mov     x2, x4      // x2 = p2_y
+    mov     x3, x5      // x3 = p3_x
+    mov     x4, x6      // x4 = p3_y
+    mov     x5, x7      // x5 ← color
+    bl      draw_line
+
+    // ------- 5) Dibujar arista entre p3 (x3,y3) y p1 (x8,x9) -------
+    //    Ahora, p3 está en (x3,x4); p1 la recuperamos de (x8,x9).
+    mov     x1, x3      // x1 = p3_x
+    mov     x2, x4      // x2 = p3_y
+    mov     x3, x8      // x3 = p1_x (guardado)
+    mov     x4, x9      // x4 = p1_y (guardado)
+    mov     x5, x7      // x5 ← color
+    bl      draw_line
+
+    // 6) Restaurar LR y retornar
+    ldp     x30, xzr, [sp], #16
+    ret
+
 // ESTRELLAS -------------------------------------------------------------------------------------
 // Funci�n para dibujar una estrella (cruz)
 // Par�metros:
@@ -78,11 +239,11 @@ star:
     ret
 
 // TRANSITION -------------------------------------------------------------------------------------
-// Funci�n para dibujar la transici�n del background
-// Par�metros:
+// Funci�n para dibujar la transici�n del background
+// Par�metros:
 // x0: base del framebuffer (debe estar cargado antes de llamar)
-// x2: posici�n Y inicial (l�nea donde comienza la transici�n)
-// x5: color a usar para la transici�n
+// x2: posici�n Y inicial (l�nea donde comienza la transici�n)
+// x5: color a usar para la transici�n
 draw_transition:
         stp     x30, x12, [sp, -32]!
 
@@ -92,14 +253,14 @@ draw_transition:
         mov     x15, x2                      // Desde donde el alto
 
 firstLine:
-        mov     x1, x14                      // Posici�n de X actual
-        mov     x2, x15                      // L�nea Y
+        mov     x1, x14                      // Posici�n de X actual
+        mov     x2, x15                      // L�nea Y
         mov     x4, #1                       // Alto
         bl      draw_rectangle               // Dibujar bloque
 
-        add     x14, x14, #12                // Avanzar p�xeles: pintados + sin pintar
+        add     x14, x14, #12                // Avanzar p�xeles: pintados + sin pintar
         cmp     x14, SCREEN_WIDTH
-        b.lt    firstLine                    // Seguir si no se pas� del ancho
+        b.lt    firstLine                    // Seguir si no se pas� del ancho
 
         add     x1, xzr, xzr
         mov     x3, #5
@@ -1274,6 +1435,7 @@ mov     x0,  x20                 // base FB
 	mov     x1, #250
 	mov     x2, #75
 	bl star
+
 
 
 // ---------- 3) GPIO DEMO + BUCLE INFINITO -----------------------
