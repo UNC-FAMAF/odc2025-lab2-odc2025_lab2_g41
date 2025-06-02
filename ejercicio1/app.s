@@ -45,12 +45,13 @@ draw_rectangle:
     ret                                  // Vuelve al llamador
 
 // ESTRELLAS -------------------------------------------------------------------------------------
-// Función para dibujar una estrella (cruz)
-// Parámetros:
+// Funciï¿½n para dibujar una estrella (cruz)
+// Parï¿½metros:
 // x1: coordenada X del centro
 // x2: coordenada Y del centro
 star:
     stp     x30, x12, [sp, -16]!         // Guarda x30 (link register) y x12 en la pila (salvar contexto)
+    stp     x1, x2, [sp, -16]!
 
     // Parte central
     mov     x3, #5                       // Ancho
@@ -74,6 +75,9 @@ star:
     sub     x1, x1, #10                   // Izquierda del centro (5*2)
     sub	    x2, x2, #5		          // No se por que hace este offset
     bl      draw_rectangle
+
+    ldp x1, x2, [sp], 16
+    ldp x30, x12, [sp], 16
     ret
 
 
