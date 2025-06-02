@@ -80,27 +80,183 @@ star:
     ldp x30, x12, [sp], 16
     ret
 
+// TRANSITION -------------------------------------------------------------------------------------
+// Función para dibujar la transición del background
+// Parámetros:
+// x0: base del framebuffer (debe estar cargado antes de llamar)
+// x2: posición Y inicial (línea donde comienza la transición)
+// x5: color a usar para la transición
+draw_transition:
+        stp     x30, x12, [sp, -32]!
+
+        add     x1, xzr, xzr                 // Inicializar X
+        mov     x3, #6                       // Ancho en X
+        mov     x14, #0                      // x14 "counter"
+        mov     x15, x2                      // Desde donde el alto
+
+firstLine:
+        mov     x1, x14                      // Posición de X actual
+        mov     x2, x15                      // Línea Y
+        mov     x4, #1                       // Alto
+        bl      draw_rectangle               // Dibujar bloque
+
+        add     x14, x14, #12                // Avanzar píxeles: pintados + sin pintar
+        cmp     x14, SCREEN_WIDTH
+        b.lt    firstLine                    // Seguir si no se pasó del ancho
+
+        add     x1, xzr, xzr
+        mov     x3, #5
+        mov     x14, #0
+        sub     x15, x15, #1
+
+secondLine:
+        mov     x1, x14
+        mov     x2, x15
+        mov     x4, #2
+        bl      draw_rectangle
+
+        add     x14, x14, #10 
+        cmp     x14, SCREEN_WIDTH
+        b.lt    secondLine
+
+        add     x1, xzr, xzr
+        mov     x3, #4
+        mov     x14, #0
+        sub     x15, x15, #2
+
+thirdLine:
+        mov     x1, x14
+        mov     x2, x15
+        mov     x4, #2
+        bl      draw_rectangle
+
+        add     x14, x14, #8 
+        cmp     x14, SCREEN_WIDTH
+        b.lt    thirdLine
+
+        add     x1, xzr, xzr
+        mov     x3, #3
+        mov     x14, #0
+        sub     x15, x15, #2
+
+fourthLine:
+        mov     x1, x14
+        mov     x2, x15 
+        mov     x4, #2
+        bl      draw_rectangle
+
+        add     x14, x14, #6 
+        cmp     x14, SCREEN_WIDTH
+        b.lt    fourthLine
+
+        add     x1, xzr, xzr
+        mov     x3, #2
+        mov     x14, #0
+        sub     x15, x15, #2
+
+fifthLine:
+        mov     x1, x14
+        mov     x2, x15 
+        mov     x4, #3
+        bl      draw_rectangle
+
+        add     x14, x14, #4 
+        cmp     x14, SCREEN_WIDTH
+        b.lt    fifthLine
+
+        add     x1, xzr, xzr
+        mov     x3, #1
+        mov     x14, #0
+        sub     x15, x15, #3
+
+sixthLine:
+        mov     x1, x14
+        mov     x2, x15
+        mov     x4, #3
+        bl      draw_rectangle
+
+        add     x14, x14, #2 
+        cmp     x14, SCREEN_WIDTH
+        b.lt    sixthLine
+
+        ldp     x30, x12, [sp], 32
+        ret
 
 main:
         // x0 llega con la base del framebuffer
         mov     x20, x0                  // guarda FB base
 
 // ---------- 1) PINTAR EL FONDO COMPLETO -------------------------
-        movz    x10, 0x16, lsl 16
-        movk    x10, 0x032F, lsl 0
-        mov     x2,  SCREEN_HEIGH
-bg_row: mov     x1,  SCREEN_WIDTH
-bg_col: stur    w10, [x0]
-        add     x0,  x0,  #4
-        sub     x1,  x1,  #1
-        cbnz    x1,  bg_col
-        sub     x2,  x2,  #1
-        cbnz    x2,  bg_row
+        mov     x0,  x20                 // base FB
+        mov     x1,  #0                  // EJE X
+        mov     x2,  #0                  // EJE Y
+        mov     x3,  SCREEN_WIDTH        // ANCHO
+        mov     x4,  SCREEN_HEIGH / 4    // ALTO
+        set_color x5, 0x16, 0x042F      //#16042F
+        bl      draw_rectangle
+
+        mov     x0,  x20                 // base FB
+        mov     x1,  #0                  // EJE X
+        mov     x2,  SCREEN_HEIGH / 4    // EJE Y
+        mov     x3,  SCREEN_WIDTH        // ANCHO
+        mov     x4,  SCREEN_HEIGH / 4    // ALTO
+        set_color x5, 0x1A, 0x0633      //#1A0633
+        bl      draw_rectangle
+
+        mov     x0,  x20                 // base FB
+        mov     x1,  #0                  // EJE X
+        mov     x2,  SCREEN_HEIGH / 2    // EJE Y
+        mov     x3,  SCREEN_WIDTH        // ANCHO
+        mov     x4,  SCREEN_HEIGH / 4    // ALTO
+        set_color x5, 0x1E, 0x0837      //#1E0837
+        bl      draw_rectangle
+
+        mov     x0,  x20                 // base FB
+        mov     x1,  #0                  // EJE X
+        mov     x2,  SCREEN_HEIGH *3 /4  // EJE Y
+        mov     x3,  SCREEN_WIDTH        // ANCHO
+        mov     x4,  SCREEN_HEIGH / 4    // ALTO
+        set_color x5, 0x22, 0x0A3B      //#220A3B
+        bl      draw_rectangle
+
+        // TRANSICIONES ENTRE COLORES
+        // 1ER TRANSICION
+        mov     x0,  x20                  // base FB
+        mov     x2, SCREEN_HEIGH / 4
+        set_color x5, 0x1A, 0x0633        //#1A0633
+        bl      draw_transition           // Call function
+
+        mov     x0,  x20                  // base FB
+        mov     x2, SCREEN_HEIGH / 4 + 5
+        set_color x5, 0x1A, 0x0633        //#1A0633
+        bl      draw_transition           // Call function
+
+        // 2DA TRANSICION
+        mov     x0,  x20                  // base FB
+        mov     x2, SCREEN_HEIGH / 2
+        set_color x5, 0x1E, 0x0837        //#1E0837
+        bl      draw_transition           // Call function
+
+        mov     x0,  x20                  // base FB
+        mov     x2, SCREEN_HEIGH / 2 + 5
+        set_color x5, 0x1E, 0x0837        //#1E0837
+        bl      draw_transition           // Call function
+
+        // 3RA TRANSICION
+        mov     x0,  x20                  // base FB
+        mov     x2, SCREEN_HEIGH * 3 / 4
+        set_color x5, 0x22, 0x0A3B        //#220A3B
+        bl      draw_transition           // Call function
+        
+        mov     x0,  x20                  // base FB
+        mov     x2, SCREEN_HEIGH * 3 / 4 + 5
+        set_color x5, 0x22, 0x0A3B        //#220A3B
+        bl      draw_transition           // Call function
 
 // ---------- 2) DIBUJO DE FIGURAS --------------------------------
 // -- MANGO DEL SABLE DE LUZ -----------------------------
         mov     x0,  x20                 // base FB
-        mov     x1,  #50               // EJE X
+        mov     x1,  #50                // EJE X
         mov     x2,  #220               // EJE Y
         mov     x3,  #330                // ANCHO
         mov     x4,  #50                // ALTO
