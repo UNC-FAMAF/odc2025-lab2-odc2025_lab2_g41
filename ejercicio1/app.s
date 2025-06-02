@@ -51,8 +51,6 @@ draw_rectangle:
 // x2: coordenada Y del centro
 star:
     stp     x30, x12, [sp, -16]!         // Guarda x30 (link register) y x12 en la pila (salvar contexto)
-    stp     x1, x2, [sp, -16]!
-
     // Parte central
     mov     x3, #5                       // Ancho
     mov     x4, #5                       // Alto
@@ -76,7 +74,6 @@ star:
     sub	    x2, x2, #5		          // No se por que hace este offset
     bl      draw_rectangle
 
-    ldp x1, x2, [sp], 16
     ldp x30, x12, [sp], 16
     ret
 
@@ -1244,8 +1241,8 @@ mov     x0,  x20                 // base FB
         mov     x21, #8            // contador (10 rectángulos)
         mov     x22, #274          // X inicial
         mov     x23, #290          // Y fijo
-        mov     x24, #2           // ancho
-        mov     x25, #4           // alto
+        mov     x24, #2            // ancho
+        mov     x25, #4            // alto
 
     nudillo3:
         mov     x0, x20            // framebuffer
@@ -1280,11 +1277,11 @@ mov     x0,  x20                 // base FB
 
 
 // ---------- 3) GPIO DEMO + BUCLE INFINITO -----------------------
-        mov     x9,  GPIO_BASE
-        str     wzr, [x9, GPIO_GPFSEL0]  // GPIO 0-9 como entrada
-        ldr     w10, [x9, GPIO_GPLEV0]   // lee 32 bits
-        and     w11, w10, 0b10
-        lsr     w11, w11, 1
+        //mov     x9,  GPIO_BASE
+        //str     wzr, [x9, GPIO_GPFSEL0]  // GPIO 0-9 como entrada
+        //ldr     w10, [x9, GPIO_GPLEV0]   // lee 32 bits
+        //and     w11, w10, 0b10
+        //lsr     w11, w11, 1
 
 	// --------------- Infinite Loop ---------------
 
