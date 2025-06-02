@@ -411,7 +411,94 @@ main:
         set_color x5, 0x22, 0x0A3B        //#220A3B
         bl      draw_transition           // Call function
 
-// ---------- 2) DIBUJO DE FIGURAS --------------------------------
+// ---------- 2) DETALLES DEL FONDO -------------------------------
+        // CALLING FUNCTION STAR (X1, X2 -> X center, Y center)
+	mov     x0, x20
+	mov     x1, #20
+	mov     x2, #100
+	bl star
+
+	mov     x0, x20
+	mov     x1, #70
+	mov     x2, #400
+	bl star
+
+	mov     x0, x20
+	mov     x1, #100
+	mov     x2, #150
+	bl star
+
+	mov     x0, x20
+	mov     x1, #125
+	mov     x2, #50
+	bl star
+
+	mov     x0, x20
+	mov     x1, #175
+	mov     x2, #440
+	bl star
+
+	mov     x0, x20
+	mov     x1, #250
+	mov     x2, #350
+	bl star
+
+	mov     x0, x20
+	mov     x1, #300
+	mov     x2, #125
+	bl star
+
+	mov     x0, x20
+	mov     x1, #360
+	mov     x2, #320
+	bl star
+
+	mov     x0, x20
+	mov     x1, #370
+	mov     x2, #180
+	bl star
+
+	mov     x0, x20
+	mov     x1, #390
+	mov     x2, #20
+	bl star
+
+	mov     x0, x20
+	mov     x1, #400
+	mov     x2, #415
+	bl star
+
+	mov     x0, x20
+	mov     x1, #500
+	mov     x2, #120
+	bl star
+
+	mov     x0, x20
+	mov     x1, #500
+	mov     x2, #375
+	bl star
+
+	mov     x0, x20
+	mov     x1, #570
+	mov     x2, #200
+	bl star
+
+	mov     x0, x20
+	mov     x1, #590
+	mov     x2, #345
+	bl star
+
+	mov     x0, x20
+	mov     x1, #600
+	mov     x2, #50
+	bl star
+
+	mov     x0, x20
+	mov     x1, #610
+	mov     x2, #460
+	bl star
+
+// ---------- 3) DIBUJO DE FIGURAS --------------------------------
 // -- MANGO DEL SABLE DE LUZ -----------------------------
         mov     x0,  x20                 // base FB
         mov     x1,  #50                // EJE X
@@ -1420,25 +1507,8 @@ mov     x0,  x20                 // base FB
         subs    x21, x21, #1       // contador--
         cbnz    x21, nudillo3
 
-// CALLING FUNCTION STAR (X1, X2 -> X center, Y center)
-	mov     x0, x20
-	mov     x1, #200
-	mov     x2, #100
-	bl star
 
-	mov     x0, x20
-	mov     x1, #300
-	mov     x2, #125
-	bl star
-
-	mov     x0, x20
-	mov     x1, #250
-	mov     x2, #75
-	bl star
-
-
-
-// ---------- 3) GPIO DEMO + BUCLE INFINITO -----------------------
+// ---------- 4) GPIO DEMO + BUCLE INFINITO -----------------------
         //mov     x9,  GPIO_BASE
         //str     wzr, [x9, GPIO_GPFSEL0]  // GPIO 0-9 como entrada
         //ldr     w10, [x9, GPIO_GPLEV0]   // lee 32 bits
