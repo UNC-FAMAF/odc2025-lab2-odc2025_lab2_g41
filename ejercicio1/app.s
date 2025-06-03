@@ -556,6 +556,7 @@ main:
         mov     x20, x0                      // guarda FB base
 
 // --------------- 1) PINTAR EL FONDO COMPLETO -------------------------
+        // PINTAR EL FONDO (RECTANGULOS)
         mov     x0,  x20                     // base FB
         mov     x1,  #0                      // EJE X
         mov     x2,  #0                      // EJE Y
@@ -915,7 +916,7 @@ main:
 
 
 // --------------- 4) ODC ENGRAVING ----------------------------------
-        //O
+        // O
         mov     x0,  x20                     // base FB
         mov     x1,  #300                    // EJE X
         mov     x2,  #225                    // EJE Y
@@ -948,7 +949,7 @@ main:
         set_color x5, 0x4, 0x1839            // #041839
         bl      draw_rectangle
 
-        //D
+        // D
         mov     x0,  x20                     // base FB
         mov     x1,  #315                    // EJE X
         mov     x2,  #223                    // EJE Y
@@ -981,7 +982,7 @@ main:
         set_color x5, 0x4, 0x1839            // #041839
         bl      draw_rectangle
 
-        //C
+        // C
         mov     x0,  x20                     // base FB
         mov     x1,  #330                    // EJE X
         mov     x2,  #225                    // EJE Y
@@ -1006,7 +1007,7 @@ main:
         set_color x5, 0x4, 0x1839            // #041839
         bl      draw_rectangle
 
-        //2
+        // 2
         mov     x0,  x20                     // base FB
         mov     x1,  #302                    // EJE X
         mov     x2,  #262                    // EJE Y
@@ -1047,7 +1048,7 @@ main:
         set_color x5, 0x4, 0x1839            // #041839
         bl      draw_rectangle
 
-        //0
+        // 0
         mov     x0,  x20                     // base FB
         mov     x1,  #314                    // EJE X
         mov     x2,  #246                    // EJE Y
@@ -1080,7 +1081,7 @@ main:
         set_color x5, 0x4, 0x1839            // #041839
         bl      draw_rectangle
 
-        //2
+        // 2
         mov     x0,  x20                     // base FB
         mov     x1,  #326                    // EJE X
         mov     x2,  #262                    // EJE Y
@@ -1121,7 +1122,7 @@ main:
         set_color x5, 0x4, 0x1839            // #041839
         bl      draw_rectangle
 
-        //5
+        // 5
         mov     x0,  x20                     // base FB
         mov     x1,  #338                    // EJE X
         mov     x2,  #262                    // EJE Y
@@ -1586,7 +1587,6 @@ main:
         subs    x21, x21, #1                 // contador--
         cbnz    x21, nudillo1
 
-
         // 2DO NUDILLO
         mov     x20, x0                      // framebuffer base
         mov     x21, #12                     // contador (10 rectángulos)
@@ -1608,7 +1608,6 @@ main:
         sub     x23, x23, #2
         subs    x21, x21, #1                 // contador--
         cbnz    x21, nudillo2
-
 
         // 3ER NUDILLO
         mov     x20, x0                      // framebuffer base
