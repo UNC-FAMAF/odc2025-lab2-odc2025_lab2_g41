@@ -261,8 +261,15 @@ firstLine:
         bl      draw_rectangle               // Dibujar bloque
 
         add     x14, x14, #12                // Avanzar p�xeles: pintados + sin pintar
+
+        add     x11, x14, x3
+        cmp     x11, SCREEN_WIDTH
+        b.ge    nextLine                    // Si se pas� del ancho, salir
+
         cmp     x14, SCREEN_WIDTH
         b.lt    firstLine                    // Seguir si no se pas� del ancho
+
+nextLine:
 
         subs    x12, x12, #1                 // Lineas restantes
         b.eq    endTransition                // Si ya no quedan lineas, salir
@@ -278,8 +285,15 @@ secondLine:
         bl      draw_rectangle
 
         add     x14, x14, #10 
+
+        add     x11, x14, x3
+        cmp     x11, SCREEN_WIDTH
+        b.ge    nextLine1                    // Si se pas� del ancho, salir
+
         cmp     x14, SCREEN_WIDTH
         b.lt    secondLine
+
+nextLine1:
 
         subs    x12, x12, #1                 // Lineas restantes
         b.eq    endTransition                // Si ya no quedan lineas, salir
@@ -295,8 +309,15 @@ thirdLine:
         bl      draw_rectangle
 
         add     x14, x14, #8 
+
+        add     x11, x14, x3
+        cmp     x11, SCREEN_WIDTH
+        b.ge    nextLine2                    // Si se pas� del ancho, salir
+
         cmp     x14, SCREEN_WIDTH
         b.lt    thirdLine
+
+nextLine2:
 
         subs    x12, x12, #1                 // Lineas restantes
         b.eq    endTransition                // Si ya no quedan lineas, salir
@@ -312,8 +333,15 @@ fourthLine:
         bl      draw_rectangle
 
         add     x14, x14, #6 
+
+        add     x11, x14, x3
+        cmp     x11, SCREEN_WIDTH
+        b.ge    nextLine3                    // Si se pas� del ancho, salir
+
         cmp     x14, SCREEN_WIDTH
         b.lt    fourthLine
+
+nextLine3:
 
         subs    x12, x12, #1                 // Lineas restantes
         b.eq    endTransition                // Si ya no quedan lineas, salir
@@ -329,8 +357,15 @@ fifthLine:
         bl      draw_rectangle
 
         add     x14, x14, #4 
+
+        add     x11, x14, x3
+        cmp     x11, SCREEN_WIDTH
+        b.ge    nextLine4                    // Si se pas� del ancho, salir
+
         cmp     x14, SCREEN_WIDTH
         b.lt    fifthLine
+
+nextLine4:
 
         subs    x12, x12, #1                 // Lineas restantes
         b.eq    endTransition                // Si ya no quedan lineas, salir
@@ -346,6 +381,11 @@ sixthLine:
         bl      draw_rectangle
 
         add     x14, x14, #2 
+
+        add     x11, x14, x3
+        cmp     x11, SCREEN_WIDTH
+        b.ge    endTransition                    // Si se pas� del ancho, salir
+        
         cmp     x14, SCREEN_WIDTH
         b.lt    sixthLine
 
@@ -378,8 +418,15 @@ firstLineInv:
         bl      draw_rectangle               // Dibujar bloque
 
         add     x14, x14, #12                // Avanzar p�xeles: pintados + sin pintar
+
+        add     x11, x14, x3
+        cmp     x11, SCREEN_WIDTH
+        b.ge    nextLine01                    // Si se pas� del ancho, salir
+
         cmp     x14, SCREEN_WIDTH
         b.lt    firstLineInv                 // Seguir si no se pas� del ancho
+
+nextLine01:
 
         sub    x12, x12, #1                  // Lineas restantes
         cbz    x12, endTransitionInv         // Si ya no quedan lineas, salir
@@ -394,9 +441,16 @@ secondLineInv:
         mov     x4, #2
         bl      draw_rectangle
 
-        add     x14, x14, #4
+        add     x14, x14, #10
+
+        add     x11, x14, x3
+        cmp     x11, SCREEN_WIDTH
+        b.ge    nextLine02                    // Si se pas� del ancho, salir
+
         cmp     x14, SCREEN_WIDTH
         b.lt    secondLineInv
+
+nextLine02:
 
         sub    x12, x12, #1                  // Lineas restantes
         cbz    x12, endTransitionInv         // Si ya no quedan lineas, salir
@@ -412,8 +466,15 @@ thirdLineInv:
         bl      draw_rectangle
 
         add     x14, x14, #8 
+
+        add     x11, x14, x3
+        cmp     x11, SCREEN_WIDTH
+        b.ge    nextLine03                    // Si se pas� del ancho, salir
+
         cmp     x14, SCREEN_WIDTH
         b.lt    thirdLineInv
+
+nextLine03:
 
         sub    x12, x12, #1                  // Lineas restantes
         cbz    x12, endTransitionInv         // Si ya no quedan lineas, salir
@@ -429,8 +490,15 @@ fourthLineInv:
         bl      draw_rectangle
 
         add     x14, x14, #6 
+
+        add     x11, x14, x3
+        cmp     x11, SCREEN_WIDTH
+        b.ge    nextLine04                    // Si se pas� del ancho, salir
+
         cmp     x14, SCREEN_WIDTH
         b.lt    fourthLineInv
+
+nextLine04:
 
         sub    x12, x12, #1                  // Lineas restantes
         cbz    x12, endTransitionInv         // Si ya no quedan lineas, salir
@@ -446,8 +514,15 @@ fifthLineInv:
         bl      draw_rectangle
 
         add     x14, x14, #4
+
+        add     x11, x14, x3
+        cmp     x11, SCREEN_WIDTH
+        b.ge    nextLine05                    // Si se pas� del ancho, salir
+
         cmp     x14, SCREEN_WIDTH
         b.lt    fifthLineInv
+
+nextLine05:
 
         sub    x12, x12, #1                  // Lineas restantes
         cbz    x12, endTransitionInv         // Si ya no quedan lineas, salir
@@ -463,6 +538,11 @@ sixthLineInv:
         bl      draw_rectangle
 
         add     x14, x14, #2 
+
+        add     x11, x14, x3
+        cmp     x11, SCREEN_WIDTH
+        b.ge    endTransitionInv                    // Si se pas� del ancho, salir
+
         cmp     x14, SCREEN_WIDTH
         b.lt    sixthLineInv
 
@@ -1205,7 +1285,7 @@ main:
         bl      draw_transition
 
         mov     x0,  x20                 // base FB
-        mov     x1,  #380               // EJE X
+        mov     x1,  #385               // EJE X
         mov     x2,  #224               // EJE Y
         mov     x6,  #5                 // Largo del loop
         set_color    x5, 0x78, 0xc6fa
