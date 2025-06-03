@@ -215,14 +215,12 @@ star:
     // Parte central
     mov     x3, #5                       // Ancho
     mov     x4, #5                       // Alto
-    movz    x5, 0x3B, lsl 16             // Color del centro #3b8fae
-    movk    x5, 0x8FAE, lsl 0
+    set_color x5, 0x3B, 0x8FAE           // Color del centro #3B8FAE
     bl      draw_rectangle
 
     // Parte superior e inferior
-    sub     x2, x2, #10                    // Subir del centro (5*2)
-    movz    x5, 0x14, lsl 16		  // Color de alrededor #14366d
-    movk    x5, 0x366D, lsl 0
+    sub     x2, x2, #10                   // Subir del centro (5*2)
+    set_color x5, 0x14, 0x366D            // Color de alrededor #14366D
     bl      draw_rectangle
     add     x2, x2, #5                    // Bajar del centro
     bl      draw_rectangle
@@ -551,90 +549,93 @@ endTransitionInv:
         ldp     x30, x12, [sp], 32
         ret
 
+
+// -----------------------------------------------------------------------------------------------
 main:
         // x0 llega con la base del framebuffer
-        mov     x20, x0                  // guarda FB base
+        mov     x20, x0                      // guarda FB base
 
-// ---------- 1) PINTAR EL FONDO COMPLETO -------------------------
-        mov     x0,  x20                 // base FB
-        mov     x1,  #0                  // EJE X
-        mov     x2,  #0                  // EJE Y
-        mov     x3,  SCREEN_WIDTH        // ANCHO
-        mov     x4,  SCREEN_HEIGH / 4    // ALTO
-        set_color x5, 0x16, 0x042F      //#16042F
+// --------------- 1) PINTAR EL FONDO COMPLETO -------------------------
+        mov     x0,  x20                     // base FB
+        mov     x1,  #0                      // EJE X
+        mov     x2,  #0                      // EJE Y
+        mov     x3,  SCREEN_WIDTH            // ANCHO
+        mov     x4,  SCREEN_HEIGH / 4        // ALTO
+        set_color x5, 0x16, 0x42F            // #16042F
         bl      draw_rectangle
 
-        mov     x0,  x20                 // base FB
-        mov     x1,  #0                  // EJE X
-        mov     x2,  SCREEN_HEIGH / 4    // EJE Y
-        mov     x3,  SCREEN_WIDTH        // ANCHO
-        mov     x4,  SCREEN_HEIGH / 4    // ALTO
-        set_color x5, 0x1A, 0x0633      //#1A0633
+        mov     x0,  x20                     // base FB
+        mov     x1,  #0                      // EJE X
+        mov     x2,  SCREEN_HEIGH / 4        // EJE Y
+        mov     x3,  SCREEN_WIDTH            // ANCHO
+        mov     x4,  SCREEN_HEIGH / 4        // ALTO
+        set_color x5, 0x1A, 0x633            // #1A0633
         bl      draw_rectangle
 
-        mov     x0,  x20                 // base FB
-        mov     x1,  #0                  // EJE X
-        mov     x2,  SCREEN_HEIGH / 2    // EJE Y
-        mov     x3,  SCREEN_WIDTH        // ANCHO
-        mov     x4,  SCREEN_HEIGH / 4    // ALTO
-        set_color x5, 0x1E, 0x0837      //#1E0837
+        mov     x0,  x20                     // base FB
+        mov     x1,  #0                      // EJE X
+        mov     x2,  SCREEN_HEIGH / 2        // EJE Y
+        mov     x3,  SCREEN_WIDTH            // ANCHO
+        mov     x4,  SCREEN_HEIGH / 4        // ALTO
+        set_color x5, 0x1E, 0x837            // #1E0837
         bl      draw_rectangle
 
-        mov     x0,  x20                 // base FB
-        mov     x1,  #0                  // EJE X
-        mov     x2,  SCREEN_HEIGH *3 /4  // EJE Y
-        mov     x3,  SCREEN_WIDTH        // ANCHO
-        mov     x4,  SCREEN_HEIGH / 4    // ALTO
-        set_color x5, 0x22, 0x0A3B      //#220A3B
+        mov     x0,  x20                     // base FB
+        mov     x1,  #0                      // EJE X
+        mov     x2,  SCREEN_HEIGH *3 /4      // EJE Y
+        mov     x3,  SCREEN_WIDTH            // ANCHO
+        mov     x4,  SCREEN_HEIGH / 4        // ALTO
+        set_color x5, 0x22, 0xA3B            // #220A3B
         bl      draw_rectangle
 
         // TRANSICIONES ENTRE COLORES
         // 1ER TRANSICION
-        mov     x0,  x20                  // base FB
-        add     x1, xzr, xzr             // EJE X = 0
-        mov     x2, SCREEN_HEIGH / 4
-        set_color x5, 0x1A, 0x0633        //#1A0633
-        mov     x6,  #6                   // Largo del loop
-        bl      draw_transition           // Call function
+        mov     x0,  x20                     // base FB
+        add     x1, xzr, xzr                 // EJE X = 0
+        mov     x2, SCREEN_HEIGH / 4         // EJE Y
+        set_color x5, 0x1A, 0x633            // #1A0633
+        mov     x6,  #6                      // Largo del loop
+        bl      draw_transition              // Call function
 
-        mov     x0,  x20                  // base FB
-        add     x1, xzr, xzr             // EJE X = 0
-        mov     x2, SCREEN_HEIGH / 4 + 5
-        set_color x5, 0x1A, 0x0633        //#1A0633
-        mov     x6,  #6                   // Largo del loop
-        bl      draw_transition           // Call function
+        mov     x0,  x20                     // base FB
+        add     x1, xzr, xzr                 // EJE X = 0
+        mov     x2, SCREEN_HEIGH / 4 + 5     // EJE Y
+        set_color x5, 0x1A, 0x633            // #1A0633
+        mov     x6,  #6                      // Largo del loop
+        bl      draw_transition              // Call function
 
         // 2DA TRANSICION
-        mov     x0,  x20                  // base FB
-        add     x1, xzr, xzr             // EJE X = 0
-        mov     x2, SCREEN_HEIGH / 2
-        set_color x5, 0x1E, 0x0837        //#1E0837
-        mov     x6,  #6                   // Largo del loop
-        bl      draw_transition           // Call function
+        mov     x0,  x20                     // base FB
+        add     x1, xzr, xzr                 // EJE X = 0
+        mov     x2, SCREEN_HEIGH / 2         // EJE Y
+        set_color x5, 0x1E, 0x837            // #1E0837
+        mov     x6,  #6                      // Largo del loop
+        bl      draw_transition              // Call function
 
-        mov     x0,  x20                  // base FB
-        add     x1, xzr, xzr             // EJE X = 0
-        mov     x2, SCREEN_HEIGH / 2 + 5
-        set_color x5, 0x1E, 0x0837        //#1E0837
-        mov     x6,  #6                   // Largo del loop
-        bl      draw_transition           // Call function
+        mov     x0,  x20                     // base FB
+        add     x1, xzr, xzr                 // EJE X = 0
+        mov     x2, SCREEN_HEIGH / 2 + 5     // EJE Y
+        set_color x5, 0x1E, 0x837            // #1E0837
+        mov     x6,  #6                      // Largo del loop
+        bl      draw_transition              // Call function
 
         // 3RA TRANSICION
-        mov     x0,  x20                  // base FB
-        add     x1, xzr, xzr             // EJE X = 0
-        mov     x2, SCREEN_HEIGH * 3 / 4
-        set_color x5, 0x22, 0x0A3B        //#220A3B
-        mov     x6,  #6                   // Largo del loop
-        bl      draw_transition           // Call function
+        mov     x0,  x20                     // base FB
+        add     x1, xzr, xzr                 // EJE X = 0
+        mov     x2, SCREEN_HEIGH * 3 / 4     // EJE Y
+        set_color x5, 0x22, 0xA3B            // #220A3B
+        mov     x6,  #6                      // Largo del loop
+        bl      draw_transition              // Call function
         
-        mov     x0,  x20                  // base FB
-        add     x1, xzr, xzr             // EJE X = 0
-        mov     x2, SCREEN_HEIGH * 3 / 4 + 5
-        set_color x5, 0x22, 0x0A3B        //#220A3B
-        mov     x6,  #6                   // Largo del loop
-        bl      draw_transition           // Call function
+        mov     x0,  x20                     // base FB
+        add     x1, xzr, xzr                 // EJE X = 0
+        mov     x2, SCREEN_HEIGH * 3 / 4 + 5 // EJE Y
+        set_color x5, 0x22, 0xA3B            // #220A3B
+        mov     x6,  #6                      // Largo del loop
+        bl      draw_transition              // Call function
 
-// ---------- 2) DETALLES DEL FONDO -------------------------------
+
+// --------------- 2) DETALLES DEL FONDO -------------------------------
         // CALLING FUNCTION STAR (X1, X2 -> X center, Y center)
 	mov     x0, x20
 	mov     x1, #20
@@ -721,1043 +722,918 @@ main:
 	mov     x2, #460
 	bl star
 
-// ---------- 3) DIBUJO DE FIGURAS --------------------------------
-// -- MANGO DEL SABLE DE LUZ -----------------------------
-        mov     x0,  x20                 // base FB
-        mov     x1,  #50                // EJE X
-        mov     x2,  #220               // EJE Y
-        mov     x3,  #330                // ANCHO
-        mov     x4,  #50                // ALTO
-        movz    x5, 0x0c, lsl 16
-        movk    x5, 0x3172, lsl 0       // x5 = 0000 0000 0083 15c7
+
+// --------------- 3) DIBUJO DE FIGURAS --------------------------------
+        // MANGO DEL SABLE DE LUZ
+        mov     x0,  x20                     // base FB
+        mov     x1,  #50                     // EJE X
+        mov     x2,  #220                    // EJE Y
+        mov     x3,  #330                    // ANCHO
+        mov     x4,  #50                     // ALTO
+        set_color x5, 0xc, 0x3172            // #0C3172
+        bl      draw_rectangle
+
+        // DETALLES MANGO
+        // EMISOR
+        mov     x0,  x20                     // base FB
+        mov     x1,  #375                    // EJE X
+        mov     x2,  #220                    // EJE Y
+        mov     x3,  #5                      // ANCHO
+        mov     x4,  #50                     // ALTO
+        set_color x5, 0x4, 0x1839            // #041839
+        bl      draw_rectangle
+
+        mov     x0,  x20                     // base FB
+        mov     x1,  #370                    // EJE X
+        mov     x2,  #223                    // EJE Y
+        mov     x3,  #5                      // ANCHO
+        mov     x4,  #45                     // ALTO
+        set_color x5, 0x4, 0x1839            // #041839
+        bl      draw_rectangle
+
+        // ALETITA
+        mov     x0,  x20                     // base FB
+        mov     x1,  #362                    // EJE X
+        mov     x2,  #270                    // EJE Y
+        mov     x3,  #1                      // ANCHO
+        mov     x4,  #20                     // ALTO
+        set_color x5, 0x4, 0x1839            // #041839
+        bl      draw_rectangle
+
+        mov     x0,  x20                     // base FB
+        mov     x1,  #360                    // EJE X
+        mov     x2,  #270                    // EJE Y
+        mov     x3,  #2                      // ANCHO
+        mov     x4,  #25                     // ALTO
+        set_color x5, 0x4, 0x1839            // #041839
+        bl      draw_rectangle
+
+        mov     x0,  x20                     // base FB
+        mov     x1,  #358                    // EJE X
+        mov     x2,  #270                    // EJE Y
+        mov     x3,  #2                      // ANCHO
+        mov     x4,  #28                     // ALTO
+        set_color x5, 0x4, 0x1839            // #041839
+        bl      draw_rectangle
+
+        mov     x0,  x20                     // base FB
+        mov     x1,  #356                    // EJE X
+        mov     x2,  #270                    // EJE Y
+        mov     x3,  #2                      // ANCHO
+        mov     x4,  #30                     // ALTO
+        set_color x5, 0xc, 0x3172            // #0C3172
+        bl      draw_rectangle
+
+        mov     x0,  x20                     // base FB
+        mov     x1,  #354                    // EJE X
+        mov     x2,  #270                    // EJE Y
+        mov     x3,  #2                      // ANCHO
+        mov     x4,  #30                     // ALTO
+        set_color x5, 0xc, 0x3172            // #0C3172
+        bl      draw_rectangle
+
+        mov     x0,  x20                     // base FB
+        mov     x1,  #352                    // EJE X
+        mov     x2,  #270                    // EJE Y
+        mov     x3,  #2                      // ANCHO
+        mov     x4,  #30                     // ALTO
+        set_color x5, 0xc, 0x3172            // #0C3172
+        bl      draw_rectangle
+
+        mov     x0,  x20                     // base FB
+        mov     x1,  #350                    // EJE X
+        mov     x2,  #270                    // EJE Y
+        mov     x3,  #2                      // ANCHO
+        mov     x4,  #28                     // ALTO
+        set_color x5, 0xc, 0x3172            // #0C3172
+        bl      draw_rectangle
+
+        mov     x0,  x20                     // base FB
+        mov     x1,  #348                    // EJE X
+        mov     x2,  #270                    // EJE Y
+        mov     x3,  #2                      // ANCHO
+        mov     x4,  #26                     // ALTO
+        set_color x5, 0xc, 0x3172            // #0C3172
+        bl      draw_rectangle
+
+        mov     x0,  x20                     // base FB
+        mov     x1,  #347                    // EJE X
+        mov     x2,  #270                    // EJE Y
+        mov     x3,  #1                      // ANCHO
+        mov     x4,  #23                     // ALTO
+        set_color x5, 0xc, 0x3172            // #0C3172
+        bl      draw_rectangle
+
+        mov     x0,  x20                     // base FB
+        mov     x1,  #346                    // EJE X
+        mov     x2,  #270                    // EJE Y
+        mov     x3,  #1                      // ANCHO
+        mov     x4,  #18                     // ALTO
+        set_color x5, 0xc, 0x3172            // #0C3172
+        bl      draw_rectangle
+
+        mov     x0,  x20                     // base FB
+        mov     x1,  #340                    // EJE X
+        mov     x2,  #270                    // EJE Y
+        mov     x3,  #6                      // ANCHO
+        mov     x4,  #16                     // ALTO
+        set_color x5, 0xc, 0x3172            // #0C3172
+        bl      draw_rectangle
+
+        mov     x0,  x20                     // base FB
+        mov     x1,  #339                    // EJE X
+        mov     x2,  #270                    // EJE Y
+        mov     x3,  #1                      // ANCHO
+        mov     x4,  #14                     // ALTO
+        set_color x5, 0xc, 0x3172            // #0C3172
+        bl      draw_rectangle
+
+        mov     x0,  x20                     // base FB
+        mov     x1,  #338                    // EJE X
+        mov     x2,  #270                    // EJE Y
+        mov     x3,  #1                      // ANCHO
+        mov     x4,  #12                     // ALTO
+        set_color x5, 0xc, 0x3172            // #0C3172
+        bl      draw_rectangle
+
+        mov     x0,  x20                     // base FB
+        mov     x1,  #337                    // EJE X
+        mov     x2,  #270                    // EJE Y
+        mov     x3,  #1                      // ANCHO
+        mov     x4,  #10                     // ALTO
+        set_color x5, 0x4, 0x1839            // #041839
+        bl      draw_rectangle
+
+        // GRIP
+        mov     x0,  x20                     // base FB
+        mov     x1,  #50                     // EJE X
+        mov     x2,  #260                    // EJE Y
+        mov     x3,  #60                     // ANCHO
+        mov     x4,  #5                      // ALTO
+        set_color x5, 0x4, 0x1839            // #041839
+        bl      draw_rectangle
+
+        mov     x0,  x20                     // base FB
+        mov     x1,  #50                     // EJE X
+        mov     x2,  #243                    // EJE Y
+        mov     x3,  #80                     // ANCHO
+        mov     x4,  #5                      // ALTO
+        set_color x5, 0x4, 0x1839            // #041839
+        bl      draw_rectangle
+
+        mov     x0,  x20                     // base FB
+        mov     x1,  #50                     // EJE X
+        mov     x2,  #225                    // EJE Y
+        mov     x3,  #80                     // ANCHO
+        mov     x4,  #5                      // ALTO
+        set_color x5, 0x4, 0x1839            // #041839
+        bl      draw_rectangle
+
+        mov     x0,  x20                     // base FB
+        mov     x1,  #130                    // EJE X
+        mov     x2,  #226                    // EJE Y
+        mov     x3,  #4                      // ANCHO
+        mov     x4,  #3                      // ALTO
+        set_color x5, 0x4, 0x1839            // #041839
+        bl      draw_rectangle
+
+        mov     x0,  x20                     // base FB
+        mov     x1,  #130                    // EJE X
+        mov     x2,  #244                    // EJE Y
+        mov     x3,  #4                      // ANCHO
+        mov     x4,  #3                      // ALTO
+        set_color x5, 0x4, 0x1839            // #041839
+        bl      draw_rectangle
+
+        mov     x0,  x20                     // base FB
+        mov     x1,  #47                     // EJE X
+        mov     x2,  #221                    // EJE Y
+        mov     x3,  #3                      // ANCHO
+        mov     x4,  #48                     // ALTO
+        set_color x5, 0x4, 0x1839            // #041839
         bl      draw_rectangle
 
 
-//DETALLES MANGO
-// EMISOR
-        mov     x0,  x20                 // base FB
-        mov     x1,  #375               // EJE X
-        mov     x2,  #220               // EJE Y
-        mov     x3,  #5                // ANCHO
-        mov     x4,  #50                // ALTO
-        movz    x5, 0x04, lsl 16
-        movk    x5, 0x1839, lsl 0
+// --------------- 4) ODC ENGRAVING ----------------------------------
+        //O
+        mov     x0,  x20                     // base FB
+        mov     x1,  #300                    // EJE X
+        mov     x2,  #225                    // EJE Y
+        mov     x3,  #3                      // ANCHO
+        mov     x4,  #13                     // ALTO
+        set_color x5, 0x4, 0x1839            // #041839
         bl      draw_rectangle
 
-        mov     x0,  x20                 // base FB
-        mov     x1,  #370               // EJE X
-        mov     x2,  #223               // EJE Y
-        mov     x3,  #5                // ANCHO
-        mov     x4,  #45                // ALTO
-        movz    x5, 0x04, lsl 16
-        movk    x5, 0x1839, lsl 0
+        mov     x0,  x20                     // base FB
+        mov     x1,  #310                    // EJE X
+        mov     x2,  #225                    // EJE Y
+        mov     x3,  #3                      // ANCHO
+        mov     x4,  #13                     // ALTO
+        set_color x5, 0x4, 0x1839            // #041839
         bl      draw_rectangle
 
-// ALETITA
-        mov     x0,  x20                 // base FB
-        mov     x1,  #362               // EJE X
-        mov     x2,  #270               // EJE Y
-        mov     x3,  #1                // ANCHO
-        mov     x4,  #20                // ALTO
-        movz    x5, 0x04, lsl 16
-        movk    x5, 0x1839, lsl 0
+        mov     x0,  x20                     // base FB
+        mov     x1,  #303                    // EJE X
+        mov     x2,  #223                    // EJE Y
+        mov     x3,  #7                      // ANCHO
+        mov     x4,  #2                      // ALTO
+        set_color x5, 0x4, 0x1839            // #041839
         bl      draw_rectangle
 
-        mov     x0,  x20                 // base FB
-        mov     x1,  #360               // EJE X
-        mov     x2,  #270               // EJE Y
-        mov     x3,  #2                // ANCHO
-        mov     x4,  #25                // ALTO
-        movz    x5, 0x04, lsl 16
-        movk    x5, 0x1839, lsl 0
+        mov     x0,  x20                     // base FB
+        mov     x1,  #303                    // EJE X
+        mov     x2,  #238                    // EJE Y
+        mov     x3,  #7                      // ANCHO
+        mov     x4,  #2                      // ALTO
+        set_color x5, 0x4, 0x1839            // #041839
         bl      draw_rectangle
 
-        mov     x0,  x20                 // base FB
-        mov     x1,  #358               // EJE X
-        mov     x2,  #270               // EJE Y
-        mov     x3,  #2                // ANCHO
-        mov     x4,  #28                // ALTO
-        movz    x5, 0x04, lsl 16
-        movk    x5, 0x1839, lsl 0
+        //D
+        mov     x0,  x20                     // base FB
+        mov     x1,  #315                    // EJE X
+        mov     x2,  #223                    // EJE Y
+        mov     x3,  #3                      // ANCHO
+        mov     x4,  #17                     // ALTO
+        set_color x5, 0x4, 0x1839            // #041839
         bl      draw_rectangle
 
-        mov     x0,  x20                 // base FB
-        mov     x1,  #356               // EJE X
-        mov     x2,  #270               // EJE Y
-        mov     x3,  #2                // ANCHO
-        mov     x4,  #30                // ALTO
-        movz    x5, 0x0c, lsl 16
-        movk    x5, 0x3172, lsl 0       // x5 = 0000 0000 0083 15c7
+        mov     x0,  x20                     // base FB
+        mov     x1,  #325                    // EJE X
+        mov     x2,  #225                    // EJE Y
+        mov     x3,  #3                      // ANCHO
+        mov     x4,  #13                     // ALTO
+        set_color x5, 0x4, 0x1839            // #041839
         bl      draw_rectangle
 
-        mov     x0,  x20                 // base FB
-        mov     x1,  #354               // EJE X
-        mov     x2,  #270               // EJE Y
-        mov     x3,  #2                // ANCHO
-        mov     x4,  #30                // ALTO
-        movz    x5, 0x0c, lsl 16
-        movk    x5, 0x3172, lsl 0       // x5 = 0000 0000 0083 15c7
+        mov     x0,  x20                     // base FB
+        mov     x1,  #318                    // EJE X
+        mov     x2,  #223                    // EJE Y
+        mov     x3,  #7                      // ANCHO
+        mov     x4,  #2                      // ALTO
+        set_color x5, 0x4, 0x1839            // #041839
         bl      draw_rectangle
 
-        mov     x0,  x20                 // base FB
-        mov     x1,  #352               // EJE X
-        mov     x2,  #270               // EJE Y
-        mov     x3,  #2                // ANCHO
-        mov     x4,  #30                // ALTO
-        movz    x5, 0x0c, lsl 16
-        movk    x5, 0x3172, lsl 0       // x5 = 0000 0000 0083 15c7
+        mov     x0,  x20                     // base FB
+        mov     x1,  #318                    // EJE X
+        mov     x2,  #238                    // EJE Y
+        mov     x3,  #7                      // ANCHO
+        mov     x4,  #2                      // ALTO
+        set_color x5, 0x4, 0x1839            // #041839
         bl      draw_rectangle
 
-        mov     x0,  x20                 // base FB
-        mov     x1,  #350               // EJE X
-        mov     x2,  #270               // EJE Y
-        mov     x3,  #2                // ANCHO
-        mov     x4,  #28                // ALTO
-        movz    x5, 0x0c, lsl 16
-        movk    x5, 0x3172, lsl 0       // x5 = 0000 0000 0083 15c7
+        //C
+        mov     x0,  x20                     // base FB
+        mov     x1,  #330                    // EJE X
+        mov     x2,  #225                    // EJE Y
+        mov     x3,  #3                      // ANCHO
+        mov     x4,  #13                     // ALTO
+        set_color x5, 0x4, 0x1839            // #041839
         bl      draw_rectangle
 
-        mov     x0,  x20                 // base FB
-        mov     x1,  #348               // EJE X
-        mov     x2,  #270               // EJE Y
-        mov     x3,  #2                // ANCHO
-        mov     x4,  #26                // ALTO
-        movz    x5, 0x0c, lsl 16
-        movk    x5, 0x3172, lsl 0       // x5 = 0000 0000 0083 15c7
+        mov     x0,  x20                     // base FB
+        mov     x1,  #333                    // EJE X
+        mov     x2,  #223                    // EJE Y
+        mov     x3,  #8                      // ANCHO
+        mov     x4,  #2                      // ALTO
+        set_color x5, 0x4, 0x1839            // #041839
         bl      draw_rectangle
 
-        mov     x0,  x20                 // base FB
-        mov     x1,  #347               // EJE X
-        mov     x2,  #270               // EJE Y
-        mov     x3,  #1               // ANCHO
-        mov     x4,  #23                // ALTO
-        movz    x5, 0x0c, lsl 16
-        movk    x5, 0x3172, lsl 0       // x5 = 0000 0000 0083 15c7
+        mov     x0,  x20                     // base FB
+        mov     x1,  #333                    // EJE X
+        mov     x2,  #238                    // EJE Y
+        mov     x3,  #8                      // ANCHO
+        mov     x4,  #2                      // ALTO
+        set_color x5, 0x4, 0x1839            // #041839
         bl      draw_rectangle
 
-        mov     x0,  x20                 // base FB
-        mov     x1,  #346               // EJE X
-        mov     x2,  #270               // EJE Y
-        mov     x3,  #1               // ANCHO
-        mov     x4,  #18                // ALTO
-        movz    x5, 0x0c, lsl 16
-        movk    x5, 0x3172, lsl 0       // x5 = 0000 0000 0083 15c7
+        //2
+        mov     x0,  x20                     // base FB
+        mov     x1,  #302                    // EJE X
+        mov     x2,  #262                    // EJE Y
+        mov     x3,  #6                      // ANCHO
+        mov     x4,  #2                      // ALTO
+        set_color x5, 0x4, 0x1839            // #041839
         bl      draw_rectangle
 
-        mov     x0,  x20                 // base FB
-        mov     x1,  #340               // EJE X
-        mov     x2,  #270               // EJE Y
-        mov     x3,  #6               // ANCHO
-        mov     x4,  #16                // ALTO
-        movz    x5, 0x0c, lsl 16
-        movk    x5, 0x3172, lsl 0       // x5 = 0000 0000 0083 15c7
+        mov     x0,  x20                     // base FB
+        mov     x1,  #302                    // EJE X
+        mov     x2,  #254                    // EJE Y
+        mov     x3,  #6                      // ANCHO
+        mov     x4,  #2                      // ALTO
+        set_color x5, 0x4, 0x1839            // #041839
         bl      draw_rectangle
 
-
-        mov     x0,  x20                 // base FB
-        mov     x1,  #339               // EJE X
-        mov     x2,  #270               // EJE Y
-        mov     x3,  #1               // ANCHO
-        mov     x4,  #14                // ALTO
-        movz    x5, 0x0c, lsl 16
-        movk    x5, 0x3172, lsl 0       // x5 = 0000 0000 0083 15c7
+        mov     x0,  x20                     // base FB
+        mov     x1,  #302                    // EJE X
+        mov     x2,  #246                    // EJE Y
+        mov     x3,  #6                      // ANCHO
+        mov     x4,  #2                      // ALTO
+        set_color x5, 0x4, 0x1839            // #041839
         bl      draw_rectangle
 
-
-        mov     x0,  x20                 // base FB
-        mov     x1,  #338               // EJE X
-        mov     x2,  #270               // EJE Y
-        mov     x3,  #1               // ANCHO
-        mov     x4,  #12                // ALTO
-        movz    x5, 0x0c, lsl 16
-        movk    x5, 0x3172, lsl 0       // x5 = 0000 0000 0083 15c7
+        mov     x0,  x20                     // base FB
+        mov     x1,  #308                    // EJE X
+        mov     x2,  #248                    // EJE Y
+        mov     x3,  #2                      // ANCHO
+        mov     x4,  #6                      // ALTO
+        set_color x5, 0x4, 0x1839            // #041839
         bl      draw_rectangle
 
-
-        mov     x0,  x20                 // base FB
-        mov     x1,  #337               // EJE X
-        mov     x2,  #270               // EJE Y
-        mov     x3,  #1               // ANCHO
-        mov     x4,  #10                // ALTO
-        movz    x5, 0x04, lsl 16
-        movk    x5, 0x1839, lsl 0
+        mov     x0,  x20                     // base FB
+        mov     x1,  #300                    // EJE X
+        mov     x2,  #256                    // EJE Y
+        mov     x3,  #2                      // ANCHO
+        mov     x4,  #6                      // ALTO
+        set_color x5, 0x4, 0x1839            // #041839
         bl      draw_rectangle
 
-//GRIP
-
-
-        mov     x0,  x20                 // base FB
-        mov     x1,  #50              // EJE X
-        mov     x2,  #260               // EJE Y
-        mov     x3,  #60               // ANCHO
-        mov     x4,  #5                // ALTO
-        movz    x5, 0x04, lsl 16
-        movk    x5, 0x1839, lsl 0
+        //0
+        mov     x0,  x20                     // base FB
+        mov     x1,  #314                    // EJE X
+        mov     x2,  #246                    // EJE Y
+        mov     x3,  #6                      // ANCHO
+        mov     x4,  #2                      // ALTO
+        set_color x5, 0x4, 0x1839            // #041839
         bl      draw_rectangle
 
-
-        mov     x0,  x20                 // base FB
-        mov     x1,  #50               // EJE X
-        mov     x2,  #243               // EJE Y
-        mov     x3,  #80               // ANCHO
-        mov     x4,  #5                // ALTO
-        movz    x5, 0x04, lsl 16
-        movk    x5, 0x1839, lsl 0
+        mov     x0,  x20                     // base FB
+        mov     x1,  #314                    // EJE X
+        mov     x2,  #262                    // EJE Y
+        mov     x3,  #6                      // ANCHO
+        mov     x4,  #2                      // ALTO
+        set_color x5, 0x4, 0x1839            // #041839
         bl      draw_rectangle
 
-
-        mov     x0,  x20                 // base FB
-        mov     x1,  #50               // EJE X
-        mov     x2,  #225               // EJE Y
-        mov     x3,  #80               // ANCHO
-        mov     x4,  #5                // ALTO
-        movz    x5, 0x04, lsl 16
-        movk    x5, 0x1839, lsl 0
+        mov     x0,  x20                     // base FB
+        mov     x1,  #312                    // EJE X
+        mov     x2,  #248                    // EJE Y
+        mov     x3,  #2                      // ANCHO
+        mov     x4,  #14                     // ALTO
+        set_color x5, 0x4, 0x1839            // #041839
         bl      draw_rectangle
 
-
-        mov     x0,  x20                 // base FB
-        mov     x1,  #130               // EJE X
-        mov     x2,  #226               // EJE Y
-        mov     x3,  #4               // ANCHO
-        mov     x4,  #3                // ALTO
-        movz    x5, 0x04, lsl 16
-        movk    x5, 0x1839, lsl 0
+        mov     x0,  x20                     // base FB
+        mov     x1,  #320                    // EJE X
+        mov     x2,  #248                    // EJE Y
+        mov     x3,  #2                      // ANCHO
+        mov     x4,  #14                     // ALTO
+        set_color x5, 0x4, 0x1839            // #041839
         bl      draw_rectangle
 
-
-        mov     x0,  x20                 // base FB
-        mov     x1,  #130               // EJE X
-        mov     x2,  #244               // EJE Y
-        mov     x3,  #4               // ANCHO
-        mov     x4,  #3                // ALTO
-        movz    x5, 0x04, lsl 16
-        movk    x5, 0x1839, lsl 0
+        //2
+        mov     x0,  x20                     // base FB
+        mov     x1,  #326                    // EJE X
+        mov     x2,  #262                    // EJE Y
+        mov     x3,  #6                      // ANCHO
+        mov     x4,  #2                      // ALTO
+        set_color x5, 0x4, 0x1839            // #041839
         bl      draw_rectangle
 
-        mov     x0,  x20                 // base FB
-        mov     x1,  #47               // EJE X
-        mov     x2,  #221               // EJE Y
-        mov     x3,  #3               // ANCHO
-        mov     x4,  #48                // ALTO
-        movz    x5, 0x04, lsl 16
-        movk    x5, 0x1839, lsl 0
+        mov     x0,  x20                     // base FB
+        mov     x1,  #326                    // EJE X
+        mov     x2,  #254                    // EJE Y
+        mov     x3,  #6                      // ANCHO
+        mov     x4,  #2                      // ALTO
+        set_color x5, 0x4, 0x1839            // #041839
         bl      draw_rectangle
 
-
-// ODC ENGRAVING
-//O
-        mov     x0,  x20                 // base FB
-        mov     x1,  #300               // EJE X
-        mov     x2,  #225               // EJE Y
-        mov     x3,  #3               // ANCHO
-        mov     x4,  #13                // ALTO
-        movz    x5, 0x04, lsl 16
-        movk    x5, 0x1839, lsl 0
+        mov     x0,  x20                     // base FB
+        mov     x1,  #326                    // EJE X
+        mov     x2,  #246                    // EJE Y
+        mov     x3,  #6                      // ANCHO
+        mov     x4,  #2                      // ALTO
+        set_color x5, 0x4, 0x1839            // #041839
         bl      draw_rectangle
 
-        mov     x0,  x20                 // base FB
-        mov     x1,  #310               // EJE X
-        mov     x2,  #225               // EJE Y
-        mov     x3,  #3               // ANCHO
-        mov     x4,  #13                // ALTO
-        movz    x5, 0x04, lsl 16
-        movk    x5, 0x1839, lsl 0
+        mov     x0,  x20                     // base FB
+        mov     x1,  #332                    // EJE X
+        mov     x2,  #248                    // EJE Y
+        mov     x3,  #2                      // ANCHO
+        mov     x4,  #6                      // ALTO
+        set_color x5, 0x4, 0x1839            // #041839
         bl      draw_rectangle
 
-
-        mov     x0,  x20                 // base FB
-        mov     x1,  #303               // EJE X
-        mov     x2,  #223               // EJE Y
-        mov     x3,  #7               // ANCHO
-        mov     x4,  #2                // ALTO
-        movz    x5, 0x04, lsl 16
-        movk    x5, 0x1839, lsl 0
+        mov     x0,  x20                     // base FB
+        mov     x1,  #324                    // EJE X
+        mov     x2,  #256                    // EJE Y
+        mov     x3,  #2                      // ANCHO
+        mov     x4,  #6                      // ALTO
+        set_color x5, 0x4, 0x1839            // #041839
         bl      draw_rectangle
 
-        mov     x0,  x20                 // base FB
-        mov     x1,  #303               // EJE X
-        mov     x2,  #238               // EJE Y
-        mov     x3,  #7               // ANCHO
-        mov     x4,  #2                // ALTO
-        movz    x5, 0x04, lsl 16
-        movk    x5, 0x1839, lsl 0
+        //5
+        mov     x0,  x20                     // base FB
+        mov     x1,  #338                    // EJE X
+        mov     x2,  #262                    // EJE Y
+        mov     x3,  #6                      // ANCHO
+        mov     x4,  #2                      // ALTO
+        set_color x5, 0x4, 0x1839            // #041839
+        bl      draw_rectangle
+
+        mov     x0,  x20                     // base FB
+        mov     x1,  #338                    // EJE X
+        mov     x2,  #254                    // EJE Y
+        mov     x3,  #6                      // ANCHO
+        mov     x4,  #2                      // ALTO
+        set_color x5, 0x4, 0x1839            // #041839
+        bl      draw_rectangle
+
+        mov     x0,  x20                     // base FB
+        mov     x1,  #338                    // EJE X
+        mov     x2,  #246                    // EJE Y
+        mov     x3,  #6                      // ANCHO
+        mov     x4,  #2                      // ALTO
+        set_color x5, 0x4, 0x1839            // #041839
+        bl      draw_rectangle
+
+        mov     x0,  x20                     // base FB
+        mov     x1,  #344                    // EJE X
+        mov     x2,  #256                    // EJE Y
+        mov     x3,  #2                      // ANCHO
+        mov     x4,  #6                      // ALTO
+        set_color x5, 0x4, 0x1839            // #041839
+        bl      draw_rectangle
+
+        mov     x0,  x20                     // base FB
+        mov     x1,  #336                    // EJE X
+        mov     x2,  #248                    // EJE Y
+        mov     x3,  #2                      // ANCHO
+        mov     x4,  #6                      // ALTO
+        set_color x5, 0x4, 0x1839            // #041839
         bl      draw_rectangle
 
 
-//D
-        mov     x0,  x20                 // base FB
-        mov     x1,  #315               // EJE X
-        mov     x2,  #223               // EJE Y
-        mov     x3,  #3               // ANCHO
-        mov     x4,  #17                // ALTO
-        movz    x5, 0x04, lsl 16
-        movk    x5, 0x1839, lsl 0
+// --------------- 5) HAZ DEL SABLE DE LUZ -----------------------------
+        // BASE DEL HAZ
+        mov     x0,  x20                     // base FB
+        mov     x1,  #376                    // EJE X
+        mov     x2,  #232                    // EJE Y
+        mov     x3,  #264                    // ANCHO
+        mov     x4,  #25                     // ALTO
+        set_color x5, 0xAD, 0xFFFF           // #ADFFFF
         bl      draw_rectangle
 
-        mov     x0,  x20                 // base FB
-        mov     x1,  #325               // EJE X
-        mov     x2,  #225               // EJE Y
-        mov     x3,  #3               // ANCHO
-        mov     x4,  #13                // ALTO
-        movz    x5, 0x04, lsl 16
-        movk    x5, 0x1839, lsl 0
+        // DETALLES DEL HAZ
+        mov     x0,  x20                     // base FB
+        mov     x1,  #376                    // EJE X
+        mov     x2,  #232                    // EJE Y
+        mov     x3,  #264                    // ANCHO
+        mov     x4,  #3                      // ALTO
+        set_color x5, 0x78, 0xC6FA           // #78C6FA
         bl      draw_rectangle
 
-
-        mov     x0,  x20                 // base FB
-        mov     x1,  #318               // EJE X
-        mov     x2,  #223               // EJE Y
-        mov     x3,  #7               // ANCHO
-        mov     x4,  #2                // ALTO
-        movz    x5, 0x04, lsl 16
-        movk    x5, 0x1839, lsl 0
+        mov     x0,  x20                     // base FB
+        mov     x1,  #376                    // EJE X
+        mov     x2,  #234                    // EJE Y
+        mov     x3,  #264                    // ANCHO
+        mov     x4,  #3                      // ALTO
+        set_color x5, 0x98, 0xD3FA           // #98D3FA
         bl      draw_rectangle
 
-        mov     x0,  x20                 // base FB
-        mov     x1,  #318               // EJE X
-        mov     x2,  #238               // EJE Y
-        mov     x3,  #7               // ANCHO
-        mov     x4,  #2                // ALTO
-        movz    x5, 0x04, lsl 16
-        movk    x5, 0x1839, lsl 0
+        mov     x0,  x20                     // base FB
+        mov     x1,  #376                    // EJE X
+        mov     x2,  #249                    // EJE Y
+        mov     x3,  #264                    // ANCHO
+        mov     x4,  #3                      // ALTO
+        set_color x5, 0xFF, 0xFFFF           // #FFFFFF
         bl      draw_rectangle
+        
 
-//C
-        mov     x0,  x20                 // base FB
-        mov     x1,  #330               // EJE X
-        mov     x2,  #225               // EJE Y
-        mov     x3,  #3               // ANCHO
-        mov     x4,  #13                // ALTO
-        movz    x5, 0x04, lsl 16
-        movk    x5, 0x1839, lsl 0
-        bl      draw_rectangle
-
-        mov     x0,  x20                 // base FB
-        mov     x1,  #333               // EJE X
-        mov     x2,  #223               // EJE Y
-        mov     x3,  #8               // ANCHO
-        mov     x4,  #2                // ALTO
-        movz    x5, 0x04, lsl 16
-        movk    x5, 0x1839, lsl 0
-        bl      draw_rectangle
-
-        mov     x0,  x20                 // base FB
-        mov     x1,  #333               // EJE X
-        mov     x2,  #238               // EJE Y
-        mov     x3,  #8               // ANCHO
-        mov     x4,  #2                // ALTO
-        movz    x5, 0x04, lsl 16
-        movk    x5, 0x1839, lsl 0
-        bl      draw_rectangle
-
-//2
-
-        mov     x0,  x20                 // base FB
-        mov     x1,  #302               // EJE X
-        mov     x2,  #262               // EJE Y
-        mov     x3,  #6               // ANCHO
-        mov     x4,  #2                // ALTO
-        movz    x5, 0x04, lsl 16
-        movk    x5, 0x1839, lsl 0
-        bl      draw_rectangle
-
-        mov     x0,  x20                 // base FB
-        mov     x1,  #302               // EJE X
-        mov     x2,  #254               // EJE Y
-        mov     x3,  #6               // ANCHO
-        mov     x4,  #2                // ALTO
-        movz    x5, 0x04, lsl 16
-        movk    x5, 0x1839, lsl 0
-        bl      draw_rectangle
-
-
-        mov     x0,  x20                 // base FB
-        mov     x1,  #302               // EJE X
-        mov     x2,  #246               // EJE Y
-        mov     x3,  #6               // ANCHO
-        mov     x4,  #2                // ALTO
-        movz    x5, 0x04, lsl 16
-        movk    x5, 0x1839, lsl 0
-        bl      draw_rectangle
-
-        mov     x0,  x20                 // base FB
-        mov     x1,  #308               // EJE X
-        mov     x2,  #248               // EJE Y
-        mov     x3,  #2               // ANCHO
-        mov     x4,  #6                // ALTO
-        movz    x5, 0x04, lsl 16
-        movk    x5, 0x1839, lsl 0
-        bl      draw_rectangle
-
-
-        mov     x0,  x20                 // base FB
-        mov     x1,  #300               // EJE X
-        mov     x2,  #256               // EJE Y
-        mov     x3,  #2               // ANCHO
-        mov     x4,  #6                // ALTO
-        movz    x5, 0x04, lsl 16
-        movk    x5, 0x1839, lsl 0
-        bl      draw_rectangle
-
-//0
-        mov     x0,  x20                 // base FB
-        mov     x1,  #314               // EJE X
-        mov     x2,  #246               // EJE Y
-        mov     x3,  #6               // ANCHO
-        mov     x4,  #2                // ALTO
-        movz    x5, 0x04, lsl 16
-        movk    x5, 0x1839, lsl 00
-        bl      draw_rectangle
-
-        mov     x0,  x20                 // base FB
-        mov     x1,  #314               // EJE X
-        mov     x2,  #262               // EJE Y
-        mov     x3,  #6               // ANCHO
-        mov     x4,  #2                // ALTO
-        movz    x5, 0x04, lsl 16
-        movk    x5, 0x1839, lsl 0
-        bl      draw_rectangle
-
-        mov     x0,  x20                 // base FB
-        mov     x1,  #312               // EJE X
-        mov     x2,  #248               // EJE Y
-        mov     x3,  #2               // ANCHO
-        mov     x4,  #14                // ALTO
-        movz    x5, 0x04, lsl 16
-        movk    x5, 0x1839, lsl 0
-        bl      draw_rectangle
-
-
-        mov     x0,  x20                 // base FB
-        mov     x1,  #320               // EJE X
-        mov     x2,  #248               // EJE Y
-        mov     x3,  #2               // ANCHO
-        mov     x4,  #14                // ALTO
-        movz    x5, 0x04, lsl 16
-        movk    x5, 0x1839, lsl 0
-        bl      draw_rectangle
-
-//2
-
-        mov     x0,  x20                 // base FB
-        mov     x1,  #326               // EJE X
-        mov     x2,  #262               // EJE Y
-        mov     x3,  #6               // ANCHO
-        mov     x4,  #2                // ALTO
-        movz    x5, 0x04, lsl 16
-        movk    x5, 0x1839, lsl 0
-        bl      draw_rectangle
-
-        mov     x0,  x20                 // base FB
-        mov     x1,  #326               // EJE X
-        mov     x2,  #254               // EJE Y
-        mov     x3,  #6               // ANCHO
-        mov     x4,  #2                // ALTO
-        movz    x5, 0x04, lsl 16
-        movk    x5, 0x1839, lsl 0
-        bl      draw_rectangle
-
-
-        mov     x0,  x20                 // base FB
-        mov     x1,  #326               // EJE X
-        mov     x2,  #246               // EJE Y
-        mov     x3,  #6               // ANCHO
-        mov     x4,  #2                // ALTO
-        movz    x5, 0x04, lsl 16
-        movk    x5, 0x1839, lsl 0
-        bl      draw_rectangle
-
-        mov     x0,  x20                 // base FB
-        mov     x1,  #332               // EJE X
-        mov     x2,  #248               // EJE Y
-        mov     x3,  #2               // ANCHO
-        mov     x4,  #6                // ALTO
-        movz    x5, 0x04, lsl 16
-        movk    x5, 0x1839, lsl 0
-        bl      draw_rectangle
-
-
-        mov     x0,  x20                 // base FB
-        mov     x1,  #324               // EJE X
-        mov     x2,  #256               // EJE Y
-        mov     x3,  #2               // ANCHO
-        mov     x4,  #6                // ALTO
-        movz    x5, 0x04, lsl 16
-        movk    x5, 0x1839, lsl 0
-        bl      draw_rectangle
-
-//5
-
-        mov     x0,  x20                 // base FB
-        mov     x1,  #338               // EJE X
-        mov     x2,  #262               // EJE Y
-        mov     x3,  #6               // ANCHO
-        mov     x4,  #2                // ALTO
-        movz    x5, 0x04, lsl 16
-        movk    x5, 0x1839, lsl 0
-        bl      draw_rectangle
-
-        mov     x0,  x20                 // base FB
-        mov     x1,  #338               // EJE X
-        mov     x2,  #254               // EJE Y
-        mov     x3,  #6               // ANCHO
-        mov     x4,  #2                // ALTO
-        movz    x5, 0x04, lsl 16
-        movk    x5, 0x1839, lsl 0
-        bl      draw_rectangle
-
-
-        mov     x0,  x20                 // base FB
-        mov     x1,  #338               // EJE X
-        mov     x2,  #246               // EJE Y
-        mov     x3,  #6               // ANCHO
-        mov     x4,  #2                // ALTO
-        movz    x5, 0x04, lsl 16
-        movk    x5, 0x1839, lsl 0
-        bl      draw_rectangle
-
-        mov     x0,  x20                 // base FB
-        mov     x1,  #344               // EJE X
-        mov     x2,  #256               // EJE Y
-        mov     x3,  #2               // ANCHO
-        mov     x4,  #6                // ALTO
-        movz    x5, 0x04, lsl 16
-        movk    x5, 0x1839, lsl 0
-        bl      draw_rectangle
-
-
-        mov     x0,  x20                 // base FB
-        mov     x1,  #336               // EJE X
-        mov     x2,  #248               // EJE Y
-        mov     x3,  #2               // ANCHO
-        mov     x4,  #6                // ALTO
-        movz    x5, 0x04, lsl 16
-        movk    x5, 0x1839, lsl 0
-        bl      draw_rectangle
-
-
-// -- HAZ DEL SABLE DE LUZ -----------------------------
-        mov     x0,  x20                 // base FB
-        mov     x1,  #376               // EJE X
-        mov     x2,  #232               // EJE Y
-        mov     x3,  #264                // ANCHO
-        mov     x4,  #25                // ALTO
-        movz    x5, 0xAD, lsl 16
-        movk    x5, 0xFFFF, lsl 0       // x5 = 0000 0000 0083 15c7
-        bl      draw_rectangle
-
-//DETALLES DEL HAZ
-        mov     x0,  x20                 // base FB
-        mov     x1,  #376               // EJE X
-        mov     x2,  #232               // EJE Y
-        mov     x3,  #264                // ANCHO
-        mov     x4,  #3                // ALTO
-        movz    x5, 0x78, lsl 16
-        movk    x5, 0xc6fa, lsl 0       // x5 = 0000 0000 0083 15c7
-        bl      draw_rectangle
-
-        mov     x0,  x20                 // base FB
-        mov     x1,  #376               // EJE X
-        mov     x2,  #234               // EJE Y
-        mov     x3,  #264                // ANCHO
-        mov     x4,  #3                // ALTO
-        movz    x5, 0x98, lsl 16
-        movk    x5, 0xd3fa, lsl 0       // x5 = 0000 0000 0083 15c7
-        bl      draw_rectangle
-
-        mov     x0,  x20                 // base FB
-        mov     x1,  #376               // EJE X
-        mov     x2,  #249               // EJE Y
-        mov     x3,  #264                // ANCHO
-        mov     x4,  #3                // ALTO
-        movz    x5, 0xFF, lsl 16
-        movk    x5, 0xFFFF, lsl 0       // x5 = 0000 0000 0083 15c7
-        bl      draw_rectangle
-
-// GLOW DEL SABLE ----------------------------------------------------------------------------
+// --------------- 6) GLOW DEL SABLE ------------------------------------
         // Glow superior
-        mov     x0,  x20                 // base FB
-        mov     x1,  #376               // EJE X
-        mov     x2,  #231               // EJE Y
-        mov     x6,  #5                 // Largo del loop
-        set_color    x5, 0x78, 0xc6fa
+        mov     x0,  x20                     // base FB
+        mov     x1,  #376                    // EJE X
+        mov     x2,  #231                    // EJE Y
+        mov     x6,  #5                      // Largo del loop
+        set_color    x5, 0x78, 0xC6FA        // #78C6FA
         bl      draw_transition
 
-        mov     x0,  x20                 // base FB
-        mov     x1,  #385               // EJE X
-        mov     x2,  #224               // EJE Y
-        mov     x6,  #5                 // Largo del loop
-        set_color    x5, 0x78, 0xc6fa
+        mov     x0,  x20                     // base FB
+        mov     x1,  #385                    // EJE X
+        mov     x2,  #224                    // EJE Y
+        mov     x6,  #5                      // Largo del loop
+        set_color    x5, 0x78, 0xC6FA        // #78C6FA
         bl      draw_transition_inverse
 
         // Glow inferior
-        mov     x0,  x20                 // base FB
-        mov     x1,  #376               // EJE X
-        mov     x2,  #255               // EJE Y
-        mov     x6,  #5                 // Largo del loop
-        set_color    x5, 0xad, 0xffff
+        mov     x0,  x20                     // base FB
+        mov     x1,  #376                    // EJE X
+        mov     x2,  #255                    // EJE Y
+        mov     x6,  #5                      // Largo del loop
+        set_color    x5, 0xAD, 0xFFFF        // #ADFFFF
         bl      draw_transition_inverse
 
-        mov     x0,  x20                 // base FB
-        mov     x1,  #379               // EJE X
-        mov     x2,  #264               // EJE Y
-        mov     x6,  #5                 // Largo del loop
-        set_color    x5, 0xad, 0xffff
+        mov     x0,  x20                     // base FB
+        mov     x1,  #379                    // EJE X
+        mov     x2,  #264                    // EJE Y
+        mov     x6,  #5                      // Largo del loop
+        set_color    x5, 0xAD, 0xFFFF        // #ADFFFF
         bl      draw_transition
 
-// BRAZO
-// LOOP1 -------------------------------------------------------------------------------------
-        mov     x20, x0            // framebuffer base
-        mov     x21, #10            // contador (10 rectángulos)
-        mov     x22, #0          // X inicial
-        mov     x23, #300          // Y fijo
-        mov     x24, #6           // ancho
-        mov     x25, #90           // alto
+
+// --------------- 7) BRAZO ---------------------------------------------
+        // LOOP1
+        mov     x20, x0                      // framebuffer base
+        mov     x21, #10                     // contador (10 rectángulos)
+        mov     x22, #0                      // X inicial
+        mov     x23, #300                    // Y fijo
+        mov     x24, #6                      // ancho
+        mov     x25, #90                     // alto
 
     rectLoop1:
-        mov     x0, x20            // framebuffer
-        mov     x1, x22            // X
-        mov     x2, x23            // Y
-        mov     x3, x24            // ancho
-        mov     x4, x25            // alto
-        movz    x5,  #0,     lsl 16
-        movk    x5,  #0x4782, lsl 0
+        mov     x0, x20                      // framebuffer
+        mov     x1, x22                      // X
+        mov     x2, x23                      // Y
+        mov     x3, x24                      // ancho
+        mov     x4, x25                      // alto
+        set_color x5, 0x0, 0x4782            // #004782
         bl      draw_rectangle
 
-        add     x22, x22, x24      // X += ancho → siguiente rectángulo a la derecha
+        add     x22, x22, x24                // X += ancho → siguiente rectángulo a la derecha
         sub     x23, x23, #2
-        subs    x21, x21, #1       // contador--
+        subs    x21, x21, #1                 // contador--
         cbnz    x21, rectLoop1
 
-// LOOP2 -------------------------------------------------------------------------------------
-        mov     x20, x0            // framebuffer base
-        mov     x21, #10            // contador (10 rectángulos)
-        mov     x22, #60          // X inicial
-        mov     x23, #280          // Y fijo
-        mov     x24, #6           // ancho
-        mov     x25, #90           // alto
+        // LOOP2
+        mov     x20, x0                      // framebuffer base
+        mov     x21, #10                     // contador (10 rectángulos)
+        mov     x22, #60                     // X inicial
+        mov     x23, #280                    // Y fijo
+        mov     x24, #6                      // ancho
+        mov     x25, #90                     // alto
 
     rectLoop2:
-        mov     x0, x20            // framebuffer
-        mov     x1, x22            // X
-        mov     x2, x23            // Y
-        mov     x3, x24            // ancho
-        mov     x4, x25            // alto
-        movz    x5,  #0,     lsl 16
-        movk    x5,  #0x4782, lsl 0
+        mov     x0, x20                      // framebuffer
+        mov     x1, x22                      // X
+        mov     x2, x23                      // Y
+        mov     x3, x24                      // ancho
+        mov     x4, x25                      // alto
+        set_color x5, 0x0, 0x4782            // #004782
         bl      draw_rectangle
 
-        add     x22, x22, x24      // X += ancho → siguiente rectángulo a la derecha
+        add     x22, x22, x24                // X += ancho → siguiente rectángulo a la derecha
         sub     x23, x23, #3
-        subs    x21, x21, #1       // contador--
+        subs    x21, x21, #1                 // contador--
         cbnz    x21, rectLoop2
 
-
-// LOOP3 -------------------------------------------------------------------------------------
-        mov     x20, x0            // framebuffer base
-        mov     x21, #10            // contador (10 rectángulos)
-        mov     x22, #120          // X inicial
-        mov     x23, #250          // Y fijo
-        mov     x24, #6           // ancho
-        mov     x25, #90           // alto
+        // LOOP3
+        mov     x20, x0                      // framebuffer base
+        mov     x21, #10                     // contador (10 rectángulos)
+        mov     x22, #120                    // X inicial
+        mov     x23, #250                    // Y fijo
+        mov     x24, #6                      // ancho
+        mov     x25, #90                     // alto
 
     rectLoop3:
-        mov     x0, x20            // framebuffer
-        mov     x1, x22            // X
-        mov     x2, x23            // Y
-        mov     x3, x24            // ancho
-        mov     x4, x25            // alto
-        movz    x5,  #0,     lsl 16
-        movk    x5,  #0x4782, lsl 0
+        mov     x0, x20                      // framebuffer
+        mov     x1, x22                      // X
+        mov     x2, x23                      // Y
+        mov     x3, x24                      // ancho
+        mov     x4, x25                      // alto
+        set_color x5, 0x0, 0x4782            // #004782
         bl      draw_rectangle
 
-        add     x22, x22, x24      // X += ancho → siguiente rectángulo a la derecha
+        add     x22, x22, x24                // X += ancho → siguiente rectángulo a la derecha
         sub     x23, x23, #4
-        subs    x21, x21, #1       // contador--
+        subs    x21, x21, #1                 // contador--
         cbnz    x21, rectLoop3
 
 
-
-
-
-//HAND -------------------------------------------------------------
-//DEDO GORDO
-        mov     x0,  x20                 // base FB
-        mov     x1,  #260               // EJE X
-        mov     x2,  #190             // EJE Y
-        mov     x3,  #6              // ANCHO
-        mov     x4,  #82                // ALTO
-        movz    x5,  #0x01,     lsl 16
-        movk    x5,  #0x2e54, lsl 0
+// --------------- 8) HAND ---------------------------------------------
+        // DEDO GORDO
+        mov     x0,  x20                     // base FB
+        mov     x1,  #260                    // EJE X
+        mov     x2,  #190                    // EJE Y
+        mov     x3,  #6                      // ANCHO
+        mov     x4,  #82                     // ALTO
+        set_color x5, 0x1, 0x2E54            // #012E54
         bl      draw_rectangle
 
-        mov     x0,  x20                 // base FB
-        mov     x1,  #266               // EJE X
-        mov     x2,  #190             // EJE Y
-        mov     x3,  #6              // ANCHO
-        mov     x4,  #82                // ALTO
-        movz    x5,  #0x01,     lsl 16
-        movk    x5,  #0x2e54, lsl 0
+        mov     x0,  x20                     // base FB
+        mov     x1,  #266                    // EJE X
+        mov     x2,  #190                    // EJE Y
+        mov     x3,  #6                      // ANCHO
+        mov     x4,  #82                     // ALTO
+        set_color x5, 0x1, 0x2E54            // #012E54
         bl      draw_rectangle
 
-        mov     x0,  x20                 // base FB
-        mov     x1,  #272               // EJE X
-        mov     x2,  #190             // EJE Y
-        mov     x3,  #6              // ANCHO
-        mov     x4,  #82                // ALTO
-        movz    x5,  #0x01,     lsl 16
-        movk    x5,  #0x2e54, lsl 0
+        mov     x0,  x20                     // base FB
+        mov     x1,  #272                    // EJE X
+        mov     x2,  #190                    // EJE Y
+        mov     x3,  #6                      // ANCHO
+        mov     x4,  #82                     // ALTO
+        set_color x5, 0x1, 0x2E54            // #012E54
         bl      draw_rectangle
 
-        mov     x0,  x20                 // base FB
-        mov     x1,  #278               // EJE X
-        mov     x2,  #190             // EJE Y
-        mov     x3,  #3              // ANCHO
-        mov     x4,  #82                // ALTO
-        movz    x5,  #0x01,     lsl 16
-        movk    x5,  #0x2e54, lsl 0
+        mov     x0,  x20                     // base FB
+        mov     x1,  #278                    // EJE X
+        mov     x2,  #190                    // EJE Y
+        mov     x3,  #3                      // ANCHO
+        mov     x4,  #82                     // ALTO
+        set_color x5, 0x1, 0x2E54            // #012E54
         bl      draw_rectangle
 
-        mov     x0,  x20                 // base FB
-        mov     x1,  #281               // EJE X
-        mov     x2,  #192             // EJE Y
-        mov     x3,  #3              // ANCHO
-        mov     x4,  #28                // ALTO
-        movz    x5,  #0x01,     lsl 16
-        movk    x5,  #0x2e54, lsl 0
+        mov     x0,  x20                     // base FB
+        mov     x1,  #281                    // EJE X
+        mov     x2,  #192                    // EJE Y
+        mov     x3,  #3                      // ANCHO
+        mov     x4,  #28                     // ALTO
+        set_color x5, 0x1, 0x2E54            // #012E54
         bl      draw_rectangle
 
-        mov     x0,  x20                 // base FB
-        mov     x1,  #283               // EJE X
-        mov     x2,  #194             // EJE Y
-        mov     x3,  #3              // ANCHO
-        mov     x4,  #28                // ALTO
-        movz    x5,  #0x01,     lsl 16
-        movk    x5,  #0x2e54, lsl 0
+        mov     x0,  x20                     // base FB
+        mov     x1,  #283                    // EJE X
+        mov     x2,  #194                    // EJE Y
+        mov     x3,  #3                      // ANCHO
+        mov     x4,  #28                     // ALTO
+        set_color x5, 0x1, 0x2E54            // #012E54
         bl      draw_rectangle
 
-        mov     x0,  x20                 // base FB
-        mov     x1,  #286               // EJE X
-        mov     x2,  #196             // EJE Y
-        mov     x3,  #3              // ANCHO
-        mov     x4,  #24                // ALTO
-        movz    x5,  #0x01,     lsl 16
-        movk    x5,  #0x2e54, lsl 0
+        mov     x0,  x20                     // base FB
+        mov     x1,  #286                    // EJE X
+        mov     x2,  #196                    // EJE Y
+        mov     x3,  #3                      // ANCHO
+        mov     x4,  #24                     // ALTO
+        set_color x5, 0x1, 0x2E54            // #012E54
         bl      draw_rectangle
 
-        mov     x0,  x20                 // base FB
-        mov     x1,  #289               // EJE X
-        mov     x2,  #198             // EJE Y
-        mov     x3,  #3              // ANCHO
-        mov     x4,  #22                // ALTO
-        movz    x5,  #0x01,     lsl 16
-        movk    x5,  #0x2e54, lsl 0
+        mov     x0,  x20                     // base FB
+        mov     x1,  #289                    // EJE X
+        mov     x2,  #198                    // EJE Y
+        mov     x3,  #3                      // ANCHO
+        mov     x4,  #22                     // ALTO
+        set_color x5, 0x1, 0x2E54            // #012E54
         bl      draw_rectangle
 
-        mov     x0,  x20                 // base FB
-        mov     x1,  #292               // EJE X
-        mov     x2,  #200             // EJE Y
-        mov     x3,  #3              // ANCHO
-        mov     x4,  #20                // ALTO
-        movz    x5,  #0x01,     lsl 16
-        movk    x5,  #0x2e54, lsl 0
+        mov     x0,  x20                     // base FB
+        mov     x1,  #292                    // EJE X
+        mov     x2,  #200                    // EJE Y
+        mov     x3,  #3                      // ANCHO
+        mov     x4,  #20                     // ALTO
+        set_color x5, 0x1, 0x2E54            // #012E54
         bl      draw_rectangle
 
-        mov     x0,  x20                 // base FB
-        mov     x1,  #295               // EJE X
-        mov     x2,  #204             // EJE Y
-        mov     x3,  #2              // ANCHO
-        mov     x4,  #16                // ALTO
-        movz    x5,  #0x01,     lsl 16
-        movk    x5,  #0x2e54, lsl 0
+        mov     x0,  x20                     // base FB
+        mov     x1,  #295                    // EJE X
+        mov     x2,  #204                    // EJE Y
+        mov     x3,  #2                      // ANCHO
+        mov     x4,  #16                     // ALTO
+        set_color x5, 0x1, 0x2E54            // #012E54
         bl      draw_rectangle
 
+        // OTROS DEDOS
+        mov     x0,  x20                     // base FB
+        mov     x1,  #162                    // EJE X
+        mov     x2,  #216                    // EJE Y
+        mov     x3,  #6                      // ANCHO
+        mov     x4,  #90                     // ALTO
+        set_color x5, 0x0, 0x4782            // #004782
+        bl      draw_rectangle
 
+        mov     x0,  x20                     // base FB
+        mov     x1,  #168                    // EJE X
+        mov     x2,  #210                    // EJE Y
+        mov     x3,  #6                      // ANCHO
+        mov     x4,  #98                     // ALTO
+        set_color x5, 0x0, 0x4782            // #004782
+        bl      draw_rectangle
 
-// OTROS DEDOS
-        mov     x0,  x20                 // base FB
-        mov     x1,  #162              // EJE X
-        mov     x2,  #216              // EJE Y
-        mov     x3,  #6              // ANCHO
-        mov     x4,  #90                // ALTO
+        mov     x0,  x20                     // base FB
+        mov     x1,  #174                    // EJE X
+        mov     x2,  #206                    // EJE Y
+        mov     x3,  #6                      // ANCHO
+        mov     x4,  #102                    // ALTO
+        set_color x5, 0x0, 0x4782            // #004782
+        bl      draw_rectangle
+
+        mov     x0,  x20                     // base FB
+        mov     x1,  #180                    // EJE X
+        mov     x2,  #202                    // EJE Y
+        mov     x3,  #6                      // ANCHO
+        mov     x4,  #106                    // ALTO
+        set_color x5, 0x0, 0x4782            // #004782
+        bl      draw_rectangle
+
+        mov     x0,  x20                     // base FB
+        mov     x1,  #186                    // EJE X
+        mov     x2,  #198                    // EJE Y
+        mov     x3,  #6                      // ANCHO
+        mov     x4,  #110                    // ALTO
+        set_color x5, 0x0, 0x4782            // #004782
+        bl      draw_rectangle
+
+        mov     x0,  x20                     // base FB
+        mov     x1,  #192                    // EJE X
+        mov     x2,  #192                    // EJE Y
+        mov     x3,  #6                      // ANCHO
+        mov     x4,  #114                    // ALTO
+        set_color x5, 0x0, 0x4782            // #004782
+        bl      draw_rectangle
+
+        mov     x0,  x20                     // base FB
+        mov     x1,  #198                    // EJE X
+        mov     x2,  #188                    // EJE Y
+        mov     x3,  #6                      // ANCHO
+        mov     x4,  #118                    // ALTO
+        set_color x5, 0x0, 0x4782            // #004782
+        bl      draw_rectangle
+
+        mov     x0,  x20                     // base FB
+        mov     x1,  #204                    // EJE X
+        mov     x2,  #184                    // EJE Y
+        mov     x3,  #6                      // ANCHO
+        mov     x4,  #122                    // ALTO
+        set_color x5, 0x0, 0x4782            // #004782
+        bl      draw_rectangle
+
+        mov     x0,  x20                     // base FB
+        mov     x1,  #210                    // EJE X
+        mov     x2,  #182                    // EJE Y
+        mov     x3,  #6                      // ANCHO
+        mov     x4,  #124                    // ALTO
+        set_color x5, 0x0, 0x4782            // #004782
+        bl      draw_rectangle
+
+        mov     x0,  x20                     // base FB
+        mov     x1,  #216                    // EJE X
+        mov     x2,  #180                    // EJE Y
+        mov     x3,  #6                      // ANCHO
+        mov     x4,  #124                    // ALTO
+        set_color x5, 0x0, 0x4782            // #004782
+        bl      draw_rectangle
+
+        mov     x0,  x20                     // base FB
+        mov     x1,  #222                    // EJE X
+        mov     x2,  #180                    // EJE Y
+        mov     x3,  #6                      // ANCHO
+        mov     x4,  #124                    // ALTO
+        set_color x5, 0x0, 0x4782            // #004782
+        bl      draw_rectangle
+
+        mov     x0,  x20                     // base FB
+        mov     x1,  #228                    // EJE X
+        mov     x2,  #180                    // EJE Y
+        mov     x3,  #6                      // ANCHO
+        mov     x4,  #124                    // ALTO
+        set_color x5, 0x0, 0x4782            // #004782
+        bl      draw_rectangle
+
+        mov     x0,  x20                     // base FB
+        mov     x1,  #234                    // EJE X
+        mov     x2,  #180                    // EJE Y
+        mov     x3,  #6                      // ANCHO
+        mov     x4,  #122                    // ALTO
+        set_color x5, 0x0, 0x4782            // #004782
+        bl      draw_rectangle
+
+        mov     x0,  x20                     // base FB
+        mov     x1,  #240                    // EJE X
+        mov     x2,  #182                    // EJE Y
+        mov     x3,  #6                      // ANCHO
+        mov     x4,  #120                    // ALTO
+        set_color x5, 0x0, 0x4782            // #004782
         movz    x5,  #0,     lsl 16
         movk    x5,  #0x4782, lsl 0
         bl      draw_rectangle
 
-        mov     x0,  x20                 // base FB
-        mov     x1,  #168              // EJE X
-        mov     x2,  #210              // EJE Y
-        mov     x3,  #6              // ANCHO
-        mov     x4,  #98                // ALTO
+        mov     x0,  x20                     // base FB
+        mov     x1,  #246                    // EJE X
+        mov     x2,  #184                    // EJE Y
+        mov     x3,  #6                      // ANCHO
+        mov     x4,  #118                    // ALTO
+        set_color x5, 0x0, 0x4782            // #004782
         movz    x5,  #0,     lsl 16
         movk    x5,  #0x4782, lsl 0
         bl      draw_rectangle
 
-        mov     x0,  x20                 // base FB
-        mov     x1,  #174              // EJE X
-        mov     x2,  #206              // EJE Y
-        mov     x3,  #6              // ANCHO
-        mov     x4,  #102                // ALTO
-        movz    x5,  #0,     lsl 16
-        movk    x5,  #0x4782, lsl 0
+        mov     x0,  x20                     // base FB
+        mov     x1,  #252                    // EJE X
+        mov     x2,  #186                    // EJE Y
+        mov     x3,  #6                      // ANCHO
+        mov     x4,  #114                    // ALTO
+        set_color x5, 0x0, 0x4782            // #004782
+        bl      draw_rectangle
+
+        mov     x0,  x20                     // base FB
+        mov     x1,  #258                    // EJE X
+        mov     x2,  #188                    // EJE Y
+        mov     x3,  #6                      // ANCHO
+        mov     x4,  #110                    // ALTO
+        set_color x5, 0x0, 0x4782            // #004782
+        bl      draw_rectangle
+
+        mov     x0,  x20                     // base FB
+        mov     x1,  #264                    // EJE X
+        mov     x2,  #192                    // EJE Y
+        mov     x3,  #6                      // ANCHO
+        mov     x4,  #104                    // ALTO
+        set_color x5, 0x0, 0x4782            // #004782
+        bl      draw_rectangle
+
+        mov     x0,  x20                     // base FB
+        mov     x1,  #264                    // EJE X
+        mov     x2,  #194                    // EJE Y
+        mov     x3,  #6                      // ANCHO
+        mov     x4,  #102                    // ALTO
+        set_color x5, 0x0, 0x4782            // #004782
+        bl      draw_rectangle
+
+        mov     x0,  x20                     // base FB
+        mov     x1,  #270                    // EJE X
+        mov     x2,  #194                    // EJE Y
+        mov     x3,  #6                      // ANCHO
+        mov     x4,  #100                    // ALTO
+        set_color x5, 0x0, 0x4782            // #004782
+        bl      draw_rectangle
+
+        mov     x0,  x20                     // base FB
+        mov     x1,  #276                    // EJE X
+        mov     x2,  #200                    // EJE Y
+        mov     x3,  #6                      // ANCHO
+        mov     x4,  #90                     // ALTO
+        set_color x5, 0x0, 0x4782            // #004782
+        bl      draw_rectangle
+
+        mov     x0,  x20                     // base FB
+        mov     x1,  #282                    // EJE X
+        mov     x2,  #204                    // EJE Y
+        mov     x3,  #6                      // ANCHO
+        mov     x4,  #82                     // ALTO
+        set_color x5, 0x0, 0x4782            // #004782
         bl      draw_rectangle
 
 
-        mov     x0,  x20                 // base FB
-        mov     x1,  #180              // EJE X
-        mov     x2,  #202              // EJE Y
-        mov     x3,  #6              // ANCHO
-        mov     x4,  #106                // ALTO
-        movz    x5,  #0,     lsl 16
-        movk    x5,  #0x4782, lsl 0
-        bl      draw_rectangle
-
-
-        mov     x0,  x20                 // base FB
-        mov     x1,  #186              // EJE X
-        mov     x2,  #198              // EJE Y
-        mov     x3,  #6              // ANCHO
-        mov     x4,  #110                // ALTO
-        movz    x5,  #0,     lsl 16
-        movk    x5,  #0x4782, lsl 0
-        bl      draw_rectangle
-
-
-        mov     x0,  x20                 // base FB
-        mov     x1,  #192               // EJE X
-        mov     x2,  #192             // EJE Y
-        mov     x3,  #6              // ANCHO
-        mov     x4,  #114                // ALTO
-        movz    x5,  #0,     lsl 16
-        movk    x5,  #0x4782, lsl 0
-        bl      draw_rectangle
-
-        mov     x0,  x20                 // base FB
-        mov     x1,  #198               // EJE X
-        mov     x2,  #188              // EJE Y
-        mov     x3,  #6              // ANCHO
-        mov     x4,  #118                // ALTO
-        movz    x5,  #0,     lsl 16
-        movk    x5,  #0x4782, lsl 0
-        bl      draw_rectangle
-
-
-        mov     x0,  x20                 // base FB
-        mov     x1,  #204               // EJE X
-        mov     x2,  #184              // EJE Y
-        mov     x3,  #6              // ANCHO
-        mov     x4,  #122                // ALTO
-        movz    x5,  #0,     lsl 16
-        movk    x5,  #0x4782, lsl 0
-        bl      draw_rectangle
-
-
-        mov     x0,  x20                 // base FB
-        mov     x1,  #210               // EJE X
-        mov     x2,  #182              // EJE Y
-        mov     x3,  #6              // ANCHO
-        mov     x4,  #124                // ALTO
-        movz    x5,  #0,     lsl 16
-        movk    x5,  #0x4782, lsl 0
-        bl      draw_rectangle
-
-        mov     x0,  x20                 // base FB
-        mov     x1,  #216               // EJE X
-        mov     x2,  #180              // EJE Y
-        mov     x3,  #6              // ANCHO
-        mov     x4,  #124                // ALTO
-        movz    x5,  #0,     lsl 16
-        movk    x5,  #0x4782, lsl 0
-        bl      draw_rectangle
-
-
-        mov     x0,  x20                 // base FB
-        mov     x1,  #222               // EJE X
-        mov     x2,  #180              // EJE Y
-        mov     x3,  #6              // ANCHO
-        mov     x4,  #124                // ALTO
-        movz    x5,  #0,     lsl 16
-        movk    x5,  #0x4782, lsl 0
-        bl      draw_rectangle
-
-        mov     x0,  x20                 // base FB
-        mov     x1,  #228               // EJE X
-        mov     x2,  #180             // EJE Y
-        mov     x3,  #6              // ANCHO
-        mov     x4,  #124                // ALTO
-        movz    x5,  #0,     lsl 16
-        movk    x5,  #0x4782, lsl 0
-        bl      draw_rectangle
-
-
-        mov     x0,  x20                 // base FB
-        mov     x1,  #234               // EJE X
-        mov     x2,  #180              // EJE Y
-        mov     x3,  #6              // ANCHO
-        mov     x4,  #122                // ALTO
-        movz    x5,  #0,     lsl 16
-        movk    x5,  #0x4782, lsl 0
-        bl      draw_rectangle
-
-        mov     x0,  x20                 // base FB
-        mov     x1,  #240               // EJE X
-        mov     x2,  #182              // EJE Y
-        mov     x3,  #6              // ANCHO
-        mov     x4,  #120                // ALTO
-        movz    x5,  #0,     lsl 16
-        movk    x5,  #0x4782, lsl 0
-        bl      draw_rectangle
-
-        mov     x0,  x20                 // base FB
-        mov     x1,  #246               // EJE X
-        mov     x2,  #184              // EJE Y
-        mov     x3,  #6              // ANCHO
-        mov     x4,  #118                // ALTO
-        movz    x5,  #0,     lsl 16
-        movk    x5,  #0x4782, lsl 0
-        bl      draw_rectangle
-
-        mov     x0,  x20                 // base FB
-        mov     x1,  #252               // EJE X
-        mov     x2,  #186              // EJE Y
-        mov     x3,  #6              // ANCHO
-        mov     x4,  #114                // ALTO
-        movz    x5,  #0,     lsl 16
-        movk    x5,  #0x4782, lsl 0
-        bl      draw_rectangle
-
-        mov     x0,  x20                 // base FB
-        mov     x1,  #258               // EJE X
-        mov     x2,  #188              // EJE Y
-        mov     x3,  #6              // ANCHO
-        mov     x4,  #110                // ALTO
-        movz    x5,  #0,     lsl 16
-        movk    x5,  #0x4782, lsl 0
-        bl      draw_rectangle
-
-        mov     x0,  x20                 // base FB
-        mov     x1,  #264               // EJE X
-        mov     x2,  #192              // EJE Y
-        mov     x3,  #6              // ANCHO
-        mov     x4,  #104                // ALTO
-        movz    x5,  #0,     lsl 16
-        movk    x5,  #0x4782, lsl 0
-        bl      draw_rectangle
-
-        mov     x0,  x20                 // base FB
-        mov     x1,  #264               // EJE X
-        mov     x2,  #194              // EJE Y
-        mov     x3,  #6              // ANCHO
-        mov     x4,  #102                // ALTO
-        movz    x5,  #0,     lsl 16
-        movk    x5,  #0x4782, lsl 0
-        bl      draw_rectangle
-
-        mov     x0,  x20                 // base FB
-        mov     x1,  #270               // EJE X
-        mov     x2,  #194              // EJE Y
-        mov     x3,  #6              // ANCHO
-        mov     x4,  #100                // ALTO
-        movz    x5,  #0,     lsl 16
-        movk    x5,  #0x4782, lsl 0
-        bl      draw_rectangle
-
-        mov     x0,  x20                 // base FB
-        mov     x1,  #276               // EJE X
-        mov     x2,  #200             // EJE Y
-        mov     x3,  #6              // ANCHO
-        mov     x4,  #90                // ALTO
-        movz    x5,  #0,     lsl 16
-        movk    x5,  #0x4782, lsl 0
-        bl      draw_rectangle
-
-
-        mov     x0,  x20                 // base FB
-        mov     x1,  #282               // EJE X
-        mov     x2,  #204             // EJE Y
-        mov     x3,  #6              // ANCHO
-        mov     x4,  #82                // ALTO
-        movz    x5,  #0,     lsl 16
-        movk    x5,  #0x4782, lsl 0
-        bl      draw_rectangle
-
-
-// DETALLES DE MANOS
-
-// NUDILLO1 -------------------------------------------------------------------------------------
-        mov     x20, x0            // framebuffer base
-        mov     x21, #14            // contador (10 rectángulos)
-        mov     x22, #286          // X inicial
-        mov     x23, #240          // Y fijo
-        mov     x24, #2           // ancho
-        mov     x25, #4           // alto
+// --------------- 9) DETALLES DE MANOS --------------------------------
+        // 1ER NUDILLO
+        mov     x20, x0                      // framebuffer base
+        mov     x21, #14                     // contador (10 rectángulos)
+        mov     x22, #286                    // X inicial
+        mov     x23, #240                    // Y fijo
+        mov     x24, #2                      // ancho
+        mov     x25, #4                      // alto
 
     nudillo1:
-        mov     x0, x20            // framebuffer
-        mov     x1, x22            // X
-        mov     x2, x23            // Y
-        mov     x3, x24            // ancho
-        mov     x4, x25            // alto
-        movz    x5,  #0x01,     lsl 16
-        movk    x5,  #0x2e54, lsl 0
+        mov     x0, x20                      // framebuffer
+        mov     x1, x22                      // X
+        mov     x2, x23                      // Y
+        mov     x3, x24                      // ancho
+        mov     x4, x25                      // alto
+        set_color x5, 0x1, 0x2E54            // #012E54
         bl      draw_rectangle
 
-        sub     x22, x22, x24      // X += ancho → siguiente rectángulo a la derecha
+        sub     x22, x22, x24                // X += ancho → siguiente rectángulo a la derecha
         sub     x23, x23, #2
-        subs    x21, x21, #1       // contador--
+        subs    x21, x21, #1                 // contador--
         cbnz    x21, nudillo1
 
 
-// NUDILLO2 -------------------------------------------------------------------------------------
-        mov     x20, x0            // framebuffer base
-        mov     x21, #12            // contador (10 rectángulos)
-        mov     x22, #286          // X inicial
-        mov     x23, #270          // Y fijo
-        mov     x24, #2           // ancho
-        mov     x25, #4           // alto
+        // 2DO NUDILLO
+        mov     x20, x0                      // framebuffer base
+        mov     x21, #12                     // contador (10 rectángulos)
+        mov     x22, #286                    // X inicial
+        mov     x23, #270                    // Y fijo
+        mov     x24, #2                      // ancho
+        mov     x25, #4                      // alto
 
     nudillo2:
-        mov     x0, x20            // framebuffer
-        mov     x1, x22            // X
-        mov     x2, x23            // Y
-        mov     x3, x24            // ancho
-        mov     x4, x25            // alto
-        movz    x5,  #0x01,     lsl 16
-        movk    x5,  #0x2e54, lsl 0
+        mov     x0, x20                      // framebuffer
+        mov     x1, x22                      // X
+        mov     x2, x23                      // Y
+        mov     x3, x24                      // ancho
+        mov     x4, x25                      // alto
+        set_color x5, 0x1, 0x2E54            // #012E54
         bl      draw_rectangle
 
-        sub     x22, x22, x24      // X += ancho → siguiente rectángulo a la derecha
+        sub     x22, x22, x24                // X += ancho → siguiente rectángulo a la derecha
         sub     x23, x23, #2
-        subs    x21, x21, #1       // contador--
+        subs    x21, x21, #1                 // contador--
         cbnz    x21, nudillo2
 
 
-// NUDILLO3 -------------------------------------------------------------------------------------
-        mov     x20, x0            // framebuffer base
-        mov     x21, #8            // contador (10 rectángulos)
-        mov     x22, #274          // X inicial
-        mov     x23, #290          // Y fijo
-        mov     x24, #2            // ancho
-        mov     x25, #4            // alto
+        // 3ER NUDILLO
+        mov     x20, x0                      // framebuffer base
+        mov     x21, #8                      // contador (10 rectángulos)
+        mov     x22, #274                    // X inicial
+        mov     x23, #290                    // Y fijo
+        mov     x24, #2                      // ancho
+        mov     x25, #4                      // alto
 
     nudillo3:
-        mov     x0, x20            // framebuffer
-        mov     x1, x22            // X
-        mov     x2, x23            // Y
-        mov     x3, x24            // ancho
-        mov     x4, x25            // alto
-        movz    x5,  #0x01,     lsl 16
-        movk    x5,  #0x2e54, lsl 0
+        mov     x0, x20                      // framebuffer
+        mov     x1, x22                      // X
+        mov     x2, x23                      // Y
+        mov     x3, x24                      // ancho
+        mov     x4, x25                      // alto
+        set_color x5, 0x1, 0x2E54            // #012E54
         bl      draw_rectangle
 
-        sub     x22, x22, x24      // X += ancho → siguiente rectángulo a la derecha
+        sub     x22, x22, x24                // X += ancho → siguiente rectángulo a la derecha
         sub     x23, x23, #2
-        subs    x21, x21, #1       // contador--
+        subs    x21, x21, #1                 // contador--
         cbnz    x21, nudillo3
 
 
-// ---------- 4) GPIO DEMO + BUCLE INFINITO -----------------------
+// ---------- 10) GPIO DEMO + BUCLE INFINITO ---------------------------
         //mov     x9,  GPIO_BASE
         //str     wzr, [x9, GPIO_GPFSEL0]  // GPIO 0-9 como entrada
         //ldr     w10, [x9, GPIO_GPLEV0]   // lee 32 bits
