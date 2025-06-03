@@ -1205,11 +1205,11 @@ main:
         bl      draw_transition
 
         mov     x0,  x20                 // base FB
-        mov     x1,  #379               // EJE X
-        mov     x2,  #228               // EJE Y
-        mov     x6,  #3                 // Largo del loop
+        mov     x1,  #380               // EJE X
+        mov     x2,  #224               // EJE Y
+        mov     x6,  #5                 // Largo del loop
         set_color    x5, 0x78, 0xc6fa
-        bl      draw_transition
+        bl      draw_transition_inverse
 
         // Glow inferior
         mov     x0,  x20                 // base FB
@@ -1220,11 +1220,11 @@ main:
         bl      draw_transition_inverse
 
         mov     x0,  x20                 // base FB
-        mov     x1,  #376               // EJE X
-        mov     x2,  #258               // EJE Y
-        mov     x6,  #3                 // Largo del loop
+        mov     x1,  #379               // EJE X
+        mov     x2,  #264               // EJE Y
+        mov     x6,  #5                 // Largo del loop
         set_color    x5, 0xad, 0xffff
-        bl      draw_transition_inverse
+        bl      draw_transition
 
 // BRAZO
 // LOOP1 -------------------------------------------------------------------------------------
