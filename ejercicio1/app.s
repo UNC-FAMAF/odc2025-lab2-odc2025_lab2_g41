@@ -244,12 +244,14 @@ star:
 // x0: base del framebuffer (debe estar cargado antes de llamar)
 // x2: posici�n Y inicial (l�nea donde comienza la transici�n)
 // x5: color a usar para la transici�n
+// x6: hasta donde llegar en los line
 draw_transition:
         stp     x30, x12, [sp, -32]!
 
-        add     x1, xzr, xzr                 // Inicializar X
+        mov     x12, x6                      // x12 = largo del loop
+        mov     x13, x1                      // Guardar donde inicializar X
         mov     x3, #6                       // Ancho en X
-        mov     x14, #0                      // x14 "counter"
+        mov     x14, x13                     // x14 "counter"
         mov     x15, x2                      // Desde donde el alto
 
 firstLine:
@@ -262,9 +264,11 @@ firstLine:
         cmp     x14, SCREEN_WIDTH
         b.lt    firstLine                    // Seguir si no se pas� del ancho
 
-        add     x1, xzr, xzr
+        subs    x12, x12, #1                 // Lineas restantes
+        b.eq    endTransition                // Si ya no quedan lineas, salir
+
         mov     x3, #5
-        mov     x14, #0
+        mov     x14, x13
         sub     x15, x15, #1
 
 secondLine:
@@ -277,9 +281,11 @@ secondLine:
         cmp     x14, SCREEN_WIDTH
         b.lt    secondLine
 
-        add     x1, xzr, xzr
+        subs    x12, x12, #1                 // Lineas restantes
+        b.eq    endTransition                // Si ya no quedan lineas, salir
+
         mov     x3, #4
-        mov     x14, #0
+        mov     x14, x13
         sub     x15, x15, #2
 
 thirdLine:
@@ -292,9 +298,11 @@ thirdLine:
         cmp     x14, SCREEN_WIDTH
         b.lt    thirdLine
 
-        add     x1, xzr, xzr
+        subs    x12, x12, #1                 // Lineas restantes
+        b.eq    endTransition                // Si ya no quedan lineas, salir
+
         mov     x3, #3
-        mov     x14, #0
+        mov     x14, x13
         sub     x15, x15, #2
 
 fourthLine:
@@ -307,9 +315,11 @@ fourthLine:
         cmp     x14, SCREEN_WIDTH
         b.lt    fourthLine
 
-        add     x1, xzr, xzr
+        subs    x12, x12, #1                 // Lineas restantes
+        b.eq    endTransition                // Si ya no quedan lineas, salir
+
         mov     x3, #2
-        mov     x14, #0
+        mov     x14, x13
         sub     x15, x15, #2
 
 fifthLine:
@@ -322,9 +332,11 @@ fifthLine:
         cmp     x14, SCREEN_WIDTH
         b.lt    fifthLine
 
-        add     x1, xzr, xzr
+        subs    x12, x12, #1                 // Lineas restantes
+        b.eq    endTransition                // Si ya no quedan lineas, salir
+
         mov     x3, #1
-        mov     x14, #0
+        mov     x14, x13
         sub     x15, x15, #3
 
 sixthLine:
@@ -336,6 +348,125 @@ sixthLine:
         add     x14, x14, #2 
         cmp     x14, SCREEN_WIDTH
         b.lt    sixthLine
+
+endTransition:
+
+        ldp     x30, x12, [sp], 32
+        ret
+
+
+// TRANSITION INVERSED --------------------------------------------------------------------------
+// Funci�n para dibujar la transici�n del background
+// Par�metros:
+// x0: base del framebuffer (debe estar cargado antes de llamar)
+// x2: posici�n Y inicial (l�nea donde comienza la transici�n)
+// x5: color a usar para la transici�n
+// x6: hasta donde llegar en los line
+draw_transition_inverse:
+        stp     x30, x12, [sp, -32]!
+
+        mov     x12, x6                      // x12 = largo del loop
+        mov     x13, x1                      // Guardar donde inicializar X
+        mov     x3, #6                       // Ancho en X
+        mov     x14, x1                      // x14 "counter"
+        mov     x15, x2                      // Desde donde el alto
+
+firstLineInv:
+        mov     x1, x14                      // Posici�n de X actual
+        mov     x2, x15                      // L�nea Y
+        mov     x4, #3                       // Alto
+        bl      draw_rectangle               // Dibujar bloque
+
+        add     x14, x14, #12                // Avanzar p�xeles: pintados + sin pintar
+        cmp     x14, SCREEN_WIDTH
+        b.lt    firstLineInv                 // Seguir si no se pas� del ancho
+
+        sub    x12, x12, #1                  // Lineas restantes
+        cbz    x12, endTransitionInv         // Si ya no quedan lineas, salir
+
+        mov     x3, #5
+        mov     x14, x13
+        add     x15, x15, #3
+
+secondLineInv:
+        mov     x1, x14
+        mov     x2, x15
+        mov     x4, #2
+        bl      draw_rectangle
+
+        add     x14, x14, #4
+        cmp     x14, SCREEN_WIDTH
+        b.lt    secondLineInv
+
+        sub    x12, x12, #1                  // Lineas restantes
+        cbz    x12, endTransitionInv         // Si ya no quedan lineas, salir
+
+        mov     x3, #4
+        mov     x14, x13
+        add     x15, x15, #2
+
+thirdLineInv:
+        mov     x1, x14
+        mov     x2, x15
+        mov     x4, #2
+        bl      draw_rectangle
+
+        add     x14, x14, #8 
+        cmp     x14, SCREEN_WIDTH
+        b.lt    thirdLineInv
+
+        sub    x12, x12, #1                  // Lineas restantes
+        cbz    x12, endTransitionInv         // Si ya no quedan lineas, salir
+
+        mov     x3, #3
+        mov     x14, x13
+        add     x15, x15, #2
+
+fourthLineInv:
+        mov     x1, x14
+        mov     x2, x15 
+        mov     x4, #2
+        bl      draw_rectangle
+
+        add     x14, x14, #6 
+        cmp     x14, SCREEN_WIDTH
+        b.lt    fourthLineInv
+
+        sub    x12, x12, #1                  // Lineas restantes
+        cbz    x12, endTransitionInv         // Si ya no quedan lineas, salir
+
+        mov     x3, #2
+        mov     x14, x13
+        add     x15, x15, #2
+
+fifthLineInv:
+        mov     x1, x14
+        mov     x2, x15 
+        mov     x4, #1
+        bl      draw_rectangle
+
+        add     x14, x14, #4
+        cmp     x14, SCREEN_WIDTH
+        b.lt    fifthLineInv
+
+        sub    x12, x12, #1                  // Lineas restantes
+        cbz    x12, endTransitionInv         // Si ya no quedan lineas, salir
+
+        mov     x3, #1
+        mov     x14, x13
+        add     x15, x15, #1
+
+sixthLineInv:
+        mov     x1, x14
+        mov     x2, x15
+        mov     x4, #3
+        bl      draw_rectangle
+
+        add     x14, x14, #2 
+        cmp     x14, SCREEN_WIDTH
+        b.lt    sixthLineInv
+
+endTransitionInv:
 
         ldp     x30, x12, [sp], 32
         ret
@@ -380,35 +511,47 @@ main:
         // TRANSICIONES ENTRE COLORES
         // 1ER TRANSICION
         mov     x0,  x20                  // base FB
+        add     x1, xzr, xzr             // EJE X = 0
         mov     x2, SCREEN_HEIGH / 4
         set_color x5, 0x1A, 0x0633        //#1A0633
+        mov     x6,  #6                   // Largo del loop
         bl      draw_transition           // Call function
 
         mov     x0,  x20                  // base FB
+        add     x1, xzr, xzr             // EJE X = 0
         mov     x2, SCREEN_HEIGH / 4 + 5
         set_color x5, 0x1A, 0x0633        //#1A0633
+        mov     x6,  #6                   // Largo del loop
         bl      draw_transition           // Call function
 
         // 2DA TRANSICION
         mov     x0,  x20                  // base FB
+        add     x1, xzr, xzr             // EJE X = 0
         mov     x2, SCREEN_HEIGH / 2
         set_color x5, 0x1E, 0x0837        //#1E0837
+        mov     x6,  #6                   // Largo del loop
         bl      draw_transition           // Call function
 
         mov     x0,  x20                  // base FB
+        add     x1, xzr, xzr             // EJE X = 0
         mov     x2, SCREEN_HEIGH / 2 + 5
         set_color x5, 0x1E, 0x0837        //#1E0837
+        mov     x6,  #6                   // Largo del loop
         bl      draw_transition           // Call function
 
         // 3RA TRANSICION
         mov     x0,  x20                  // base FB
+        add     x1, xzr, xzr             // EJE X = 0
         mov     x2, SCREEN_HEIGH * 3 / 4
         set_color x5, 0x22, 0x0A3B        //#220A3B
+        mov     x6,  #6                   // Largo del loop
         bl      draw_transition           // Call function
         
         mov     x0,  x20                  // base FB
+        add     x1, xzr, xzr             // EJE X = 0
         mov     x2, SCREEN_HEIGH * 3 / 4 + 5
         set_color x5, 0x22, 0x0A3B        //#220A3B
+        mov     x6,  #6                   // Largo del loop
         bl      draw_transition           // Call function
 
 // ---------- 2) DETALLES DEL FONDO -------------------------------
@@ -1025,8 +1168,7 @@ main:
         bl      draw_rectangle
 
 //DETALLES DEL HAZ
-
-mov     x0,  x20                 // base FB
+        mov     x0,  x20                 // base FB
         mov     x1,  #376               // EJE X
         mov     x2,  #232               // EJE Y
         mov     x3,  #264                // ANCHO
@@ -1035,8 +1177,7 @@ mov     x0,  x20                 // base FB
         movk    x5, 0xc6fa, lsl 0       // x5 = 0000 0000 0083 15c7
         bl      draw_rectangle
 
-
-mov     x0,  x20                 // base FB
+        mov     x0,  x20                 // base FB
         mov     x1,  #376               // EJE X
         mov     x2,  #234               // EJE Y
         mov     x3,  #264                // ANCHO
@@ -1045,8 +1186,7 @@ mov     x0,  x20                 // base FB
         movk    x5, 0xd3fa, lsl 0       // x5 = 0000 0000 0083 15c7
         bl      draw_rectangle
 
-
-mov     x0,  x20                 // base FB
+        mov     x0,  x20                 // base FB
         mov     x1,  #376               // EJE X
         mov     x2,  #249               // EJE Y
         mov     x3,  #264                // ANCHO
@@ -1055,7 +1195,36 @@ mov     x0,  x20                 // base FB
         movk    x5, 0xFFFF, lsl 0       // x5 = 0000 0000 0083 15c7
         bl      draw_rectangle
 
+// GLOW DEL SABLE ----------------------------------------------------------------------------
+        // Glow superior
+        mov     x0,  x20                 // base FB
+        mov     x1,  #376               // EJE X
+        mov     x2,  #231               // EJE Y
+        mov     x6,  #5                 // Largo del loop
+        set_color    x5, 0x78, 0xc6fa
+        bl      draw_transition
 
+        mov     x0,  x20                 // base FB
+        mov     x1,  #379               // EJE X
+        mov     x2,  #228               // EJE Y
+        mov     x6,  #3                 // Largo del loop
+        set_color    x5, 0x78, 0xc6fa
+        bl      draw_transition
+
+        // Glow inferior
+        mov     x0,  x20                 // base FB
+        mov     x1,  #376               // EJE X
+        mov     x2,  #255               // EJE Y
+        mov     x6,  #5                 // Largo del loop
+        set_color    x5, 0xad, 0xffff
+        bl      draw_transition_inverse
+
+        mov     x0,  x20                 // base FB
+        mov     x1,  #376               // EJE X
+        mov     x2,  #258               // EJE Y
+        mov     x6,  #3                 // Largo del loop
+        set_color    x5, 0xad, 0xffff
+        bl      draw_transition_inverse
 
 // BRAZO
 // LOOP1 -------------------------------------------------------------------------------------
