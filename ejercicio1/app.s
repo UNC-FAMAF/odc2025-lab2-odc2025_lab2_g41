@@ -56,6 +56,7 @@ main:
         mov     framebuffer,  posInit                     // base FB
         add     posX, xzr, xzr                 // EJE X = 0
         mov     posY, SCREEN_HEIGH / 4         // EJE Y
+        mov     x3, SCREEN_WIDTH
         set_color color, 0x1A, 0x633            // #1A0633
         mov     x6,  #6                      // Largo del loop
         bl      draw_transition              // Call function
@@ -63,6 +64,7 @@ main:
         mov     framebuffer,  posInit                     // base FB
         add     posX, xzr, xzr                 // EJE X = 0
         mov     posY, SCREEN_HEIGH / 4 + 5     // EJE Y
+        mov     x3, SCREEN_WIDTH
         set_color color, 0x1A, 0x633            // #1A0633
         mov     x6,  #6                      // Largo del loop
         bl      draw_transition              // Call function
@@ -71,6 +73,7 @@ main:
         mov     framebuffer,  posInit                     // base FB
         add     posX, xzr, xzr                 // EJE X = 0
         mov     posY, SCREEN_HEIGH / 2         // EJE Y
+        mov     x3, SCREEN_WIDTH
         set_color color, 0x1E, 0x837            // #1E0837
         mov     x6,  #6                      // Largo del loop
         bl      draw_transition              // Call function
@@ -78,6 +81,7 @@ main:
         mov     framebuffer,  posInit                     // base FB
         add     posX, xzr, xzr                 // EJE X = 0
         mov     posY, SCREEN_HEIGH / 2 + 5     // EJE Y
+        mov     x3, SCREEN_WIDTH
         set_color color, 0x1E, 0x837            // #1E0837
         mov     x6,  #6                      // Largo del loop
         bl      draw_transition              // Call function
@@ -86,6 +90,7 @@ main:
         mov     framebuffer,  posInit                     // base FB
         add     posX, xzr, xzr                 // EJE X = 0
         mov     posY, SCREEN_HEIGH * 3 / 4     // EJE Y
+        mov     x3, SCREEN_WIDTH
         set_color color, 0x22, 0xA3B            // #220A3B
         mov     x6,  #6                      // Largo del loop
         bl      draw_transition              // Call function
@@ -93,6 +98,7 @@ main:
         mov     framebuffer,  posInit                     // base FB
         add     posX, xzr, xzr                 // EJE X = 0
         mov     posY, SCREEN_HEIGH * 3 / 4 + 5 // EJE Y
+        mov     x3, SCREEN_WIDTH
         set_color color, 0x22, 0xA3B            // #220A3B
         mov     x6,  #6                      // Largo del loop
         bl      draw_transition              // Call function
@@ -668,6 +674,7 @@ main:
         mov     posX,  #376                    // EJE X
         mov     posY,  #231                    // EJE Y
         mov     x6,  #5                      // Largo del loop
+        mov     x3, SCREEN_WIDTH
         set_color    color, 0x78, 0xC6FA        // #78C6FA
         bl      draw_transition
 
@@ -675,6 +682,7 @@ main:
         mov     posX,  #385                    // EJE X
         mov     posY,  #224                    // EJE Y
         mov     x6,  #5                      // Largo del loop
+        mov     x3, SCREEN_WIDTH
         set_color    color, 0x78, 0xC6FA        // #78C6FA
         bl      draw_transition_inverse
 
@@ -683,6 +691,7 @@ main:
         mov     posX,  #376                    // EJE X
         mov     posY,  #255                    // EJE Y
         mov     x6,  #5                      // Largo del loop
+        mov     x3, SCREEN_WIDTH
         set_color    color, 0xAD, 0xFFFF        // #ADFFFF
         bl      draw_transition_inverse
 
@@ -690,6 +699,7 @@ main:
         mov     posX,  #379                    // EJE X
         mov     posY,  #264                    // EJE Y
         mov     x6,  #5                      // Largo del loop
+        mov     x3, SCREEN_WIDTH
         set_color    color, 0xAD, 0xFFFF        // #ADFFFF
         bl      draw_transition
 

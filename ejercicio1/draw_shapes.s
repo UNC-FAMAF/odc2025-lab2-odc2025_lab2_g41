@@ -234,6 +234,7 @@ star:
 draw_transition:
         stp     x30, x12, [sp, -32]!
 
+        mov     x10, x3                        // ancho total de la funcion
         mov     x12, x6                      // x12 = largo del loop
         mov     x13, posX                      // Guardar donde inicializar X
         mov     ancho, #6                       // Ancho en X
@@ -249,10 +250,10 @@ firstLine:
         add     x14, x14, #12                // Avanzar p�xeles: pintados + sin pintar
 
         add     x11, x14, ancho
-        cmp     x11, SCREEN_WIDTH
+        cmp     x11, x10
         b.ge    nextLine                    // Si se pas� del ancho, salir
 
-        cmp     x14, SCREEN_WIDTH
+        cmp     x14, x10
         b.lt    firstLine                    // Seguir si no se pas� del ancho
 
 nextLine:
@@ -273,10 +274,10 @@ secondLine:
         add     x14, x14, #10 
 
         add     x11, x14, ancho
-        cmp     x11, SCREEN_WIDTH
+        cmp     x11, x10
         b.ge    nextLine1                    // Si se pas� del ancho, salir
 
-        cmp     x14, SCREEN_WIDTH
+        cmp     x14, x10
         b.lt    secondLine
 
 nextLine1:
@@ -297,10 +298,10 @@ thirdLine:
         add     x14, x14, #8 
 
         add     x11, x14, ancho
-        cmp     x11, SCREEN_WIDTH
+        cmp     x11, x10
         b.ge    nextLine2                    // Si se pas� del ancho, salir
 
-        cmp     x14, SCREEN_WIDTH
+        cmp     x14, x10
         b.lt    thirdLine
 
 nextLine2:
@@ -321,10 +322,10 @@ fourthLine:
         add     x14, x14, #6 
 
         add     x11, x14, ancho
-        cmp     x11, SCREEN_WIDTH
+        cmp     x11, x10
         b.ge    nextLine3                    // Si se pas� del ancho, salir
 
-        cmp     x14, SCREEN_WIDTH
+        cmp     x14, x10
         b.lt    fourthLine
 
 nextLine3:
@@ -345,10 +346,10 @@ fifthLine:
         add     x14, x14, #4 
 
         add     x11, x14, ancho
-        cmp     x11, SCREEN_WIDTH
+        cmp     x11, x10
         b.ge    nextLine4                    // Si se pas� del ancho, salir
 
-        cmp     x14, SCREEN_WIDTH
+        cmp     x14, x10
         b.lt    fifthLine
 
 nextLine4:
@@ -369,10 +370,10 @@ sixthLine:
         add     x14, x14, #2 
 
         add     x11, x14, ancho
-        cmp     x11, SCREEN_WIDTH
+        cmp     x11, x10
         b.ge    endTransition                    // Si se pas� del ancho, salir
         
-        cmp     x14, SCREEN_WIDTH
+        cmp     x14, x10
         b.lt    sixthLine
 
 endTransition:
@@ -391,6 +392,7 @@ endTransition:
 draw_transition_inverse:
         stp     x30, x12, [sp, -32]!
 
+        mov     x10, x3                        // ancho total de la funcion
         mov     x12, x6                      // x12 = largo del loop
         mov     x13, posX                      // Guardar donde inicializar X
         mov     ancho, #6                       // Ancho en X
@@ -406,10 +408,10 @@ firstLineInv:
         add     x14, x14, #12                // Avanzar p�xeles: pintados + sin pintar
 
         add     x11, x14, ancho
-        cmp     x11, SCREEN_WIDTH
+        cmp     x11, x10
         b.ge    nextLine01                    // Si se pas� del ancho, salir
 
-        cmp     x14, SCREEN_WIDTH
+        cmp     x14, x10
         b.lt    firstLineInv                 // Seguir si no se pas� del ancho
 
 nextLine01:
@@ -430,10 +432,10 @@ secondLineInv:
         add     x14, x14, #10
 
         add     x11, x14, ancho
-        cmp     x11, SCREEN_WIDTH
+        cmp     x11, x10
         b.ge    nextLine02                    // Si se pas� del ancho, salir
 
-        cmp     x14, SCREEN_WIDTH
+        cmp     x14, x10
         b.lt    secondLineInv
 
 nextLine02:
@@ -454,10 +456,10 @@ thirdLineInv:
         add     x14, x14, #8 
 
         add     x11, x14, ancho
-        cmp     x11, SCREEN_WIDTH
+        cmp     x11, x10
         b.ge    nextLine03                    // Si se pas� del ancho, salir
 
-        cmp     x14, SCREEN_WIDTH
+        cmp     x14, x10
         b.lt    thirdLineInv
 
 nextLine03:
@@ -478,10 +480,10 @@ fourthLineInv:
         add     x14, x14, #6 
 
         add     x11, x14, ancho
-        cmp     x11, SCREEN_WIDTH
+        cmp     x11, x10
         b.ge    nextLine04                    // Si se pas� del ancho, salir
 
-        cmp     x14, SCREEN_WIDTH
+        cmp     x14, x10
         b.lt    fourthLineInv
 
 nextLine04:
@@ -502,10 +504,10 @@ fifthLineInv:
         add     x14, x14, #4
 
         add     x11, x14, ancho
-        cmp     x11, SCREEN_WIDTH
+        cmp     x11, x10
         b.ge    nextLine05                    // Si se pas� del ancho, salir
 
-        cmp     x14, SCREEN_WIDTH
+        cmp     x14, x10
         b.lt    fifthLineInv
 
 nextLine05:
@@ -526,10 +528,10 @@ sixthLineInv:
         add     x14, x14, #2 
 
         add     x11, x14, ancho
-        cmp     x11, SCREEN_WIDTH
+        cmp     x11, x10
         b.ge    endTransitionInv                    // Si se pas� del ancho, salir
 
-        cmp     x14, SCREEN_WIDTH
+        cmp     x14, x10
         b.lt    sixthLineInv
 
 endTransitionInv:
