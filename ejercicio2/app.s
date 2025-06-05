@@ -17,6 +17,7 @@ main:
         // framebuffer llega con la base del framebuffer
         mov     posInit, framebuffer                      // guarda FB base
 
+reset:
 // --------------- 1) PINTAR EL FONDO COMPLETO -------------------------
         // PINTAR EL FONDO (RECTANGULOS)
         mov     framebuffer,  posInit                     // base FB
@@ -901,8 +902,6 @@ main:
         mov     ancho,  #6                      // ANCHO
         mov     alto,  #120                    // ALTO
         set_color color, 0x0, 0x4782            // #004782
-        movz    color,  #0,     lsl 16
-        movk    color,  #0x4782, lsl 0
         bl      draw_rectangle
 
         mov     framebuffer,  posInit                     // base FB
@@ -911,8 +910,6 @@ main:
         mov     ancho,  #6                      // ANCHO
         mov     alto,  #118                    // ALTO
         set_color color, 0x0, 0x4782            // #004782
-        movz    color,  #0,     lsl 16
-        movk    color,  #0x4782, lsl 0
         bl      draw_rectangle
 
         mov     framebuffer,  posInit                     // base FB
@@ -1048,38 +1045,80 @@ mov     x25, #25                      // alto
 
 InfLoop:
     // 1) Dibujar el sable en la posición actual x22
-    mov     framebuffer, posInit
-    mov     posX,       x22
-    mov     posY,       x23
-    mov     ancho,      x24
-    mov     alto,       x25
-    set_color color, 0xAD, 0xFFFF      // Color “visible” del sable
-    bl      draw_rectangle
+        // Haz del sable
+        mov     framebuffer, posInit
+        mov     posX,           #376
+        mov     posY,           #232
+        mov     ancho,          x24
+        mov     alto,           #25
+        set_color color, 0xAD, 0xFFFF      // Color “visible” del sable
+        bl      draw_rectangle
+
+        mov     framebuffer,  posInit
+        mov     posX,           #376                    // EJE X
+        mov     posY,           #232                    // EJE Y
+        mov     ancho,          x24                    // ANCHO
+        mov     alto,           #3                      // ALTO
+        set_color color, 0x78, 0xC6FA           // #78C6FA
+        bl      draw_rectangle
+
+        mov     framebuffer,  posInit                     // base FB
+        mov     posX,       #376                    // EJE X
+        mov     posY,       #234                    // EJE Y
+        mov     ancho,      x24                    // ANCHO
+        mov     alto,       #3                      // ALTO
+        set_color color, 0x98, 0xD3FA           // #98D3FA
+        bl      draw_rectangle
+
+        mov     framebuffer,  posInit                     // base FB
+        mov     posX,       #376                    // EJE X
+        mov     posY,       #249                    // EJE Y
+        mov     ancho,      x24                    // ANCHO
+        mov     alto,       #3                      // ALTO
+        set_color color, 0xFF, 0xFFFF           // #FFFFFF
+        bl      draw_rectangle
+
+        // Glow del haz
+        // Glow superior
+        /* NO ANDA TODAV�A
+        mov     framebuffer,  posInit                     // base FB
+        mov     posX,  #376                    // EJE X
+        mov     posY,  #231                    // EJE Y
+        mov     ancho, x24
+        mov     alto, xzr
+        mov     x6,  #5                      // Largo del loop
+        set_color    color, 0x78, 0xC6FA        // #78C6FA
+        bl      draw_transition*/
+        
+
 
     // 2) Avanzar X en 1
-    add     x22, x22, #1
+    add     x24, x24, #1
 
-    // 3) Si x22 == 640, borrar TODO el haz y reiniciar a 376
-    cmp     x22, #640
+    // 3) Si x24 == 264, borrar TODO el haz y reiniciar a 376
+    cmp     x24, #264
     b.ne    SkipErase
-
+/* 
     // Aquí: x22 acaba de llegar a 640 → tenemos que borrar todo el trazo
     mov     framebuffer, posInit
     mov     posX,  #376                      // Desde donde empezó el sable
     mov     posY,  x23                      // Mismo Y fijo del sable
-    mov     ancho,    #(640 - 376)         // 640 – 376 = 264 píxeles
+    mov     ancho,    #264                   // 640 – 376 = 264 píxeles
     mov     alto,    x25                    // Misma altura del sable
-    set_color color, 0x22, 0xA3B
-    bl      draw_rectangle
+    set_color color, 0x22, 0xA3B            // #220A3B
+    bl      draw_rectangle*/
+
+    mov     framebuffer, posInit
+    bl reset
 
     // Reiniciar x22 a 376 para que vuelva a aparecer en esa posición
-    mov     x22, #376
+    mov     x24, #1
 SkipErase:
     // ––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
 
 
     // 4) Retardo para ralentizar la animación
-    mov     x29, #0x000FFFFF
+    mov     x29, #0x1FFFFF
 DelayLoop:
     subs    x29, x29, #1
     b.ne    DelayLoop
