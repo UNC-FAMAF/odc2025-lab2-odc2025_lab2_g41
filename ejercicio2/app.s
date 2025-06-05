@@ -1114,7 +1114,7 @@ SkipErase:
 
 
     // 4) Retardo para ralentizar la animación
-    mov     x29, #0x7FFFF
+    mov     x29, #0xFFFFF
 DelayLoop:
     subs    x29, x29, #1
     b.ne    DelayLoop
