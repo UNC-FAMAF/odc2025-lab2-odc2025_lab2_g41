@@ -1047,24 +1047,43 @@ mov     x25, #25                      // alto
 
 
 InfLoop:
-mov framebuffer, posInit
-mov posX, x22
-mov posY, x23
-mov ancho, x24
-mov alto, x25
-set_color color, 0xAD, 0xFFFF
-bl draw_rectangle
+    // 1) Dibujar el sable en la posición actual x22
+    mov     framebuffer, posInit
+    mov     posX,       x22
+    mov     posY,       x23
+    mov     ancho,      x24
+    mov     alto,       x25
+    set_color color, 0xAD, 0xFFFF      // Color “visible” del sable
+    bl      draw_rectangle
 
-tiny_delay:
-mov x29, 0xFFFFFF
-delay:
-subs x29,x29,#1
-b.ne delay
+    // 2) Avanzar X en 1
+    add     x22, x22, #1
 
-add x22,x22,#1
+    // 3) Si x22 == 640, borrar TODO el haz y reiniciar a 376
+    cmp     x22, #640
+    b.ne    SkipErase
 
-cmp   x22, #640
-    b.ne  SkipReset      // si x22 != 640, saltamos al label SkipReset
-    mov   x22, #376      // solo aquí reseteamos
-SkipReset:
-    b     InfLoop                    // mantiene el programa corriendo :P (no borrar)
+    // Aquí: x22 acaba de llegar a 640 → tenemos que borrar todo el trazo
+    mov     framebuffer, posInit
+    mov     posX,  #376                      // Desde donde empezó el sable
+    mov     posY,  x23                      // Mismo Y fijo del sable
+    mov     ancho,    #(640 - 376)         // 640 – 376 = 264 píxeles
+    mov     alto,    x25                    // Misma altura del sable
+    set_color color, 0x22, 0xA3B
+    bl      draw_rectangle
+
+    // Reiniciar x22 a 376 para que vuelva a aparecer en esa posición
+    mov     x22, #376
+SkipErase:
+    // ––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
+
+
+    // 4) Retardo para ralentizar la animación
+    mov     x29, #0x000FFFFF
+DelayLoop:
+    subs    x29, x29, #1
+    b.ne    DelayLoop
+
+    // 5) Volver a InfLoop
+    b       InfLoop
+
