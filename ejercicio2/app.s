@@ -1036,12 +1036,8 @@ reset:
         subs    x21, x21, #1                 // contador--
         cbnz    x21, nudillo3
 
-
-mov     x22, #376                    // X inicial
-mov     x23, #232                    // Y fijo
-mov     x24, #1                      // ancho
-mov     x25, #25                      // alto
-
+        // Counter
+        mov     x24, #1                      // ancho
 
 InfLoop:
     // 1) Dibujar el sable en la posición actual x22
@@ -1098,18 +1094,18 @@ InfLoop:
     // 3) Si x24 == 264, borrar TODO el haz y reiniciar a 376
     cmp     x24, #264
     b.ne    SkipErase
-/* 
+
     // Aquí: x22 acaba de llegar a 640 → tenemos que borrar todo el trazo
     mov     framebuffer, posInit
     mov     posX,  #376                      // Desde donde empezó el sable
-    mov     posY,  x23                      // Mismo Y fijo del sable
+    mov     posY,  #232                      // Mismo Y fijo del sable
     mov     ancho,    #264                   // 640 – 376 = 264 píxeles
-    mov     alto,    x25                    // Misma altura del sable
+    mov     alto,    #25                    // Misma altura del sable
     set_color color, 0x22, 0xA3B            // #220A3B
-    bl      draw_rectangle*/
-
+    bl      draw_rectangle
+/* 
     mov     framebuffer, posInit
-    bl reset
+    bl reset*/
 
     // Reiniciar x22 a 376 para que vuelva a aparecer en esa posición
     mov     x24, #1
@@ -1118,7 +1114,7 @@ SkipErase:
 
 
     // 4) Retardo para ralentizar la animación
-    mov     x29, #0x1FFFFF
+    mov     x29, #0x7FFFF
 DelayLoop:
     subs    x29, x29, #1
     b.ne    DelayLoop
