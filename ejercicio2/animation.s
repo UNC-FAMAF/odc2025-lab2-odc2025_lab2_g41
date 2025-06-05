@@ -109,7 +109,7 @@ extend_blade:
     mov     posY,  #232
     mov     ancho, #BLADE_STEP
     mov     alto,  #25
-    set_color color, 0xAD, 0xFFFF         // #ADFFFF
+    set_color 0xAD, 0xFFFF         // #ADFFFF
     bl      draw_rectangle
 
     // Actualizar longitud
@@ -119,7 +119,8 @@ extend_blade:
 //--------------------------------------------------------------------------
 //  Retardo “tonto” ≃ 60 FPS en QEMU (ajustar 0x8000 si hace falta)
 tiny_delay:
-    mov     x9, #0x2
-1:  subs    x9, x9, #1
-    b.ne    1b
-    ret
+            mov     x14, #2
+continue:   sub     x14, x14, #1
+            cbnz    x14, continue
+            ret
+

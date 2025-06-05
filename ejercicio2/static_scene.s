@@ -2,621 +2,486 @@
     .equ SCREEN_WIDTH, 640
     .equ SCREEN_HEIGH, 480
     .include "aliases.s"
+    .include "animation.s"
 
 draw_static_scene:
 // --------------- 1) PINTAR EL FONDO COMPLETO -------------------------
         // PINTAR EL FONDO (RECTANGULOS)
-        mov     framebuffer,  posInit                     // base FB
-        mov     posX,  #0                      // EJE X
-        mov     posY,  #0                      // EJE Y
-        mov     ancho,  SCREEN_WIDTH            // ANCHO
-        mov     alto,  SCREEN_HEIGH / 4        // ALTO
-        set_color color, 0x16, 0x42F            // #16042F
+        reset_framebuffer
+        all_coordinates #0, #0, SCREEN_WIDTH, SCREEN_HEIGH / 4                          // EJE X, EJE Y, ANCHO, ALTO
+        set_color 0x16, 0x42F                                                           // #16042F
         bl      draw_rectangle
 
-        mov     framebuffer,  posInit                     // base FB
-        mov     posX,  #0                      // EJE X
-        mov     posY,  SCREEN_HEIGH / 4        // EJE Y
-        mov     ancho,  SCREEN_WIDTH            // ANCHO
-        mov     alto,  SCREEN_HEIGH / 4        // ALTO
-        set_color color, 0x1A, 0x633            // #1A0633
+        reset_framebuffer
+        all_coordinates #0, SCREEN_HEIGH / 4, SCREEN_WIDTH, SCREEN_HEIGH / 4            // EJE X, EJE Y, ANCHO, ALTO
+        set_color 0x1C, 0x735                                                           // #1C0735
         bl      draw_rectangle
 
-        mov     framebuffer,  posInit                     // base FB
-        mov     posX,  #0                      // EJE X
-        mov     posY,  SCREEN_HEIGH / 2        // EJE Y
-        mov     ancho,  SCREEN_WIDTH            // ANCHO
-        mov     alto,  SCREEN_HEIGH / 4        // ALTO
-        set_color color, 0x1E, 0x837            // #1E0837
+        reset_framebuffer
+        all_coordinates #0, SCREEN_HEIGH / 2, SCREEN_WIDTH, SCREEN_HEIGH / 4            // EJE X, EJE Y, ANCHO, ALTO
+        set_color 0x22, 0xA3B                                                           // #220A3B
         bl      draw_rectangle
 
-        mov     framebuffer,  posInit                     // base FB
-        mov     posX,  #0                      // EJE X
-        mov     posY,  SCREEN_HEIGH *3 /4      // EJE Y
-        mov     ancho,  SCREEN_WIDTH            // ANCHO
-        mov     alto,  SCREEN_HEIGH / 4        // ALTO
-        set_color color, 0x22, 0xA3B            // #220A3B
+        reset_framebuffer
+        all_coordinates #0, SCREEN_HEIGH * 3 / 4, SCREEN_WIDTH, SCREEN_HEIGH / 4        // EJE X, EJE Y, ANCHO, ALTO
+        set_color 0x28, 0xD41                                                           // #280D41
         bl      draw_rectangle
 
         // TRANSICIONES ENTRE COLORES
         // 1ER TRANSICION
-        mov     framebuffer,  posInit                     // base FB
-        add     posX, xzr, xzr                 // EJE X = 0
-        mov     posY, SCREEN_HEIGH / 4         // EJE Y
-        mov     x3, SCREEN_WIDTH
-        set_color color, 0x1A, 0x633            // #1A0633
-        mov     x6,  #6                      // Largo del loop
-        bl      draw_transition              // Call function
+        reset_framebuffer
+        coordinates #0, SCREEN_HEIGH / 4                // EJE X, EJE Y
+        mov     ancho, SCREEN_WIDTH                     // Ancho
+        set_color 0x1C, 0x735                           // #1C0735
+        mov     x6,  #6                                 // Largo del loop
+        bl      draw_transition                         // Call function
 
-        mov     framebuffer,  posInit                     // base FB
-        add     posX, xzr, xzr                 // EJE X = 0
-        mov     posY, SCREEN_HEIGH / 4 + 5     // EJE Y
-        mov     x3, SCREEN_WIDTH
-        set_color color, 0x1A, 0x633            // #1A0633
-        mov     x6,  #6                      // Largo del loop
-        bl      draw_transition              // Call function
+        reset_framebuffer
+        coordinates #0, SCREEN_HEIGH / 4 + 5            // EJE X, EJE Y
+        mov     ancho, SCREEN_WIDTH                     // Ancho
+        set_color 0x1C, 0x735                           // #1C0735
+        mov     x6,  #6                                 // Largo del loop
+        bl      draw_transition                         // Call function
 
         // 2DA TRANSICION
-        mov     framebuffer,  posInit                     // base FB
-        add     posX, xzr, xzr                 // EJE X = 0
-        mov     posY, SCREEN_HEIGH / 2         // EJE Y
-        mov     x3, SCREEN_WIDTH
-        set_color color, 0x1E, 0x837            // #1E0837
-        mov     x6,  #6                      // Largo del loop
-        bl      draw_transition              // Call function
+        reset_framebuffer
+        coordinates #0, SCREEN_HEIGH / 2                // EJE X, EJE Y
+        mov     ancho, SCREEN_WIDTH                     // Ancho
+        set_color 0x22, 0xA3B                           // #220A3B
+        mov     x6,  #6                                 // Largo del loop
+        bl      draw_transition                         // Call function
 
-        mov     framebuffer,  posInit                     // base FB
-        add     posX, xzr, xzr                 // EJE X = 0
-        mov     posY, SCREEN_HEIGH / 2 + 5     // EJE Y
-        mov     x3, SCREEN_WIDTH
-        set_color color, 0x1E, 0x837            // #1E0837
-        mov     x6,  #6                      // Largo del loop
-        bl      draw_transition              // Call function
+        reset_framebuffer
+        coordinates #0, SCREEN_HEIGH / 2 + 5            // EJE X, EJE Y
+        mov     ancho, SCREEN_WIDTH                     // Ancho
+        set_color 0x22, 0xA3B                           // #220A3B
+        mov     x6,  #6                                 // Largo del loop
+        bl      draw_transition                         // Call function
 
         // 3RA TRANSICION
-        mov     framebuffer,  posInit                     // base FB
-        add     posX, xzr, xzr                 // EJE X = 0
-        mov     posY, SCREEN_HEIGH * 3 / 4     // EJE Y
-        mov     x3, SCREEN_WIDTH
-        set_color color, 0x22, 0xA3B            // #220A3B
-        mov     x6,  #6                      // Largo del loop
-        bl      draw_transition              // Call function
-
-        mov     framebuffer,  posInit                     // base FB
-        add     posX, xzr, xzr                 // EJE X = 0
-        mov     posY, SCREEN_HEIGH * 3 / 4 + 5 // EJE Y
-        mov     x3, SCREEN_WIDTH
-        set_color color, 0x22, 0xA3B            // #220A3B
-        mov     x6,  #6                      // Largo del loop
-        bl      draw_transition              // Call function
+        reset_framebuffer
+        coordinates #0, SCREEN_HEIGH * 3 / 4            // EJE X, EJE Y
+        mov     ancho, SCREEN_WIDTH                     // Ancho
+        set_color 0x28, 0xD41                           // #280D41
+        mov     x6,  #6                                 // Largo del loop
+        bl      draw_transition                         // Call function
+        
+        reset_framebuffer
+        coordinates #0, SCREEN_HEIGH * 3 / 4 + 5        // EJE X, EJE Y
+        mov     ancho, SCREEN_WIDTH                     // Ancho
+        set_color 0x28, 0xD41                           // #280D41
+        mov     x6,  #6                                 // Largo del loop
+        bl      draw_transition                         // Call function
 
 
 // --------------- 2) DETALLES DEL FONDO -------------------------------
         // CALLING FUNCTION STAR (X1, X2 -> X center, Y center)
-	mov     framebuffer, posInit
-	mov     posX, #20
-	mov     posY, #100
+	reset_framebuffer
+        coordinates #20, #100   // EJE X, EJE Y
 	bl star
 
-	mov     framebuffer, posInit
-	mov     posX, #70
-	mov     posY, #400
+	reset_framebuffer
+        coordinates #70, #400   // EJE X, EJE Y
 	bl star
 
-	mov     framebuffer, posInit
-	mov     posX, #100
-	mov     posY, #150
+	reset_framebuffer
+        coordinates #100, #150  // EJE X, EJE Y
 	bl star
 
-	mov     framebuffer, posInit
-	mov     posX, #125
-	mov     posY, #50
+	reset_framebuffer
+        coordinates #125, #50   // EJE X, EJE Y
 	bl star
 
-	mov     framebuffer, posInit
-	mov     posX, #175
-	mov     posY, #440
+	reset_framebuffer
+	coordinates #175, #440  // EJE X, EJE Y
 	bl star
 
-	mov     framebuffer, posInit
-	mov     posX, #250
-	mov     posY, #350
+	reset_framebuffer
+	coordinates #250, #350  // EJE X, EJE Y
 	bl star
 
-	mov     framebuffer, posInit
-	mov     posX, #300
-	mov     posY, #125
+	reset_framebuffer
+	coordinates #300, #125  // EJE X, EJE Y
 	bl star
 
-	mov     framebuffer, posInit
-	mov     posX, #360
-	mov     posY, #320
+	reset_framebuffer
+	coordinates #360, #320  // EJE X, EJE Y
 	bl star
 
-	mov     framebuffer, posInit
-	mov     posX, #370
-	mov     posY, #180
+	reset_framebuffer
+	coordinates #370, #180  // EJE X, EJE Y
 	bl star
 
-	mov     framebuffer, posInit
-	mov     posX, #390
-	mov     posY, #20
+	reset_framebuffer
+	coordinates #390, #20   // EJE X, EJE Y
 	bl star
 
-	mov     framebuffer, posInit
-	mov     posX, #400
-	mov     posY, #415
+	reset_framebuffer
+	coordinates #400, #415  // EJE X, EJE Y
 	bl star
 
-	mov     framebuffer, posInit
-	mov     posX, #500
-	mov     posY, #120
+	reset_framebuffer
+	coordinates #500, #120  // EJE X, EJE Y
 	bl star
 
-	mov     framebuffer, posInit
-	mov     posX, #500
-	mov     posY, #375
+	reset_framebuffer
+	coordinates #500, #375  // EJE X, EJE Y
 	bl star
 
-	mov     framebuffer, posInit
-	mov     posX, #570
-	mov     posY, #200
+	reset_framebuffer
+	coordinates #570, #200  // EJE X, EJE Y
 	bl star
 
-	mov     framebuffer, posInit
-	mov     posX, #590
-	mov     posY, #345
+	reset_framebuffer
+	coordinates #590, #345  // EJE X, EJE Y
 	bl star
 
-	mov     framebuffer, posInit
-	mov     posX, #600
-	mov     posY, #50
+	reset_framebuffer
+	coordinates #600, #50   // EJE X, EJE Y
 	bl star
 
-	mov     framebuffer, posInit
-	mov     posX, #610
-	mov     posY, #460
+	reset_framebuffer
+	coordinates #610, #460  // EJE X, EJE Y
 	bl star
 
 
 // --------------- 3) DIBUJO DE FIGURAS --------------------------------
         // MANGO DEL SABLE DE LUZ
-        mov     framebuffer,  posInit                     // base FB
-        mov     posX,  #50                     // EJE X
-        mov     posY,  #220                    // EJE Y
-        mov     ancho,  #330                    // ANCHO
-        mov     alto,  #50                     // ALTO
-        set_color color, 0xc, 0x3172            // #0C3172
+        reset_framebuffer
+        all_coordinates #50, #220, #330, #50    // EJE X, EJE Y, ANCHO, ALTO
+        set_color 0xc, 0x3172                   // #0C3172
         bl      draw_rectangle
 
         // DETALLES MANGO
         // EMISOR
-        mov     framebuffer,  posInit                     // base FB
-        mov     posX,  #375                    // EJE X
-        mov     posY,  #220                    // EJE Y
-        mov     ancho,  #5                      // ANCHO
-        mov     alto,  #50                     // ALTO
-        set_color color, 0x4, 0x1839            // #041839
+        reset_framebuffer
+        all_coordinates #375, #220, #5, #50     // EJE X, EJE Y, ANCHO, ALTO
+        set_color 0x4, 0x1839                   // #041839
         bl      draw_rectangle
 
-        mov     framebuffer,  posInit                     // base FB
-        mov     posX,  #370                    // EJE X
-        mov     posY,  #223                    // EJE Y
-        mov     ancho,  #5                      // ANCHO
-        mov     alto,  #45                     // ALTO
-        set_color color, 0x4, 0x1839            // #041839
+        reset_framebuffer
+        all_coordinates #370, #223, #5, #45     // EJE X, EJE Y, ANCHO, ALTO
+        set_color 0x4, 0x1839                   // #041839
         bl      draw_rectangle
 
         // ALETITA
-        mov     framebuffer,  posInit                     // base FB
-        mov     posX,  #362                    // EJE X
-        mov     posY,  #270                    // EJE Y
-        mov     ancho,  #1                      // ANCHO
-        mov     alto,  #20                     // ALTO
-        set_color color, 0x4, 0x1839            // #041839
+        reset_framebuffer
+        all_coordinates #362, #270, #1, #20     // EJE X, EJE Y, ANCHO, ALTO
+        set_color 0x4, 0x1839                   // #041839
         bl      draw_rectangle
 
-        mov     framebuffer,  posInit                     // base FB
-        mov     posX,  #360                    // EJE X
-        mov     posY,  #270                    // EJE Y
-        mov     ancho,  #2                      // ANCHO
-        mov     alto,  #25                     // ALTO
-        set_color color, 0x4, 0x1839            // #041839
+        reset_framebuffer
+        all_coordinates #360, #270, #2, #25     // EJE X, EJE Y, ANCHO, ALTO
+        set_color 0x4, 0x1839                   // #041839
         bl      draw_rectangle
 
-        mov     framebuffer,  posInit                     // base FB
-        mov     posX,  #358                    // EJE X
-        mov     posY,  #270                    // EJE Y
-        mov     ancho,  #2                      // ANCHO
-        mov     alto,  #28                     // ALTO
-        set_color color, 0x4, 0x1839            // #041839
+        reset_framebuffer
+        all_coordinates #358, #270, #2, #28     // EJE X, EJE Y, ANCHO, ALTO
+        set_color 0x4, 0x1839                   // #041839
         bl      draw_rectangle
 
-        mov     framebuffer,  posInit                     // base FB
-        mov     posX,  #356                    // EJE X
-        mov     posY,  #270                    // EJE Y
-        mov     ancho,  #2                      // ANCHO
-        mov     alto,  #30                     // ALTO
-        set_color color, 0xc, 0x3172            // #0C3172
+        reset_framebuffer
+        all_coordinates #356, #270, #2, #30     // EJE X, EJE Y, ANCHO, ALTO
+        set_color 0xc, 0x3172                   // #0C3172
         bl      draw_rectangle
 
-        mov     framebuffer,  posInit                     // base FB
-        mov     posX,  #354                    // EJE X
-        mov     posY,  #270                    // EJE Y
-        mov     ancho,  #2                      // ANCHO
-        mov     alto,  #30                     // ALTO
-        set_color color, 0xc, 0x3172            // #0C3172
+        reset_framebuffer
+        all_coordinates #354, #270, #2, #30     // EJE X, EJE Y, ANCHO, ALTO
+        set_color 0xc, 0x3172                   // #0C3172
         bl      draw_rectangle
 
-        mov     framebuffer,  posInit                     // base FB
-        mov     posX,  #352                    // EJE X
-        mov     posY,  #270                    // EJE Y
-        mov     ancho,  #2                      // ANCHO
-        mov     alto,  #30                     // ALTO
-        set_color color, 0xc, 0x3172            // #0C3172
+        reset_framebuffer
+        all_coordinates #352, #270, #2, #30     // EJE X, EJE Y, ANCHO, ALTO
+        set_color 0xc, 0x3172                   // #0C3172
         bl      draw_rectangle
 
-        mov     framebuffer,  posInit                     // base FB
-        mov     posX,  #350                    // EJE X
-        mov     posY,  #270                    // EJE Y
-        mov     ancho,  #2                      // ANCHO
-        mov     alto,  #28                     // ALTO
-        set_color color, 0xc, 0x3172            // #0C3172
+        reset_framebuffer
+        all_coordinates #350, #270, #2, #28     // EJE X, EJE Y, ANCHO, ALTO
+        set_color 0xc, 0x3172                   // #0C3172
         bl      draw_rectangle
 
-        mov     framebuffer,  posInit                     // base FB
-        mov     posX,  #348                    // EJE X
-        mov     posY,  #270                    // EJE Y
-        mov     ancho,  #2                      // ANCHO
-        mov     alto,  #26                     // ALTO
-        set_color color, 0xc, 0x3172            // #0C3172
+        reset_framebuffer
+        all_coordinates #348, #270, #2, #26     // EJE X, EJE Y, ANCHO, ALTO
+        set_color 0xc, 0x3172                   // #0C3172
         bl      draw_rectangle
 
-        mov     framebuffer,  posInit                     // base FB
-        mov     posX,  #347                    // EJE X
-        mov     posY,  #270                    // EJE Y
-        mov     ancho,  #1                      // ANCHO
-        mov     alto,  #23                     // ALTO
-        set_color color, 0xc, 0x3172            // #0C3172
+        reset_framebuffer
+        all_coordinates #347, #270, #1, #23     // EJE X, EJE Y, ANCHO, ALTO
+        set_color 0xc, 0x3172                   // #0C3172
         bl      draw_rectangle
 
-        mov     framebuffer,  posInit                     // base FB
-        mov     posX,  #346                    // EJE X
-        mov     posY,  #270                    // EJE Y
-        mov     ancho,  #1                      // ANCHO
-        mov     alto,  #18                     // ALTO
-        set_color color, 0xc, 0x3172            // #0C3172
+        reset_framebuffer
+        all_coordinates #346, #270, #1, #18     // EJE X, EJE Y, ANCHO, ALTO
+        set_color 0xc, 0x3172                   // #0C3172
         bl      draw_rectangle
 
-        mov     framebuffer,  posInit                     // base FB
-        mov     posX,  #340                    // EJE X
-        mov     posY,  #270                    // EJE Y
-        mov     ancho,  #6                      // ANCHO
-        mov     alto,  #16                     // ALTO
-        set_color color, 0xc, 0x3172            // #0C3172
+        reset_framebuffer
+        all_coordinates #340, #270, #6, #16     // EJE X, EJE Y, ANCHO, ALTO
+        set_color 0xc, 0x3172                   // #0C3172
         bl      draw_rectangle
 
-        mov     framebuffer,  posInit                     // base FB
-        mov     posX,  #339                    // EJE X
-        mov     posY,  #270                    // EJE Y
-        mov     ancho,  #1                      // ANCHO
-        mov     alto,  #14                     // ALTO
-        set_color color, 0xc, 0x3172            // #0C3172
+        reset_framebuffer
+        all_coordinates #339, #270, #1, #14     // EJE X, EJE Y, ANCHO, ALTO
+        set_color 0xc, 0x3172                   // #0C3172
         bl      draw_rectangle
 
-        mov     framebuffer,  posInit                     // base FB
-        mov     posX,  #338                    // EJE X
-        mov     posY,  #270                    // EJE Y
-        mov     ancho,  #1                      // ANCHO
-        mov     alto,  #12                     // ALTO
-        set_color color, 0xc, 0x3172            // #0C3172
+        reset_framebuffer
+        all_coordinates #338, #270, #1, #12     // EJE X, EJE Y, ANCHO, ALTO
+        set_color 0xc, 0x3172                   // #0C3172
         bl      draw_rectangle
 
-        mov     framebuffer,  posInit                     // base FB
-        mov     posX,  #337                    // EJE X
-        mov     posY,  #270                    // EJE Y
-        mov     ancho,  #1                      // ANCHO
-        mov     alto,  #10                     // ALTO
-        set_color color, 0x4, 0x1839            // #041839
+        reset_framebuffer
+        all_coordinates #337, #270, #1, #10     // EJE X, EJE Y, ANCHO, ALTO
+        set_color 0x4, 0x1839                   // #041839
         bl      draw_rectangle
 
         // GRIP
-        mov     framebuffer,  posInit                     // base FB
-        mov     posX,  #50                     // EJE X
-        mov     posY,  #260                    // EJE Y
-        mov     ancho,  #60                     // ANCHO
-        mov     alto,  #5                      // ALTO
-        set_color color, 0x4, 0x1839            // #041839
+        reset_framebuffer
+        all_coordinates #50, #260, #60, #5      // EJE X, EJE Y, ANCHO, ALTO
+        set_color 0x4, 0x1839                   // #041839
         bl      draw_rectangle
 
-        mov     framebuffer,  posInit                     // base FB
-        mov     posX,  #50                     // EJE X
-        mov     posY,  #243                    // EJE Y
-        mov     ancho,  #80                     // ANCHO
-        mov     alto,  #5                      // ALTO
-        set_color color, 0x4, 0x1839            // #041839
+        reset_framebuffer
+        all_coordinates #50, #243, #80, #5      // EJE X, EJE Y, ANCHO, ALTO
+        set_color 0x4, 0x1839                   // #041839
         bl      draw_rectangle
 
-        mov     framebuffer,  posInit                     // base FB
-        mov     posX,  #50                     // EJE X
-        mov     posY,  #225                    // EJE Y
-        mov     ancho,  #80                     // ANCHO
-        mov     alto,  #5                      // ALTO
-        set_color color, 0x4, 0x1839            // #041839
+        reset_framebuffer
+        all_coordinates #50, #225, #80, #5      // EJE X, EJE Y, ANCHO, ALTO
+        set_color 0x4, 0x1839                   // #041839
         bl      draw_rectangle
 
-        mov     framebuffer,  posInit                     // base FB
-        mov     posX,  #130                    // EJE X
-        mov     posY,  #226                    // EJE Y
-        mov     ancho,  #4                      // ANCHO
-        mov     alto,  #3                      // ALTO
-        set_color color, 0x4, 0x1839            // #041839
+        reset_framebuffer
+        all_coordinates #130, #226, #4, #3      // EJE X, EJE Y, ANCHO, ALTO
+        set_color 0x4, 0x1839                   // #041839
         bl      draw_rectangle
 
-        mov     framebuffer,  posInit                     // base FB
-        mov     posX,  #130                    // EJE X
-        mov     posY,  #244                    // EJE Y
-        mov     ancho,  #4                      // ANCHO
-        mov     alto,  #3                      // ALTO
-        set_color color, 0x4, 0x1839            // #041839
+        reset_framebuffer
+        all_coordinates #130, #244, #4, #3      // EJE X, EJE Y, ANCHO, ALTO
+        set_color 0x4, 0x1839                   // #041839
         bl      draw_rectangle
 
-        mov     framebuffer,  posInit                     // base FB
-        mov     posX,  #47                     // EJE X
-        mov     posY,  #221                    // EJE Y
-        mov     ancho,  #3                      // ANCHO
-        mov     alto,  #48                     // ALTO
-        set_color color, 0x4, 0x1839            // #041839
+        reset_framebuffer
+        all_coordinates #47, #221, #3, #48      // EJE X, EJE Y, ANCHO, ALTO
+        set_color 0x4, 0x1839                   // #041839
         bl      draw_rectangle
 
 
 // --------------- 4) ODC ENGRAVING ----------------------------------
         // O
-        mov     framebuffer,  posInit                     // base FB
-        mov     posX,  #300                    // EJE X
-        mov     posY,  #225                    // EJE Y
-        mov     ancho,  #3                      // ANCHO
-        mov     alto,  #13                     // ALTO
-        set_color color, 0x4, 0x1839            // #041839
+        reset_framebuffer
+        all_coordinates #300, #225, #3, #13     // EJE X, EJE Y, ANCHO, ALTO
+        set_color 0x4, 0x1839                   // #041839
         bl      draw_rectangle
 
-        mov     framebuffer,  posInit                     // base FB
-        mov     posX,  #310                    // EJE X
-        mov     posY,  #225                    // EJE Y
-        mov     ancho,  #3                      // ANCHO
-        mov     alto,  #13                     // ALTO
-        set_color color, 0x4, 0x1839            // #041839
+        reset_framebuffer
+        all_coordinates #310, #225, #3, #13     // EJE X, EJE Y, ANCHO, ALTO
+        set_color 0x4, 0x1839                   // #041839
         bl      draw_rectangle
 
-        mov     framebuffer,  posInit                     // base FB
-        mov     posX,  #303                    // EJE X
-        mov     posY,  #223                    // EJE Y
-        mov     ancho,  #7                      // ANCHO
-        mov     alto,  #2                      // ALTO
-        set_color color, 0x4, 0x1839            // #041839
+        reset_framebuffer
+        all_coordinates #303, #223, #7, #2      // EJE X, EJE Y, ANCHO, ALTO
+        set_color 0x4, 0x1839                   // #041839
         bl      draw_rectangle
 
-        mov     framebuffer,  posInit                     // base FB
-        mov     posX,  #303                    // EJE X
-        mov     posY,  #238                    // EJE Y
-        mov     ancho,  #7                      // ANCHO
-        mov     alto,  #2                      // ALTO
-        set_color color, 0x4, 0x1839            // #041839
+        reset_framebuffer
+        all_coordinates #303, #238, #7, #2      // EJE X, EJE Y, ANCHO, ALTO
+        set_color 0x4, 0x1839                   // #041839
         bl      draw_rectangle
 
         // D
-        mov     framebuffer,  posInit                     // base FB
-        mov     posX,  #315                    // EJE X
-        mov     posY,  #223                    // EJE Y
-        mov     ancho,  #3                      // ANCHO
-        mov     alto,  #17                     // ALTO
-        set_color color, 0x4, 0x1839            // #041839
+        reset_framebuffer
+        all_coordinates #315, #223, #3, #17     // EJE X, EJE Y, ANCHO, ALTO
+        set_color 0x4, 0x1839                   // #041839
         bl      draw_rectangle
 
-        mov     framebuffer,  posInit                     // base FB
-        mov     posX,  #325                    // EJE X
-        mov     posY,  #225                    // EJE Y
-        mov     ancho,  #3                      // ANCHO
-        mov     alto,  #13                     // ALTO
-        set_color color, 0x4, 0x1839            // #041839
+        reset_framebuffer
+        all_coordinates #325, #228, #3, #13     // EJE X, EJE Y, ANCHO, ALTO
+        set_color 0x4, 0x1839                   // #041839
         bl      draw_rectangle
 
-        mov     framebuffer,  posInit                     // base FB
-        mov     posX,  #318                    // EJE X
-        mov     posY,  #223                    // EJE Y
-        mov     ancho,  #7                      // ANCHO
-        mov     alto,  #2                      // ALTO
-        set_color color, 0x4, 0x1839            // #041839
+        reset_framebuffer
+        all_coordinates #318, #223, #7, #2      // EJE X, EJE Y, ANCHO, ALTO
+        set_color 0x4, 0x1839                   // #041839
         bl      draw_rectangle
 
-        mov     framebuffer,  posInit                     // base FB
-        mov     posX,  #318                    // EJE X
-        mov     posY,  #238                    // EJE Y
-        mov     ancho,  #7                      // ANCHO
-        mov     alto,  #2                      // ALTO
-        set_color color, 0x4, 0x1839            // #041839
+        reset_framebuffer
+        all_coordinates #318, #238, #7, #2      // EJE X, EJE Y, ANCHO, ALTO
+        set_color 0x4, 0x1839                   // #041839
         bl      draw_rectangle
 
         // C
-        mov     framebuffer,  posInit                     // base FB
-        mov     posX,  #330                    // EJE X
-        mov     posY,  #225                    // EJE Y
-        mov     ancho,  #3                      // ANCHO
-        mov     alto,  #13                     // ALTO
-        set_color color, 0x4, 0x1839            // #041839
+        reset_framebuffer
+        all_coordinates #330, #225, #3, #13     // EJE X, EJE Y, ANCHO, ALTO
+        set_color 0x4, 0x1839                   // #041839
         bl      draw_rectangle
 
-        mov     framebuffer,  posInit                     // base FB
-        mov     posX,  #333                    // EJE X
-        mov     posY,  #223                    // EJE Y
-        mov     ancho,  #8                      // ANCHO
-        mov     alto,  #2                      // ALTO
-        set_color color, 0x4, 0x1839            // #041839
+        reset_framebuffer
+        all_coordinates #333, #223, #8, #2      // EJE X, EJE Y, ANCHO, ALTO
+        set_color 0x4, 0x1839                   // #041839
         bl      draw_rectangle
 
-        mov     framebuffer,  posInit                     // base FB
-        mov     posX,  #333                    // EJE X
-        mov     posY,  #238                    // EJE Y
-        mov     ancho,  #8                      // ANCHO
-        mov     alto,  #2                      // ALTO
-        set_color color, 0x4, 0x1839            // #041839
+        reset_framebuffer
+        all_coordinates #333, #238, #8, #2      // EJE X, EJE Y, ANCHO, ALTO
+        set_color 0x4, 0x1839                   // #041839
         bl      draw_rectangle
 
         // 2
-        mov     framebuffer,  posInit                     // base FB
-        mov     posX,  #302                    // EJE X
-        mov     posY,  #262                    // EJE Y
-        mov     ancho,  #6                      // ANCHO
-        mov     alto,  #2                      // ALTO
-        set_color color, 0x4, 0x1839            // #041839
+        reset_framebuffer
+        all_coordinates #302, #262, #6, #2      // EJE X, EJE Y, ANCHO, ALTO
+        set_color 0x4, 0x1839                   // #041839
         bl      draw_rectangle
 
-        mov     framebuffer,  posInit                     // base FB
-        mov     posX,  #302                    // EJE X
-        mov     posY,  #254                    // EJE Y
-        mov     ancho,  #6                      // ANCHO
-        mov     alto,  #2                      // ALTO
-        set_color color, 0x4, 0x1839            // #041839
+        reset_framebuffer
+        all_coordinates #302, #254, #6, #2      // EJE X, EJE Y, ANCHO, ALTO
+        set_color 0x4, 0x1839                   // #041839
         bl      draw_rectangle
 
-        mov     framebuffer,  posInit                     // base FB
-        mov     posX,  #302                    // EJE X
-        mov     posY,  #246                    // EJE Y
-        mov     ancho,  #6                      // ANCHO
-        mov     alto,  #2                      // ALTO
-        set_color color, 0x4, 0x1839            // #041839
+        reset_framebuffer
+        all_coordinates #302, #246, #6, #2      // EJE X, EJE Y, ANCHO, ALTO
+        set_color 0x4, 0x1839                   // #041839
         bl      draw_rectangle
 
-        mov     framebuffer,  posInit                     // base FB
-        mov     posX,  #308                    // EJE X
-        mov     posY,  #248                    // EJE Y
-        mov     ancho,  #2                      // ANCHO
-        mov     alto,  #6                      // ALTO
-        set_color color, 0x4, 0x1839            // #041839
+        reset_framebuffer
+        all_coordinates #308, #248, #2, #6      // EJE X, EJE Y, ANCHO, ALTO
+        set_color 0x4, 0x1839                   // #041839
         bl      draw_rectangle
 
-        mov     framebuffer,  posInit                     // base FB
-        mov     posX,  #300                    // EJE X
-        mov     posY,  #256                    // EJE Y
-        mov     ancho,  #2                      // ANCHO
-        mov     alto,  #6                      // ALTO
-        set_color color, 0x4, 0x1839            // #041839
+        reset_framebuffer
+        all_coordinates #300, #256, #2, #6      // EJE X, EJE Y, ANCHO, ALTO
+        set_color 0x4, 0x1839                   // #041839
         bl      draw_rectangle
 
         // 0
-        mov     framebuffer,  posInit                     // base FB
-        mov     posX,  #314                    // EJE X
-        mov     posY,  #246                    // EJE Y
-        mov     ancho,  #6                      // ANCHO
-        mov     alto,  #2                      // ALTO
-        set_color color, 0x4, 0x1839            // #041839
+        reset_framebuffer
+        all_coordinates #314, #246, #6, #2      // EJE X, EJE Y, ANCHO, ALTO
+        set_color 0x4, 0x1839                   // #041839
         bl      draw_rectangle
 
-        mov     framebuffer,  posInit                     // base FB
-        mov     posX,  #314                    // EJE X
-        mov     posY,  #262                    // EJE Y
-        mov     ancho,  #6                      // ANCHO
-        mov     alto,  #2                      // ALTO
-        set_color color, 0x4, 0x1839            // #041839
+        reset_framebuffer
+        all_coordinates #314, #262, #6, #2      // EJE X, EJE Y, ANCHO, ALTO
+        set_color 0x4, 0x1839                   // #041839
         bl      draw_rectangle
 
-        mov     framebuffer,  posInit                     // base FB
-        mov     posX,  #312                    // EJE X
-        mov     posY,  #248                    // EJE Y
-        mov     ancho,  #2                      // ANCHO
-        mov     alto,  #14                     // ALTO
-        set_color color, 0x4, 0x1839            // #041839
+        reset_framebuffer
+        all_coordinates #312, #248, #2, #14     // EJE X, EJE Y, ANCHO, ALTO
+        set_color 0x4, 0x1839                   // #041839
         bl      draw_rectangle
 
-        mov     framebuffer,  posInit                     // base FB
-        mov     posX,  #320                    // EJE X
-        mov     posY,  #248                    // EJE Y
-        mov     ancho,  #2                      // ANCHO
-        mov     alto,  #14                     // ALTO
-        set_color color, 0x4, 0x1839            // #041839
+        reset_framebuffer
+        all_coordinates #320, #248, #2, #14     // EJE X, EJE Y, ANCHO, ALTO
+        set_color 0x4, 0x1839                   // #041839
         bl      draw_rectangle
 
         // 2
-        mov     framebuffer,  posInit                     // base FB
-        mov     posX,  #326                    // EJE X
-        mov     posY,  #262                    // EJE Y
-        mov     ancho,  #6                      // ANCHO
-        mov     alto,  #2                      // ALTO
-        set_color color, 0x4, 0x1839            // #041839
+        reset_framebuffer
+        all_coordinates #326, #262, #6, #2      // EJE X, EJE Y, ANCHO, ALTO
+        set_color 0x4, 0x1839                   // #041839
         bl      draw_rectangle
 
-        mov     framebuffer,  posInit                     // base FB
-        mov     posX,  #326                    // EJE X
-        mov     posY,  #254                    // EJE Y
-        mov     ancho,  #6                      // ANCHO
-        mov     alto,  #2                      // ALTO
-        set_color color, 0x4, 0x1839            // #041839
+        reset_framebuffer
+        all_coordinates #326, #246, #6, #2      // EJE X, EJE Y, ANCHO, ALTO
+        set_color 0x4, 0x1839                   // #041839
         bl      draw_rectangle
 
-        mov     framebuffer,  posInit                     // base FB
-        mov     posX,  #326                    // EJE X
-        mov     posY,  #246                    // EJE Y
-        mov     ancho,  #6                      // ANCHO
-        mov     alto,  #2                      // ALTO
-        set_color color, 0x4, 0x1839            // #041839
+        reset_framebuffer
+        all_coordinates #326, #246, #6, #2      // EJE X, EJE Y, ANCHO, ALTO
+        set_color 0x4, 0x1839                   // #041839
         bl      draw_rectangle
 
-        mov     framebuffer,  posInit                     // base FB
-        mov     posX,  #332                    // EJE X
-        mov     posY,  #248                    // EJE Y
-        mov     ancho,  #2                      // ANCHO
-        mov     alto,  #6                      // ALTO
-        set_color color, 0x4, 0x1839            // #041839
+        reset_framebuffer
+        all_coordinates #332, #248, #2, #6      // EJE X, EJE Y, ANCHO, ALTO
+        set_color 0x4, 0x1839                   // #041839
         bl      draw_rectangle
 
-        mov     framebuffer,  posInit                     // base FB
-        mov     posX,  #324                    // EJE X
-        mov     posY,  #256                    // EJE Y
-        mov     ancho,  #2                      // ANCHO
-        mov     alto,  #6                      // ALTO
-        set_color color, 0x4, 0x1839            // #041839
+        reset_framebuffer
+        all_coordinates #324, #256, #2, #6      // EJE X, EJE Y, ANCHO, ALTO
+        set_color 0x4, 0x1839                   // #041839
         bl      draw_rectangle
 
         // 5
-        mov     framebuffer,  posInit                     // base FB
-        mov     posX,  #338                    // EJE X
-        mov     posY,  #262                    // EJE Y
-        mov     ancho,  #6                      // ANCHO
-        mov     alto,  #2                      // ALTO
-        set_color color, 0x4, 0x1839            // #041839
+        reset_framebuffer
+        all_coordinates #338, #262, #6, #2      // EJE X, EJE Y, ANCHO, ALTO
+        set_color 0x4, 0x1839                   // #041839
         bl      draw_rectangle
 
-        mov     framebuffer,  posInit                     // base FB
-        mov     posX,  #338                    // EJE X
-        mov     posY,  #254                    // EJE Y
-        mov     ancho,  #6                      // ANCHO
-        mov     alto,  #2                      // ALTO
-        set_color color, 0x4, 0x1839            // #041839
+        reset_framebuffer
+        all_coordinates #338, #254, #6, #2      // EJE X, EJE Y, ANCHO, ALTO
+        set_color 0x4, 0x1839                   // #041839
         bl      draw_rectangle
 
-        mov     framebuffer,  posInit                     // base FB
-        mov     posX,  #338                    // EJE X
-        mov     posY,  #246                    // EJE Y
-        mov     ancho,  #6                      // ANCHO
-        mov     alto,  #2                      // ALTO
-        set_color color, 0x4, 0x1839            // #041839
+        reset_framebuffer
+        all_coordinates #338, #246, #6, #2      // EJE X, EJE Y, ANCHO, ALTO
+        set_color 0x4, 0x1839                   // #041839
         bl      draw_rectangle
 
-        mov     framebuffer,  posInit                     // base FB
-        mov     posX,  #344                    // EJE X
-        mov     posY,  #256                    // EJE Y
-        mov     ancho,  #2                      // ANCHO
-        mov     alto,  #6                      // ALTO
-        set_color color, 0x4, 0x1839            // #041839
+        reset_framebuffer
+        all_coordinates #344, #256, #2, #6      // EJE X, EJE Y, ANCHO, ALTO
+        set_color 0x4, 0x1839                   // #041839
         bl      draw_rectangle
 
-        mov     framebuffer,  posInit                     // base FB
-        mov     posX,  #336                    // EJE X
-        mov     posY,  #248                    // EJE Y
-        mov     ancho,  #2                      // ANCHO
-        mov     alto,  #6                      // ALTO
-        set_color color, 0x4, 0x1839            // #041839
+        reset_framebuffer
+        all_coordinates #336, #248, #2, #6      // EJE X, EJE Y, ANCHO, ALTO
+        set_color 0x4, 0x1839                   // #041839
         bl      draw_rectangle
 
+        ret
+
+// Blade
+bladeeeeeee:
+    // --------------- 5) HAZ DEL SABLE DE LUZ -----------------------------
+        // BASE DEL HAZ
+        reset_framebuffer
+        all_coordinates #376, #232, #264, #25   // EJE X, EJE Y, ANCHO, ALTO
+        set_color 0xAD, 0xFFFF                  // #ADFFFF
+        bl      draw_rectangle
+
+        // DETALLES DEL HAZ
+        reset_framebuffer
+        all_coordinates #376, #232, #264, #3    // EJE X, EJE Y, ANCHO, ALTO
+        set_color 0x78, 0xC6FA                  // #78C6FA
+        bl      draw_rectangle
+
+        reset_framebuffer
+        all_coordinates #376, #234, #264, #3    // EJE X, EJE Y, ANCHO, ALTO
+        set_color 0x98, 0xD3FA                  // #98D3FA
+        bl      draw_rectangle
+
+        reset_framebuffer
+        all_coordinates #376, #249, #264, #3    // EJE X, EJE Y, ANCHO, ALTO
+        set_color 0xFF, 0xFFFF                  // #FFFFFF
+        bl      draw_rectangle
+        
+
+    // --------------- 6) GLOW DEL SABLE ------------------------------------
+        // Glow superior
+        reset_framebuffer
+        coordinates #376, #231                  // EJE X, EJE Y
+        mov     x6,  #5                         // Largo del loop
+        mov     ancho, SCREEN_WIDTH             // Ancho
+        set_color 0x78, 0xC6FA                  // #78C6FA
+        bl      draw_transition
+
+        reset_framebuffer
+        coordinates #385, #224                  // EJE X, EJE Y
+        mov     x6,  #5                         // Largo del loop
+        mov     ancho, SCREEN_WIDTH             // Ancho
+        set_color 0x78, 0xC6FA                  // #78C6FA
+        bl      draw_transition_inverse
+
+        // Glow inferior
+        reset_framebuffer
+        coordinates #376, #255                  // EJE X, EJE Y
+        mov     x6,  #5                         // Largo del loop
+        mov     ancho, SCREEN_WIDTH             // Ancho
+        set_color 0xAD, 0xFFFF                  // #ADFFFF
+        bl      draw_transition_inverse
+
+        reset_framebuffer
+        coordinates #379, #264                  // EJE X, EJE Y
+        mov     x6,  #5                         // Largo del loop
+        mov     ancho, SCREEN_WIDTH             // Ancho
+        set_color 0xAD, 0xFFFF                  // #ADFFFF
+        bl      draw_transition
 
         ret
