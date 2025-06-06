@@ -9,7 +9,18 @@ alfaX       .req x16
 alfaY       .req x17
 posInit     .req x20
 
-.macro set_color reg, val_high, val_low
-    movz \reg, \val_high, lsl 16
-    movk \reg, \val_low, lsl 0
+.macro set_color val_high, val_low
+    movz color, \val_high, lsl 16
+    movk color, \val_low, lsl 0
+.endm
+
+.macro all_coords x, y, an, al 
+    mov posX, \x
+    mov posY, \y
+    mov ancho, \an
+    mov alto, \al
+.endm
+
+.macro resetFramebuffer
+    mov framebuffer, posInit
 .endm

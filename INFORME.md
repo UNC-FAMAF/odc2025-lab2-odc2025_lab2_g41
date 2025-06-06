@@ -4,10 +4,10 @@
 
 ### Alumnos
 
-1) Mariano Gabriel Dubois Bruenner `45694437`
-2) Valentin Issidoro `45692174`
-3) Lisandro Marquez `45691761`
-4) Mateo Marchisone `45934473`
+1) `45694437` Mariano Gabriel Dubois Bruenner
+2) `45692174` Valentin Issidoro
+3) `45691761` Lisandro Marquez
+4) `45934473` Mateo Marchisone
 
 ---
 
@@ -23,10 +23,6 @@
     - *aliases.s:* Posee alias para sentencias recurrentes
     - *app.s:* Posee la imagen principal
     - *draw_shapes.s:* Posee las figuras básicas empleadas
-
-### Imagen de inspiración
-
-![StarWars Sable](../odc2025-lab2-odc2025_lab2_g41/utils/PixelArt.jpeg)
 
 ---
 
