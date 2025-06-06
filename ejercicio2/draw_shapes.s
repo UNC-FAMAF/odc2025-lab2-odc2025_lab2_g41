@@ -38,161 +38,6 @@ draw_rectangle:
     .equ BPP,           32        // bits por píxel (4 bytes por píxel)
 
 
-draw_line:
-    // 1) Salvar link register
-    stp     x30, xzr, [sp, #-16]!   // guardo x30 (LR)
-
-    // 2) Calcular dx, dy
-    sub     x6, ancho, posX
-    sub     x7, alto, posY
-
-    // 3) abs_dx = |dx| → en x8
-    mov     x8, x6              // copiar
-    cmp     x8, #0
-    cneg    x8, x8, MI          // si x8<0, x8 = -x8
-
-    // 4) abs_dy = |dy| → en x9
-    mov     x9, x7
-    cmp     x9, #0
-    cneg    x9, x9, MI          // si x9<0, x9 = -x9
-
-    // 5) sx = sign(dx) → +1 ó -1
-    mov     x10, #1             // por defecto +1
-    mov     x13, #-1            // usar x13 como -1
-    cmp     x6, #0
-    csel    x10, x10, x13, GE   // si dx >= 0   sx := +1 ; si dx < 0  sx := -1
-
-    // 6) sy = sign(dy) → +1 ó -1
-    mov     x11, #1             // por defecto +1
-    mov     x13, #-1            // x13 = -1
-    cmp     x7, #0
-    csel    x11, x11, x13, GE   // si dy >= 0   sy := +1 ; si dy < 0  sy := -1
-
-    // 7) Decidir si es X‐dominante o Y‐dominante
-    cmp     x8, x9
-    b.lt    .loop_ydominant     // si |dx| < |dy|, ir a la versión Y‐dominante
-
-    // ────────────────────────────────────────────────────────────────────────
-    //  A) CASO “X‐dominante”: abs_dx ≥ abs_dy
-    //    Para cada i = 0 .. abs_dx:
-    //      x = x₁ + (i · sx)
-    //      y = y₁ + ⎣(dy · i) / abs_dx⎦
-    //
-    mov     x12, #0             // i = 0
-.xloop:
-    // --- calcular x = x₁ + (i·sx) sin multiplicar
-    mov     x13, x12            // x13 ← i
-    cmp     x10, #0             // ¿sx < 0?
-    cneg    x13, x13, MI        //   si sx <0, x13 = -i; si sx≥0 queda i
-    add     x14, posX, x13        // x14 ← x₁ + (i·sx)
-
-    // --- calcular y = y₁ + (dy * i) / abs_dx
-    mul     x15, x7, x12        // x15 ← dy * i
-    sdiv    x15, x15, x8        // x15 ← (dy * i) / abs_dx (división entera, floored)
-    add     x15, x15, posY        // x15 ← y₁ + … = valor de y
-
-    // --- dibujar pixel en (x14, x15)
-    //     offset_bytes = (((y * SCREEN_WIDTH) + x) * 4)
-    //     SCREEN_WIDTH = 640 = (1<<9) + (1<<7)
-    mov     x16, x15            // x16 = y
-    lsl     x16, x16, #9        // x16 = y*512
-    mov     x17, x15            // x17 = y
-    lsl     x17, x17, #7        // x17 = y*128
-    add     x16, x16, x17       // x16 = y*640
-    add     x16, x16, x14       // x16 = y*640 + x
-    lsl     x16, x16, #2        // x16 = (y*640 + x) * 4 bytes
-    add     x16, x16, framebuffer        // x16 = dirección en el framebuffer
-    stur    w5, [x16]           // escribo el color en w5
-
-    // --- incrementar i y ver si ya terminé
-    add     x12, x12, #1        // i++
-    cmp     x12, x8             // comparar i con abs_dx
-    ble     .xloop              // mientras i ≤ abs_dx, repetir
-
-    b       .line_done          // si i > abs_dx, termino
-
-    // ────────────────────────────────────────────────────────────────────────
-.loop_ydominant:
-    // B) CASO “Y‐dominante”: abs_dx < abs_dy
-    //   Para cada i = 0 .. abs_dy:
-    //     y = y₁ + (i·sy)
-    //     x = x₁ + ⎣(dx · i) / abs_dy⎦
-    //
-    mov     x12, #0             // i = 0
-.yloop:
-    // --- calcular y = y₁ + (i·sy)
-    mov     x13, x12            // x13 ← i
-    cmp     x11, #0             // ¿sy < 0?
-    cneg    x13, x13, MI        //   si sy <0, x13 = -i; si sy≥0 queda i
-    add     x15, posY, x13        // x15 ← y₁ + (i·sy)
-
-    // --- calcular x = x₁ + ⎣(dx * i) / abs_dy⎦
-    mul     x14, x6, x12        // x14 ← dx * i
-    sdiv    x14, x14, x9        // x14 ← (dx * i) / abs_dy
-    add     x14, x14, posX        // x14 ← x₁ + … = valor de x
-
-    // --- dibujar pixel en (x14, x15)
-    mov     x16, x15            // y a x16
-    lsl     x16, x16, #9        // x16 = y*512
-    mov     x17, x15            // x17 = y
-    lsl     x17, x17, #7        // x17 = y*128
-    add     x16, x16, x17       // x16 = y*640
-    add     x16, x16, x14       // x16 = y*640 + x
-    lsl     x16, x16, #2        // x16 = (y*640 + x)*4
-    add     x16, x16, framebuffer        // x16 = dirección absoluta
-    stur    w5, [x16]           // escribo el color
-
-    // --- incrementar i y ver si ya terminé
-    add     x12, x12, #1        // i++
-    cmp     x12, x9             // comparar i con abs_dy
-    ble     .yloop              // mientras i ≤ abs_dy, repetir
-
-    // caigo aquí cuando i > abs_dy
-.line_done:
-    // Restaurar LR y retornar
-    ldp     x30, xzr, [sp], #16
-    ret
-
-
-draw_triangle:
-    // 1) Salvar LR (x30) en pila
-    stp     x30, xzr, [sp, #-16]!       // guardo x30; xzr es dummy para alinear
-
-    // 2) Guardar (p1_x, p1_y) en registros temporales (x8, x9)
-    mov     x8, posX      // x8 ← p1_x
-    mov     x9, posY      // x9 ← p1_y
-
-    // ------- 3) Dibujar arista entre p1 (posX,y1) y p2 (ancho,y4) -------
-    //    Parámetros ya en:
-    //      framebuffer = framebuffer, posX = p1_x, posY = p1_y, ancho = p2_x, alto = p2_y
-    //    Sólo hay que copiar color (en x7) → color
-    mov     color, x7      // color ← color
-    bl      draw_line
-
-    // ------- 4) Dibujar arista entre p2 (ancho,y2) y p3 (color,y3) -------
-    //    Ajustar registros para llamada:
-    //      posX ← p2_x (ya estaba en ancho), posY ← p2_y (ya en alto)
-    //      ancho ← p3_x (viene en color),   alto ← p3_y (viene en x6)
-    mov     posX, ancho      // posX = p2_x
-    mov     posY, alto      // posY = p2_y
-    mov     ancho, color      // ancho = p3_x
-    mov     alto, x6      // alto = p3_y
-    mov     color, x7      // color ← color
-    bl      draw_line
-
-    // ------- 5) Dibujar arista entre p3 (ancho,y3) y p1 (x8,x9) -------
-    //    Ahora, p3 está en (ancho,alto); p1 la recuperamos de (x8,x9).
-    mov     posX, ancho      // posX = p3_x
-    mov     posY, alto      // posY = p3_y
-    mov     ancho, x8      // ancho = p1_x (guardado)
-    mov     alto, x9      // alto = p1_y (guardado)
-    mov     color, x7      // color ← color
-    bl      draw_line
-
-    // 6) Restaurar LR y retornar
-    ldp     x30, xzr, [sp], #16
-    ret
-
 // ESTRELLAS -------------------------------------------------------------------------------------
 // Funci�n para dibujar una estrella (cruz)
 // Par�metros:
@@ -223,6 +68,14 @@ star:
 
     ldp x30, x12, [sp], 16
     ret
+
+resetPosY:
+	cmp 	posY, #480
+	b.lt	skipResetPosY
+	sub		posY, posY, #480
+skipResetPosY:
+	ret
+
 
 // TRANSITION -------------------------------------------------------------------------------------
 // Funci�n para dibujar la transici�n del background

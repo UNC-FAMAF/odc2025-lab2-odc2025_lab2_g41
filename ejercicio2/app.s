@@ -16,6 +16,8 @@
 main:
         // framebuffer llega con la base del framebuffer
         mov     posInit, framebuffer                      // guarda FB base
+        mov     alfaX, #0                                // coords iniciales de estrellas
+        mov     alfaY, #0
 
 reset:
 // --------------- 1) PINTAR EL FONDO COMPLETO -------------------------
@@ -107,89 +109,107 @@ reset:
 
 // --------------- 2) DETALLES DEL FONDO -------------------------------
         // CALLING FUNCTION STAR (X1, X2 -> X center, Y center)
+		
 	mov     framebuffer, posInit
-	mov     posX, #20
-	mov     posY, #100
+	add     posX, alfaX, #20
+	add     posY, alfaY, #100
+	bl      resetPosY
 	bl star
 
 	mov     framebuffer, posInit
-	mov     posX, #70
-	mov     posY, #400
+	add     posX, alfaX, #70
+	add     posY, alfaY, #400
+	bl 		resetPosY
 	bl star
 
 	mov     framebuffer, posInit
-	mov     posX, #100
-	mov     posY, #150
+	add     posX, alfaX, #100
+	add     posY, alfaY, #150
+	bl      resetPosY
 	bl star
 
 	mov     framebuffer, posInit
-	mov     posX, #125
-	mov     posY, #50
+	add     posX, alfaX, #125
+	add     posY, alfaY, #50
+	bl      resetPosY
 	bl star
 
 	mov     framebuffer, posInit
-	mov     posX, #175
-	mov     posY, #440
+	add     posX, alfaX, #175
+	add     posY, alfaY, #440
+	bl      resetPosY
 	bl star
 
 	mov     framebuffer, posInit
-	mov     posX, #250
-	mov     posY, #350
+	add     posX, alfaX, #250
+	add     posY, alfaY, #350
+	bl      resetPosY
 	bl star
 
 	mov     framebuffer, posInit
-	mov     posX, #300
-	mov     posY, #125
+	add     posX, alfaX, #300
+	add     posY, alfaY, #125
+	bl      resetPosY
 	bl star
 
 	mov     framebuffer, posInit
-	mov     posX, #360
-	mov     posY, #320
+	add     posX, alfaX, #360
+	add     posY, alfaY, #320
+	bl      resetPosY
 	bl star
 
 	mov     framebuffer, posInit
-	mov     posX, #370
-	mov     posY, #180
+	add     posX, alfaX, #370
+	add     posY, alfaY, #180
+	bl      resetPosY
 	bl star
 
 	mov     framebuffer, posInit
-	mov     posX, #390
-	mov     posY, #20
+	add     posX, alfaX, #390
+	add     posY, alfaY, #20
+	bl      resetPosY
 	bl star
 
 	mov     framebuffer, posInit
-	mov     posX, #400
-	mov     posY, #415
+	add     posX, alfaX, #400
+	add     posY, alfaY, #415
+	bl      resetPosY
 	bl star
 
 	mov     framebuffer, posInit
-	mov     posX, #500
-	mov     posY, #120
+	add     posX, alfaX, #500
+	add     posY, alfaY, #120
+	bl      resetPosY
 	bl star
 
 	mov     framebuffer, posInit
-	mov     posX, #500
-	mov     posY, #375
+	add     posX, alfaX, #500
+	add     posY, alfaY, #375
+	bl      resetPosY
 	bl star
 
 	mov     framebuffer, posInit
-	mov     posX, #570
-	mov     posY, #200
+	add     posX, alfaX, #570
+	add     posY, alfaY, #200
+	bl      resetPosY
 	bl star
 
 	mov     framebuffer, posInit
-	mov     posX, #590
-	mov     posY, #345
+	add     posX, alfaX, #590
+	add     posY, alfaY, #345
+	bl      resetPosY
 	bl star
 
 	mov     framebuffer, posInit
-	mov     posX, #600
-	mov     posY, #50
+	add     posX, alfaX, #600
+	add     posY, alfaY, #50
+	bl      resetPosY
 	bl star
 
 	mov     framebuffer, posInit
-	mov     posX, #610
-	mov     posY, #460
+	add     posX, alfaX, #610
+	add     posY, alfaY, #460
+	bl      resetPosY
 	bl star
 
 
@@ -1047,7 +1067,7 @@ InfLoop:
         mov     posY,           #232
         mov     ancho,          x24
         mov     alto,           #25
-        set_color color, 0xAD, 0xFFFF      // Color “visible” del sable
+        set_color color, 0xAD, 0xFFFF      // Color “visible” del sable #ADFFFF
         bl      draw_rectangle
 
         mov     framebuffer,  posInit
@@ -1076,7 +1096,7 @@ InfLoop:
 
         // Glow del haz
         // Glow superior
-        /* NO ANDA TODAV�A
+        /* NO ANDA TODAV�A
         mov     framebuffer,  posInit                     // base FB
         mov     posX,  #376                    // EJE X
         mov     posY,  #231                    // EJE Y
@@ -1085,7 +1105,6 @@ InfLoop:
         mov     x6,  #5                      // Largo del loop
         set_color    color, 0x78, 0xC6FA        // #78C6FA
         bl      draw_transition*/
-        
 
 
     // 2) Avanzar X en 1
@@ -1094,21 +1113,33 @@ InfLoop:
     // 3) Si x24 == 264, borrar TODO el haz y reiniciar a 376
     cmp     x24, #264
     b.ne    SkipErase
-
+	
     // Aquí: x22 acaba de llegar a 640 → tenemos que borrar todo el trazo
     mov     framebuffer, posInit
-    mov     posX,  #376                      // Desde donde empezó el sable
-    mov     posY,  #232                      // Mismo Y fijo del sable
-    mov     ancho,    #264                   // 640 – 376 = 264 píxeles
-    mov     alto,    #25                    // Misma altura del sable
+    mov     posX,       #376                      // Desde donde empezó el sable
+    mov     posY,       #232                      // Mismo Y fijo del sable
+    mov     ancho,      #264                   // 640 – 376 = 264 píxeles
+    mov     alto,       #25                    // Misma altura del sable
     set_color color, 0x22, 0xA3B            // #220A3B
     bl      draw_rectangle
-/* 
-    mov     framebuffer, posInit
-    bl reset*/
 
-    // Reiniciar x22 a 376 para que vuelva a aparecer en esa posición
+    mov     framebuffer, posInit
+	
+	add     alfaX, alfaX, #10                // muevo estrellas
+    add     alfaY, alfaY, #10
+	
+	cmp		alfaY, #480						 // 
+	b.gt	resetAlfaY
+	
+	bl reset
+
+resetAlfaY:
+	sub 	alfaY, alfaY, #480
+	bl reset
+	
+	// Reiniciar x22 a 376 para que vuelva a aparecer en esa posición
     mov     x24, #1
+
 SkipErase:
     // ––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
 
