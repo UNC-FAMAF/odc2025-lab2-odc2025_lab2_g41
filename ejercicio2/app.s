@@ -1058,6 +1058,7 @@ reset:
 
         // Counter
         mov     x24, #1                      // ancho
+        mov     x25, #377
 
 InfLoop:
     // 1) Dibujar el sable en la posición actual x22
@@ -1096,19 +1097,43 @@ InfLoop:
 
         // Glow del haz
         // Glow superior
-        /* NO ANDA TODAV�A
         mov     framebuffer,  posInit                     // base FB
         mov     posX,  #376                    // EJE X
         mov     posY,  #231                    // EJE Y
-        mov     ancho, x24
-        mov     alto, xzr
         mov     x6,  #5                      // Largo del loop
+        mov     x3, x25
         set_color    color, 0x78, 0xC6FA        // #78C6FA
-        bl      draw_transition*/
+        bl      draw_transition
+
+        mov     framebuffer,  posInit                     // base FB
+        mov     posX,  #385                    // EJE X
+        mov     posY,  #224                    // EJE Y
+        mov     x6,  #5                      // Largo del loop
+        mov     x3, x25
+        set_color    color, 0x78, 0xC6FA        // #78C6FA
+        bl      draw_transition_inverse
+
+        // Glow inferior
+        mov     framebuffer,  posInit                     // base FB
+        mov     posX,  #376                    // EJE X
+        mov     posY,  #255                    // EJE Y
+        mov     x6,  #5                      // Largo del loop
+        mov     x3, x25
+        set_color    color, 0xAD, 0xFFFF        // #ADFFFF
+        bl      draw_transition_inverse
+
+        mov     framebuffer,  posInit                     // base FB
+        mov     posX,  #379                    // EJE X
+        mov     posY,  #264                    // EJE Y
+        mov     x6,  #5                      // Largo del loop
+        mov     x3, x25
+        set_color    color, 0xAD, 0xFFFF        // #ADFFFF
+        bl      draw_transition
 
 
     // 2) Avanzar X en 1
     add     x24, x24, #1
+    add     x25, x25, #1
 
     // 3) Si x24 == 264, borrar TODO el haz y reiniciar a 376
     cmp     x24, #264
