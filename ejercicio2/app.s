@@ -1068,7 +1068,7 @@ InfLoop:
         mov     posY,           #232
         mov     ancho,          x24
         mov     alto,           #25
-        set_color color, 0xAD, 0xFFFF      // Color “visible” del sable #ADFFFF
+        set_color color, 0xFF, 0x4040      // Color “visible” del sable #FF4040 #ADFFFF
         bl      draw_rectangle
 
         mov     framebuffer,  posInit
@@ -1076,7 +1076,7 @@ InfLoop:
         mov     posY,           #232                    // EJE Y
         mov     ancho,          x24                    // ANCHO
         mov     alto,           #3                      // ALTO
-        set_color color, 0x78, 0xC6FA           // #78C6FA
+        set_color color, 0xBB, 0x4030           // #BB4030 #78C6FA
         bl      draw_rectangle
 
         mov     framebuffer,  posInit                     // base FB
@@ -1084,7 +1084,7 @@ InfLoop:
         mov     posY,       #234                    // EJE Y
         mov     ancho,      x24                    // ANCHO
         mov     alto,       #3                      // ALTO
-        set_color color, 0x98, 0xD3FA           // #98D3FA
+        set_color color, 0x9F, 0x4030           // #9F4030  #98D3FA
         bl      draw_rectangle
 
         mov     framebuffer,  posInit                     // base FB
@@ -1092,7 +1092,7 @@ InfLoop:
         mov     posY,       #249                    // EJE Y
         mov     ancho,      x24                    // ANCHO
         mov     alto,       #3                      // ALTO
-        set_color color, 0xFF, 0xFFFF           // #FFFFFF
+        set_color color, 0xFF, 0xBBBB           // #FFBBBB #FFFFFF
         bl      draw_rectangle
 
         // Glow del haz
@@ -1102,7 +1102,7 @@ InfLoop:
         mov     posY,  #231                    // EJE Y
         mov     x6,  #5                      // Largo del loop
         mov     x3, x25
-        set_color    color, 0x78, 0xC6FA        // #78C6FA
+        set_color    color, 0xBB, 0x4030        // #BB4030 #78C6FA
         bl      draw_transition
 
         mov     framebuffer,  posInit                     // base FB
@@ -1110,7 +1110,7 @@ InfLoop:
         mov     posY,  #224                    // EJE Y
         mov     x6,  #5                      // Largo del loop
         mov     x3, x25
-        set_color    color, 0x78, 0xC6FA        // #78C6FA
+        set_color    color, 0xBB, 0x4030        // #BB4030 #78C6FA
         bl      draw_transition_inverse
 
         // Glow inferior
@@ -1119,7 +1119,7 @@ InfLoop:
         mov     posY,  #255                    // EJE Y
         mov     x6,  #5                      // Largo del loop
         mov     x3, x25
-        set_color    color, 0xAD, 0xFFFF        // #ADFFFF
+        set_color    color, 0xFF, 0x4040        // #FF4040 #ADFFFF
         bl      draw_transition_inverse
 
         mov     framebuffer,  posInit                     // base FB
@@ -1127,7 +1127,7 @@ InfLoop:
         mov     posY,  #264                    // EJE Y
         mov     x6,  #5                      // Largo del loop
         mov     x3, x25
-        set_color    color, 0xAD, 0xFFFF        // #ADFFFF
+        set_color    color, 0xFF, 0x4040        // #FF4040 #ADFFFF
         bl      draw_transition
 
 
