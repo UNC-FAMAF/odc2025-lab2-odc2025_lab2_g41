@@ -711,72 +711,72 @@ reset:
 // --------------- 9) DETALLES DE MANOS --------------------------------
 
     // 1ER NUDILLO
-        mov     x21, #14        // contador (10 rectangulos)
-        mov     x22, #286       // X inicial
-        mov     x23, #240       // Y inicial
-        mov     x24, #2         // ancho fijo
-        mov     x25, #4         // alto fijo
+            mov     x21, #14        // contador (10 rectangulos)
+            mov     x22, #286       // X inicial
+            mov     x23, #240       // Y inicial
+            mov     x24, #2         // ancho fijo
+            mov     x25, #4         // alto fijo
 
-    nudillo1:
-        resetFramebuffer
-        mov     posX, x22       // X actual
-        mov     posY, x23       // Y actual
-        mov     ancho, x24      // ancho fijo
-        mov     alto, x25       // alto fijo
-        set_color 0x1, 0x2E54   // #012E54
-        bl      draw_rectangle
+        nudillo1:
+            resetFramebuffer
+            mov     posX, x22       // X actual
+            mov     posY, x23       // Y actual
+            mov     ancho, x24      // ancho fijo
+            mov     alto, x25       // alto fijo
+            set_color 0x1, 0x2E54   // #012E54
+            bl      draw_rectangle
 
-        sub     x22, x22, x24   // X += ancho al siguiente rectangulo a la derecha
-        sub     x23, x23, #2    // Y decremento
-        subs    x21, x21, #1    // contador--
-        cbnz    x21, nudillo1
+            sub     x22, x22, x24   // X += ancho al siguiente rectangulo a la derecha
+            sub     x23, x23, #2    // Y decremento
+            subs    x21, x21, #1    // contador--
+            cbnz    x21, nudillo1
 
     // 2DO NUDILLO
-        mov     x21, #12        // contador (10 rectangulos)
-        mov     x22, #286       // X inicial
-        mov     x23, #270       // Y inicial
-        mov     x24, #2         // ancho fijo
-        mov     x25, #4         // alto fijo
+            mov     x21, #12        // contador (10 rectangulos)
+            mov     x22, #286       // X inicial
+            mov     x23, #270       // Y inicial
+            mov     x24, #2         // ancho fijo
+            mov     x25, #4         // alto fijo
 
-    nudillo2:
-        resetFramebuffer
-        mov     posX, x22       // X actual
-        mov     posY, x23       // Y actual
-        mov     ancho, x24      // ancho fijo
-        mov     alto, x25       // alto fijo
-        set_color 0x1, 0x2E54   // #012E54
-        bl      draw_rectangle
+        nudillo2:
+            resetFramebuffer
+            mov     posX, x22       // X actual
+            mov     posY, x23       // Y actual
+            mov     ancho, x24      // ancho fijo
+            mov     alto, x25       // alto fijo
+            set_color 0x1, 0x2E54   // #012E54
+            bl      draw_rectangle
 
-        sub     x22, x22, x24   // X += ancho al siguiente rectangulo a la derecha
-        sub     x23, x23, #2    // Y decremento
-        subs    x21, x21, #1    // contador--
-        cbnz    x21, nudillo2
+            sub     x22, x22, x24   // X += ancho al siguiente rectangulo a la derecha
+            sub     x23, x23, #2    // Y decremento
+            subs    x21, x21, #1    // contador--
+            cbnz    x21, nudillo2
 
     // 3ER NUDILLO
-        mov     x21, #8         // contador (10 rectangulos)
-        mov     x22, #274       // X inicial
-        mov     x23, #290       // Y inicial
-        mov     x24, #2         // ancho fijo
-        mov     x25, #4         // alto fijo
+            mov     x21, #8         // contador (10 rectangulos)
+            mov     x22, #274       // X inicial
+            mov     x23, #290       // Y inicial
+            mov     x24, #2         // ancho fijo
+            mov     x25, #4         // alto fijo
 
-    nudillo3:
-        resetFramebuffer
-        mov     posX, x22       // X actual
-        mov     posY, x23       // Y actual
-        mov     ancho, x24      // ancho fijo
-        mov     alto, x25       // alto fijo
-        set_color 0x1, 0x2E54   // #012E54
-        bl      draw_rectangle
+        nudillo3:
+            resetFramebuffer
+            mov     posX, x22       // X actual
+            mov     posY, x23       // Y actual
+            mov     ancho, x24      // ancho fijo
+            mov     alto, x25       // alto fijo
+            set_color 0x1, 0x2E54   // #012E54
+            bl      draw_rectangle
 
-        sub     x22, x22, x24   // X += ancho al siguiente rectangulo a la derecha
-        sub     x23, x23, #2    // Y decremento
-        subs    x21, x21, #1    // contador--
-        cbnz    x21, nudillo3
+            sub     x22, x22, x24   // X += ancho al siguiente rectangulo a la derecha
+            sub     x23, x23, #2    // Y decremento
+            subs    x21, x21, #1    // contador--
+            cbnz    x21, nudillo3
 
 
     // Reset or Init counters for infinite loop
-        mov     x24, #1         // Ancho del sable a generar
-        mov     x25, #377       // Hasta donde en x glow del sable
+            mov     x24, #1         // Ancho del sable a generar
+            mov     x25, #377       // Hasta donde en x glow del sable
 
 
 InfLoop:
@@ -1057,7 +1057,7 @@ InfLoop:
 
 SkipErase:
     // 5) Retardo para ralentizar la animación
-                    mov     x29, #0x1FFFFF
+                    mov     x29, #0xFFFFF
 DelayLoop:
                     subs    x29, x29, #1
                     b.ne    DelayLoop

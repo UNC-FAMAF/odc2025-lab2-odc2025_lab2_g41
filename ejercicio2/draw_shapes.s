@@ -53,7 +53,7 @@ star:
         mov     ancho, #5                   // Ancho
         mov     alto, #5                    // Alto
         set_color 0x3B, 0x8FAE              // Color del centro #3B8FAE
-    bl      draw_rectangle
+        bl      draw_rectangle
 
     // Parte superior e inferior
         sub     posY, posY, #10             // Subir del centro (5*2)
@@ -102,7 +102,7 @@ draw_transition:
                 mov     x12, x6                 // x12 = largo del loop
                 mov     x13, posX               // Guardar donde inicializar X
 
-        // Here starts in every floor
+    // Here starts in every floor
                 mov     ancho, #6               // Ancho en X
                 mov     x14, x13                // x14 "counter"
                 mov     x15, posY               // Desde donde el alto
@@ -257,13 +257,13 @@ draw_transition:
 // color: color a usar para la transicion
 // x6: hasta donde llegar en los line
 draw_transition_inverse:
-// Salvar registros en el stack pile
+    // Salvar registros en el stack pile
                 stp     x30, x12, [sp, -32]!
 
                 mov     x10, x3                         // ancho total de la funcion
                 mov     x12, x6                         // x12 = largo del loop
                 mov     x13, posX                       // Guardar donde inicializar X
-        // Here starts in every floor
+    // Here starts in every floor
                 mov     ancho, #6                       // Ancho en X
                 mov     x14, posX                       // x14 "counter"
                 mov     x15, posY                       // Desde donde el alto
