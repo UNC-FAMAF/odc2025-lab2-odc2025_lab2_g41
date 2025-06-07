@@ -38,17 +38,22 @@
 6) Glow del haz
 7) Brazo
 8) Mano
-9) "Detalles" de la mano
+9) Detalles de la mano
 
 ### Descripción del Ejercicio 2
 
 **Proceso de dibujado:**
 
-1) a
-2) b
-3) c
-4) d
-5) e
+1) Fondo con "transición" entre colores
+2) Estrellas
+3) Mango del Sable
+4) OdC en el mango del sable
+5) Brazo
+6) Mano
+7) Detalles de la mano
+8) Animación:
+    - Se dibuja progresivamente el haz y glow del sable extendiendose hasta el final, cambiando entre 4 colores al finalizar su ciclo.
+    - Las estrellas se mueven en el fondo diagonalmente y reapareciendo al excederse de los límites de la pantalla.
 
 ---
 
@@ -61,7 +66,7 @@
 2) **ldp x1, x2, [sp], n:** La instrucción ldp es una sentencia de carga de dos de registros que realiza:
     - Carga dos registros (x1 y x2) desde el *stack*
     - Incrementa el sp *(puntero de pila)* en 16 bytes ``([sp], 16)``
-    - Utiliza direccionamiento post-indexado (primero carga, luego actualiza SP)
+    - Utiliza direccionamiento ***post-indexado*** (primero carga, luego actualiza SP)
 
 Aprendimos sobre estas sentencias **[aquí](https://developer.arm.com/documentation/102374/0102/Loads-and-stores---load-pair-and-store-pair)**
 
